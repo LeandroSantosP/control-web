@@ -22,7 +22,11 @@ export const colors = {
 //   large: '2rem',
 // };
 
-const fontSize = [10, 12, 14, 16, 18, 20];
+const fontSize = {
+  small: '1rem',
+  medium: '1.6rem',
+  large: '2.2rem',
+};
 const space = [4, 8, 12, 16, 20, 24, 28, 32];
 
 export const definitions = {

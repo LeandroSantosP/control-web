@@ -1,10 +1,9 @@
-import * as S from './components/button/StyledButton';
+import { SingUp } from './pages/SingUp/SingUpBase';
 
 function App() {
   return (
     <>
-      <S.Button fontSize="medium">test</S.Button>
-      <h1>HELLO WORLD</h1>
+      <SingUp />
     </>
   );
 }

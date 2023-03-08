@@ -11,7 +11,11 @@ declare module 'styled-components' {
       Verdigris: string;
       White: string;
     };
-    fontSize: number[];
+    fontSize: {
+      small: string;
+      medium: string;
+      large: string;
+    };
     space: number[];
   }
 }
