@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
-import * as S from './SingUpStyles';
+import * as S from './SingInStyles';
 
 import dollarBg from '../../assets/5133.jpg';
 import { Input } from '../../components/Inputs/InputBase';
@@ -12,13 +12,12 @@ import { useNavigate } from 'react-router-dom';
 
 export interface Inputs {
   email: string;
-  name: string;
   password: string;
 }
 
-export const SingUp = () => {
+export const SingIn = () => {
   const navigation = useNavigate();
-  const { singUp, error } = useAuth();
+  const { login, error } = useAuth();
 
   const {
     register,
@@ -27,19 +26,16 @@ export const SingUp = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      const res = await singUp({
-        email: data.email,
-        name: data.name,
-        password: data.password,
-      });
-      if (res) {
-        console.log('conta criada com sucesso!');
-        navigation('/entrar');
-      }
-    } catch (err) {
-      console.log(err);
+    const res = await login(data.email, data.password);
+
+    if (res.status === 200) {
+      navigation('/');
     }
+
+    if (res.response?.status === 400) {
+      console.log(error);
+    }
+    return res;
   };
 
   return (
@@ -57,15 +53,6 @@ export const SingUp = () => {
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <h1>Bem-Vindo!</h1>
 
-          <Label>Nome</Label>
-
-          <Input
-            fontSize="medium"
-            register={{
-              ...register('name'),
-            }}
-          />
-
           <Label>Email</Label>
           <Input
             fontSize="medium"
@@ -79,13 +66,11 @@ export const SingUp = () => {
               }),
             }}
           />
-          <p>{error?.message === 'Email already Exists!' && error?.message}</p>
           <ErrorMessage
             errors={errors}
             name="email"
             render={({ message }) => <p>{message}</p>}
           />
-          <p>{errors.name?.message}</p>
 
           <Label>Senha</Label>
           <Input
@@ -94,15 +79,6 @@ export const SingUp = () => {
               required: 'Campo Obrigatório',
               ...register('password', {
                 required: 'Campo Obrigatório',
-                pattern: {
-                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                  message:
-                    'Senha deve conter no minemo 8 caracteres, e pelo menos uma letra e um numero!',
-                },
-                minLength: {
-                  value: 3,
-                  message: 'Mínimo de 3 caracteres',
-                },
               }),
             }}
           />
@@ -112,11 +88,15 @@ export const SingUp = () => {
             render={({ message }) => <p>{message}</p>}
           />
 
+          <p>{error?.message}</p>
+
           <S.Box JustifyContent="space-between">
             <Button fontSize="small" type="submit">
-              Cadastra-se!
+              Logar!
             </Button>
-            <S.NotHaveAccount>Ja tem conta?</S.NotHaveAccount>
+            <S.NotHaveAccount onClick={() => navigation('/cadastre')}>
+              Ainda nao tem conta?
+            </S.NotHaveAccount>
           </S.Box>
         </S.Form>
       </S.Box>

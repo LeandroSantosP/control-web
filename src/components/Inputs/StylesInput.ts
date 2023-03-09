@@ -1,19 +1,16 @@
 import styled from 'styled-components';
 
-interface ButtonProps {
+interface InputStylesProps {
   fontSize: 'small' | 'medium' | 'large';
 }
 
-const ButtonStyled = styled.button<ButtonProps>`
+export const Input = styled.input<InputStylesProps>`
   background-color: transparent;
+  border-radius: 200px;
+
+  height: 45px;
+  color: #fff;
   border: 1px solid #fff;
   font-size: ${(props) => props.theme.fontSize[props.fontSize]};
-  max-width: 140px;
   padding: 12px 18px;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 200px;
-  margin: 2rem 0;
 `;
-
-export { ButtonStyled };

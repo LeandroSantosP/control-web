@@ -1,11 +1,8 @@
 import { SingUp } from './pages/SingUp/SingUpBase';
+import { RoutesApp } from './routes';
 
 function App() {
-  return (
-    <>
-      <SingUp />
-    </>
-  );
+  return <RoutesApp />;
 }
 
 export { App };

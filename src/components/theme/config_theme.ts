@@ -16,12 +16,6 @@ export const colors = {
   ...BrandColor,
 };
 
-// const fontSize = {
-//   small: '1rem',
-//   medium: '1.50rem',
-//   large: '2rem',
-// };
-
 const fontSize = {
   small: '1rem',
   medium: '1.6rem',
