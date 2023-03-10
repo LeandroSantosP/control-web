@@ -18,7 +18,7 @@ export interface Inputs {
 
 export const SingUp = () => {
   const navigation = useNavigate();
-  const { singUp, error } = useAuth();
+  const { singUp, error, loading } = useAuth();
 
   const {
     register,
@@ -27,18 +27,15 @@ export const SingUp = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      const res = await singUp({
-        email: data.email,
-        name: data.name,
-        password: data.password,
-      });
-      if (res) {
-        console.log('conta criada com sucesso!');
-        navigation('/entrar');
-      }
-    } catch (err) {
-      console.log(err);
+    const res = await singUp({
+      email: data.email,
+      name: data.name,
+      password: data.password,
+    });
+
+    if (res) {
+      console.log('conta criada com sucesso!');
+      navigation('/entrar');
     }
   };
 
@@ -56,19 +53,19 @@ export const SingUp = () => {
       <S.Box>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <h1>Bem-Vindo!</h1>
-
           <Label>Nome</Label>
-
           <Input
+            placeholder="Digite seu nome"
             fontSize="medium"
             register={{
               ...register('name'),
             }}
           />
-
+          {errors?.name?.message && <p>{errors.name?.message}</p>}
           <Label>Email</Label>
           <Input
             fontSize="medium"
+            placeholder="Ex:.example@example.com"
             register={{
               ...register('email', {
                 required: 'Campo Obrigatório',
@@ -85,11 +82,11 @@ export const SingUp = () => {
             name="email"
             render={({ message }) => <p>{message}</p>}
           />
-          <p>{errors.name?.message}</p>
 
           <Label>Senha</Label>
           <Input
             fontSize="medium"
+            placeholder="Digite sua senha"
             register={{
               required: 'Campo Obrigatório',
               ...register('password', {
@@ -111,12 +108,13 @@ export const SingUp = () => {
             name="password"
             render={({ message }) => <p>{message}</p>}
           />
-
           <S.Box JustifyContent="space-between">
-            <Button fontSize="small" type="submit">
-              Cadastra-se!
+            <Button ISdisabled={loading} fontSize="small" type="submit">
+              {loading ? 'Carregando...' : ' Cadastra-se!'}
             </Button>
-            <S.NotHaveAccount>Ja tem conta?</S.NotHaveAccount>
+            <S.NotHaveAccount onClick={() => navigation('/entrar')}>
+              Já tem conta?
+            </S.NotHaveAccount>
           </S.Box>
         </S.Form>
       </S.Box>

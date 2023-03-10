@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { AxiosError, AxiosResponse } from 'axios';
+import { createContext, useContext, useState } from 'react';
+import { AxiosResponse } from 'axios';
 import { api } from '../axios';
 interface AuthContextProps {
   isLogged: boolean;
-  login: (email: string, password: string) => Promise<UserResponse>;
+  login: (email: string, password: string) => Promise<UserResponse | void>;
   user: CredentialsProps | null;
   loading: boolean;
   singUp: ({
@@ -55,12 +55,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
 
-  useEffect(() => {
-    if (isLogged === true) {
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (isLogged === true) {
+  //   }
+  // }, []);
 
-  async function login(email: string, password: string): Promise<UserResponse> {
+  async function login(
+    email: string,
+    password: string
+  ): Promise<UserResponse | void> {
     setIsLogged(true);
     setLoading(true);
     try {
@@ -76,13 +79,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       setUser(response.data);
       setIsLogged(true);
-      setLoading(false);
       return response;
     } catch (err: any) {
       setError(err.response.data);
+      setUser(null);
       setIsLogged(false);
+      return;
+    } finally {
       setLoading(false);
-      return err;
     }
   }
 
@@ -92,23 +96,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password,
   }: signUpProps): Promise<void | AxiosResponse<unknown>> {
     setLoading(true);
-    const result = await api
-      .post('/users', {
+
+    try {
+      const result = await api.post('/users', {
         name,
         email,
         password,
-      })
-      .then((res) => {
-        setError({ message: '' });
-        setLoading(false);
-        return res;
-      })
-      .catch((erro: AxiosError<ErrosAxios>) => {
-        setLoading(false);
-        setError(erro.response?.data);
       });
-
-    return result;
+      setError({ message: '' });
+      return result;
+    } catch (erro: any) {
+      console.log(erro);
+      setError(erro.response?.data);
+      return;
+    } finally {
+      setLoading(false);
+    }
+    return;
   }
 
   return (
