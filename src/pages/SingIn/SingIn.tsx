@@ -1,14 +1,16 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { Box } from '../../components/Box/Box';
 
 import * as S from './SingInStyles';
 
-import dollarBg from '../../assets/5133.jpg';
+import dollarBg from '../../shared/assets/5133.jpg';
 import { Input } from '../../components/Inputs/InputBase';
 import { Button } from '../../components/button/BaseButton';
 import { Label } from '../../components/Inputs/Label';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export interface Inputs {
   email: string;
@@ -17,13 +19,22 @@ export interface Inputs {
 
 export const SingIn = () => {
   const navigation = useNavigate();
+  const { isLogged } = useAuth();
   const { login, error, loading } = useAuth();
+
+  useEffect(() => {
+    if (isLogged) {
+      navigation('/');
+    }
+  }, [isLogged, navigation]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    mode: 'all',
+  });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const res = await login(data.email, data.password);
@@ -40,7 +51,7 @@ export const SingIn = () => {
 
   return (
     <S.Wrapper>
-      <S.Box
+      <Box
         style={{
           backgroundImage: `url(${dollarBg})`,
           backgroundPosition: 'center center',
@@ -49,7 +60,7 @@ export const SingIn = () => {
         }}
       />
 
-      <S.Box>
+      <Box>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
           <h1>Bem-Vindo!</h1>
 
@@ -92,16 +103,16 @@ export const SingIn = () => {
 
           <p>{error?.message}</p>
 
-          <S.Box JustifyContent="space-between">
+          <Box JustifyContent="space-between">
             <Button fontSize="small" type="submit" ISdisabled={loading}>
               {loading ? 'Carregando...' : 'Logar!'}
             </Button>
             <S.NotHaveAccount onClick={() => navigation('/cadastre')}>
               Ainda não tem conta?
             </S.NotHaveAccount>
-          </S.Box>
+          </Box>
         </S.Form>
-      </S.Box>
+      </Box>
     </S.Wrapper>
   );
 };

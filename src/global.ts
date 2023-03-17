@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     color: ${(props) => props.theme.colors.White};
     background-color: ${({ theme }) => theme.colors.Dark};
-    font-family: Open-Sans, Helvetica, Sans-Serif;
+    font-family:"Roboto", Helvetica, Sans-Serif;
   }
   html, body > div {
   height: 100%;

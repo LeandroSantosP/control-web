@@ -1,16 +1,23 @@
 import { createContext, useContext, useState } from 'react';
+import {
+  getItem,
+  setItem,
+} from '../modules/Storage/persistence-adpeters/local-storage';
+import { StorageProvider } from '../modules/Storage';
 import { AxiosResponse } from 'axios';
-import { api } from '../axios';
+import { loginAPI, SingUpAPI } from '../../api/index';
+
 interface AuthContextProps {
   isLogged: boolean;
   login: (email: string, password: string) => Promise<UserResponse | void>;
-  user: CredentialsProps | null;
   loading: boolean;
+  logout: () => void;
   singUp: ({
     email,
     name,
     password,
   }: signUpProps) => Promise<void | AxiosResponse<any, any>>;
+
   error: { message: string } | undefined;
 }
 
@@ -46,43 +53,39 @@ interface signUpProps {
 export interface ErrosAxios {
   message: string;
 }
-
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<CredentialsProps | null>(null);
   const [error, setError] = useState<{ message: string }>();
   const [loading, setLoading] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(() => {
+    const token = localStorage.getItem('auth');
+    return token ? true : false;
+  });
 
-  // useEffect(() => {
-  //   if (isLogged === true) {
-  //   }
-  // }, []);
+  function logout() {
+    localStorage.removeItem('auth');
+    setIsLogged(false);
+    return;
+  }
 
   async function login(
     email: string,
     password: string
   ): Promise<UserResponse | void> {
-    setIsLogged(true);
+    setIsLogged(false);
     setLoading(true);
     try {
-      const response: UserResponse = await api.get('/auth', {
-        headers: {
-          Authorization: 'Basic ' + btoa(email + ':' + password),
-        },
-      });
+      const response: UserResponse = await loginAPI({ email, password });
 
       if (response.status === 200) {
-        localStorage.setItem('token', response.data.token);
+        setIsLogged(true);
+        localStorage.setItem('auth', JSON.stringify(response.data));
       }
 
-      setUser(response.data);
-      setIsLogged(true);
       return response;
     } catch (err: any) {
       setError(err.response.data);
-      setUser(null);
       setIsLogged(false);
       return;
     } finally {
@@ -98,28 +101,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setLoading(true);
 
     try {
-      const result = await api.post('/users', {
-        name,
-        email,
-        password,
-      });
+      const result = await SingUpAPI({ email, name, password });
+
       setError({ message: '' });
       return result;
     } catch (erro: any) {
-      console.log(erro);
       setError(erro.response?.data);
       return;
     } finally {
       setLoading(false);
     }
-    return;
   }
 
   return (
     <AuthContext.Provider
-      value={{ isLogged, loading, login, user, singUp, error: error }}
+      value={{ isLogged, logout, loading, login, singUp, error: error }}
     >
-      {children}
+      <StorageProvider persistenceAdepter={{ getItem, setItem }}>
+        {children}
+      </StorageProvider>
     </AuthContext.Provider>
   );
 };

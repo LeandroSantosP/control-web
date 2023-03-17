@@ -1,14 +1,15 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { useNavigate } from 'react-router-dom';
 
 import * as S from './SingUpStyles';
 
-import dollarBg from '../../assets/5133.jpg';
+import dollarBg from '../../shared/assets/5133.jpg';
 import { Input } from '../../components/Inputs/InputBase';
 import { Button } from '../../components/button/BaseButton';
 import { Label } from '../../components/Inputs/Label';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../shared/contexts/AuthContext';
+import { useEffect } from 'react';
 
 export interface Inputs {
   email: string;
@@ -18,13 +19,21 @@ export interface Inputs {
 
 export const SingUp = () => {
   const navigation = useNavigate();
-  const { singUp, error, loading } = useAuth();
+  const { singUp, error, loading, isLogged } = useAuth();
+
+  useEffect(() => {
+    if (isLogged) {
+      navigation('/');
+    }
+  }, [isLogged, navigation]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<Inputs>({
+    mode: 'all',
+  });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const res = await singUp({
@@ -52,16 +61,22 @@ export const SingUp = () => {
 
       <S.Box>
         <S.Form onSubmit={handleSubmit(onSubmit)}>
-          <h1>Bem-Vindo!</h1>
+          <h1>Cadastre-se!</h1>
           <Label>Nome</Label>
           <Input
             placeholder="Digite seu nome"
             fontSize="medium"
             register={{
-              ...register('name'),
+              ...register('name', {
+                required: 'Campo Obrigatório',
+              }),
             }}
           />
-          {errors?.name?.message && <p>{errors.name?.message}</p>}
+          <ErrorMessage
+            errors={errors}
+            name="name"
+            render={({ message }) => <p>{message}</p>}
+          />
           <Label>Email</Label>
           <Input
             fontSize="medium"
@@ -87,6 +102,7 @@ export const SingUp = () => {
           <Input
             fontSize="medium"
             placeholder="Digite sua senha"
+            type="password"
             register={{
               required: 'Campo Obrigatório',
               ...register('password', {
