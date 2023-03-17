@@ -1,25 +1,38 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../shared/contexts/AuthContext';
-import { useStorage } from '../../shared/modules/Storage';
-import * as S from './DashBoard.Styled';
+import { Layout } from '../../components/Layout';
+import * as S from './DashBoardStyled';
 
 export const DashBoard = () => {
-  const navigate = useNavigate();
-  const { logout, isLogged } = useAuth();
-  const { state } = useStorage();
-  if (!isLogged) {
-    navigate('/entrar');
-  }
-
   return (
-    <S.Wrapper>
-      <S.Menu>
-        <h1>Ola, {state && state.user?.name}</h1>
-        <button onClick={logout}>sair</button>
-      </S.Menu>
-      <S.Main>
-        <p>content</p>
-      </S.Main>
-    </S.Wrapper>
+    <Layout>
+      {/* <h1> + DashBoard</h1> */}
+      <S.DashboardWrapper>
+        <S.TransactionHeader>
+          <h2>Transações</h2>
+          <S.AddButton>+</S.AddButton>
+        </S.TransactionHeader>
+        <S.UlWrapper>
+          <S.TransactionItemLi>
+            <S.TransactionContent>
+              <h3>Conta A</h3> <span> category</span>
+            </S.TransactionContent>
+            <S.TransactionContent>
+              <h3>- RS 50</h3>
+              <span>Nao Paga</span>
+            </S.TransactionContent>
+          </S.TransactionItemLi>
+          <S.Divider />
+          <S.TransactionItemLi>
+            <S.TransactionContent>
+              <h3>Conta A</h3> <span> category</span>
+            </S.TransactionContent>
+            <S.TransactionContent>
+              <h3>- RS 50</h3>
+              <span>Nao Paga</span>
+            </S.TransactionContent>
+          </S.TransactionItemLi>
+        </S.UlWrapper>
+        <S.Divider />
+      </S.DashboardWrapper>
+    </Layout>
   );
 };

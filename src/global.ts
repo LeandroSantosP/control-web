@@ -1,6 +1,12 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
+* {
+  list-style: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
   body {
     margin: 0;
@@ -16,7 +22,10 @@ const GlobalStyle = createGlobalStyle`
   }
   html, body > div {
   height: 100%;
+
 }
+
+
 `;
 
 export { GlobalStyle };

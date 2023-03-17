@@ -12,6 +12,7 @@ declare module 'styled-components' {
       White: string;
     };
     fontSize: {
+      extraSmall: string;
       small: string;
       medium: string;
       large: string;

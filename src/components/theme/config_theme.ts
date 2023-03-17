@@ -20,6 +20,7 @@ const fontSize = {
   small: '1rem',
   medium: '1.6rem',
   large: '2.2rem',
+  extraSmall: '0.6rem',
 };
 const space = [4, 8, 12, 16, 20, 24, 28, 32];
 
