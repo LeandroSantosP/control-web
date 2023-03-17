@@ -15,7 +15,7 @@ interface StorageProviderProps {
 }
 
 interface userInfos {
-  user: {
+  user?: {
     name: string;
     email: string;
   };
@@ -40,7 +40,6 @@ const InMemoryStorageProvider = ({
 
     if (infos !== null) {
       setState(infos);
-
       await persistenceAdepter.setItem(infos);
     }
   }, [persistenceAdepter]);
@@ -69,8 +68,4 @@ export const StorageProvider = ({
   );
 };
 
-export const useStorage = () => {
-  const { setState, state } = useContext(InMemoryStorageContext);
-
-  return { state, setState };
-};
+export const useStorage = () => useContext(InMemoryStorageContext);

@@ -5,7 +5,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 
-import { Home } from '../pages/Home/Home';
+import { DashBoard } from '../pages/DashBoard/DashBoard';
 import { SingIn } from '../pages/SingIn/SingIn';
 import { SingUp } from '../pages/SingUp/SingUp';
 import { useAuth } from '../shared/contexts/AuthContext';
@@ -20,7 +20,7 @@ export function RoutesApp() {
   return (
     <Router>
       <Routes>
-        <Route element={PrivateRoute(Home)} path="/" />
+        <Route element={PrivateRoute(DashBoard)} path="/" />
         <Route element={<SingIn />} path="/entrar" />
         <Route element={<SingUp />} path="/cadastre" />
         <Route path="*" element={<Navigate to="/" />} />

@@ -18,7 +18,7 @@ interface singUpProps extends LoginProps {
 
 export const SingUpAPI = async ({ name, email, password }: singUpProps) => {
   try {
-    const res = await api.post('/user', {
+    const res = await api.post('/user/create', {
       name,
       email,
       password,
