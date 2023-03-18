@@ -6,6 +6,22 @@ const GlobalStyle = createGlobalStyle`
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
+    ::-webkit-scrollbar {
+  background-color: ${(props) =>
+     props.theme.colors.Dark}; /* cor de fundo do scroll */
+  width: 8px; /* largura do scroll vertical */
+  border-radius:   1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* cor do "polegar" do scroll */
+  border-radius: 5px; /* borda arredondada do "polegar" */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa; /* cor do "polegar" do scroll quando o mouse está sobre ele */
+}
 }
 
   body {
@@ -22,6 +38,9 @@ const GlobalStyle = createGlobalStyle`
   }
   html, body > div {
   height: 100%;
+
+
+
 
 }
 
