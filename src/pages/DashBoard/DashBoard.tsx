@@ -1,11 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
-import { Layout } from '../../components/Layout';
-import { Transaction } from '../../components/Transaction/Transaction';
-import { TransactionListItem } from '../../components/TransactionListItem/TransactionListItem';
+import { Layout } from '../../components/providers/Layout/';
+import { Transaction } from '../../components/Molecules/Transaction/Transaction';
+import { TransactionListItem } from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { useStorage } from '../../shared/modules/Storage';
 import * as S from './DashBoardStyled';
-import { useQuery } from 'react-query';
 import { useTransactionContext } from '../../shared/contexts';
 
 interface TransactionDTO {

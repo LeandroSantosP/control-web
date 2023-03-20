@@ -1,5 +1,5 @@
-import { Box } from '../Box/Box';
-import { Input } from './InputBase';
+import { Box } from '../../atoms/Box/Box';
+import { Input } from '../../atoms/Input/InputBase';
 import { Label } from './Label';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {

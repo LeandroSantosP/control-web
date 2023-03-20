@@ -4,16 +4,23 @@ interface ButtonPros extends React.ButtonHTMLAttributes<HTMLButtonElement> {
    children: React.ReactNode;
    ISdisabled?: boolean;
    fontSize: 'small' | 'medium' | 'large';
+   bg?: string;
 }
 
 function Button({
    children,
    ISdisabled = false,
    fontSize,
+   bg,
    ...props
 }: ButtonPros) {
    return (
-      <S.ButtonStyled ISdisabled={ISdisabled} fontSize={fontSize} {...props}>
+      <S.ButtonStyled
+         ISdisabled={ISdisabled}
+         fontSize={fontSize}
+         bg={bg}
+         {...props}
+      >
          {children}
       </S.ButtonStyled>
    );

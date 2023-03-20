@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Box } from '../Box/Box';
+import { Box } from '../../atoms/Box/Box';
 
 interface WrapperProps {
    type?: 'success' | 'warning' | 'error' | 'default';

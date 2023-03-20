@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './App';
-import { Theme } from './components/theme';
+import { Theme } from './components/providers/theme';
 import { AuthProvider } from './shared/contexts/AuthContext';
 import { GlobalStyle } from './global';
 

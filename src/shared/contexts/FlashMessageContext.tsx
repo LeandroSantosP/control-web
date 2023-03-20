@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { FlashMessage } from '../../components/FlashMessage/FlashMessage';
+import { FlashMessage } from '../../components/Molecules/FlashMessage/FlashMessage';
 
 interface handleShowingFlashMessageProps {
    message: string;

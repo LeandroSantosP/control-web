@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import * as S from './SingUpStyles';
 
 import dollarBg from '../../shared/assets/5133.jpg';
-import { Input } from '../../components/Inputs/InputBase';
-import { Button } from '../../components/button/BaseButton';
-import { Label } from '../../components/Inputs/Label';
+import { Input } from '../../components/atoms/Input/InputBase';
+import { Button } from '../../components/atoms/button/BaseButton';
+import { Label } from '../../components/Molecules/InputAndLabel/Label';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { useEffect } from 'react';
 

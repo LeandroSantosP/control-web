@@ -23,7 +23,7 @@
       "**/*.ts",
       "**/*.tsx",
       "pages/auth/auth.js",
-      "src/components/Inputs/StylesInput.jsx"
+      "src/components/Molecules/InputAndLabel/StylesInput.jsx"
    ],
    "references": [
       {

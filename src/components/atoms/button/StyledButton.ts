@@ -1,17 +1,18 @@
 import styled from 'styled-components';
+import { color } from 'styled-system';
 
 interface ButtonProps {
    fontSize: 'small' | 'medium' | 'large';
    ISdisabled: boolean;
+   bg?: string;
 }
 
 const ButtonStyled = styled.button<ButtonProps>`
-   background-color: #ccc;
    border: 1px solid #fff;
    font-size: ${(props) => props.theme.fontSize[props.fontSize]};
    max-width: 140px;
    padding: 12px 18px;
-   color: ${(props) => props.theme.colors.Dark};
+   ${color}
    cursor: pointer;
    border-radius: 200px;
    opacity: ${(props) => props.ISdisabled && 0.5};
