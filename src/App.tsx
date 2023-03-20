@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RoutesApp } from './routes';
+import { TransactionProvider } from './shared/contexts';
+import { FlashMessageProvider } from './shared/contexts/FlashMessageContext';
 
 function App() {
    const queryClient = new QueryClient();
@@ -7,7 +9,11 @@ function App() {
    return (
       <>
          <QueryClientProvider client={queryClient}>
-            <RoutesApp />
+            <FlashMessageProvider>
+               <TransactionProvider>
+                  <RoutesApp />
+               </TransactionProvider>
+            </FlashMessageProvider>
          </QueryClientProvider>
       </>
    );

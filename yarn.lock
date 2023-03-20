@@ -1716,6 +1716,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@phosphor-icons/react@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@phosphor-icons/react/-/react-2.0.5.tgz#3c07191a4489ed5a8c35f4bc228938990d13b1a4"
+  integrity sha512-Ghohi+Dk+Y0RoI1vra3jH2QC3sO6C16a/Km0gfy05ONIsC62Vwn1SK2Qaim77VPyn1FS7qjMxocdi9kx6btvXg==
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.10"
   resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.10.tgz#2eba163b8e7dbabb4ce3609ab5e32ab63dda3ef8"
@@ -1759,6 +1764,27 @@
   integrity sha512-1pVM9RfOQ+n/N5PJK33kRSKsr1glNxomxONs5c49MliinBY6Yw2Q995qfBUUo0/Mbg05B/sGA0gkgPI7kmSHBg==
   dependencies:
     "@babel/runtime" "^7.13.10"
+
+"@radix-ui/react-dialog@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-dialog/-/react-dialog-1.0.3.tgz#a715bf30f35fcd80476c0a07fcc073c1968e6d3e"
+  integrity sha512-owNhq36kNPqC2/a+zJRioPg6HHnTn5B/sh/NjTY8r4W9g1L5VJlrzZIVcBr7R9Mg8iLjVmh6MGgMlfoVf/WO/A==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.0"
+    "@radix-ui/react-compose-refs" "1.0.0"
+    "@radix-ui/react-context" "1.0.0"
+    "@radix-ui/react-dismissable-layer" "1.0.3"
+    "@radix-ui/react-focus-guards" "1.0.0"
+    "@radix-ui/react-focus-scope" "1.0.2"
+    "@radix-ui/react-id" "1.0.0"
+    "@radix-ui/react-portal" "1.0.2"
+    "@radix-ui/react-presence" "1.0.0"
+    "@radix-ui/react-primitive" "1.0.2"
+    "@radix-ui/react-slot" "1.0.1"
+    "@radix-ui/react-use-controllable-state" "1.0.0"
+    aria-hidden "^1.1.1"
+    react-remove-scroll "2.5.5"
 
 "@radix-ui/react-dismissable-layer@1.0.3":
   version "1.0.3"
@@ -2406,6 +2432,11 @@
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.3.tgz#a136f83b0758698df454e328759dbd3d44555311"
   integrity sha512-NfQ4gyz38SL8sDNrSixxU2Os1a5xcdFxipAFxYEuLUlvU2uDwS4NUpsImcf1//SlWItCVMMLiylsxbmNMToV/g==
+
+"@types/vanilla-masker@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/vanilla-masker/-/vanilla-masker-1.2.1.tgz#5eb024a7ee9d5e9e2caf7e61cb07c37a80c74445"
+  integrity sha512-b5ajZhEff5Ymf0znJ6ReHd4RIzZxb8QORD52/gC9qiG1wgBG+uraJbOgIXIyn4/OLOko/bmDajXuxn2WnYD3ew==
 
 "@types/ws@^8.5.1":
   version "8.5.4"
@@ -7705,7 +7736,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -7867,6 +7898,13 @@ react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-number-format@^5.1.4:
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-5.1.4.tgz#23057d94a4f1b08e12ee41328e86be929b60a791"
+  integrity sha512-QV7QHzHrk9ZS9V0bWkIwu6ywiXJt0www4/cXWEVEgwaNqthmOZl/Cf5O0ukEPlGZJJr06Jh3+CM4rZsvXn8cOg==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-refresh@^0.11.0:
   version "0.11.0"
@@ -8092,6 +8130,13 @@ relateurl@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==
+
+remask@^0.1.0-alpha.5:
+  version "0.1.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/remask/-/remask-0.1.0-alpha.5.tgz#003d49b203210501a4e66b6e7c034e6a92b6e417"
+  integrity sha512-oRVGV7FWDvL6aOcATa/TPyNs78PUr9F1gn2495/J2A4G1B6mSGWKnZfyyc5hfoqLkpxmUdF2LR/pICR2Ox9Ovw==
+  dependencies:
+    vanilla-masker "^1.2.0"
 
 renderkid@^3.0.0:
   version "3.0.0"
@@ -9195,6 +9240,11 @@ v8-to-istanbul@^8.1.0:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
     source-map "^0.7.3"
+
+vanilla-masker@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vanilla-masker/-/vanilla-masker-1.2.0.tgz#c2830e9d994a5fecd2261506477c2707fe589756"
+  integrity sha512-5SQeksiWaRYfbTaLVcqDPlvINGRt7ODbmWqqMMdT4GuZEC01KJm7FxaytscI5GZ9mlkTNQDwqllSHbv1ENxQEA==
 
 vary@~1.1.2:
   version "1.1.2"

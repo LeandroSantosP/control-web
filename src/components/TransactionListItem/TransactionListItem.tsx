@@ -1,4 +1,3 @@
-import { format } from 'path';
 import * as S from './TransactionLIstItem';
 
 interface TransactionListItemProps {
@@ -8,14 +7,15 @@ interface TransactionListItemProps {
    resolved: boolean;
 }
 
-const FormatCurense = (value: number) =>
+const FormatCurense = (amount: number) =>
    new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
-   }).format(value);
+   }).format(amount);
 
 export const TransactionListItem = (params: TransactionListItemProps) => {
    const { account, amount, category, resolved } = params;
+
    return (
       <>
          <S.TransactionItemLi>

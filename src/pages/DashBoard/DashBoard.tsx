@@ -1,9 +1,12 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
 import { Layout } from '../../components/Layout';
+import { Transaction } from '../../components/Transaction/Transaction';
 import { TransactionListItem } from '../../components/TransactionListItem/TransactionListItem';
 import { useStorage } from '../../shared/modules/Storage';
 import * as S from './DashBoardStyled';
+import { useQuery } from 'react-query';
+import { useTransactionContext } from '../../shared/contexts';
 
 interface TransactionDTO {
    id: string;
@@ -15,23 +18,25 @@ interface TransactionDTO {
    create_at: Date;
    recurrence: null;
    value: number;
+   resolved: boolean;
    updated_at: Date;
 }
 
 export const DashBoard = () => {
    const { state } = useStorage();
+   const { open: WhenTransactionIsCreateWithSuccess } = useTransactionContext();
    const [transaction, setTransaction] = useState<TransactionDTO[]>([]);
 
    const fetchTransactions = useCallback(async () => {
       if (state.token !== undefined) {
          const result = await getTransactions();
-         setTransaction(result!);
+         setTransaction(result);
       }
    }, [state.token]);
 
    useEffect(() => {
       fetchTransactions();
-   }, [fetchTransactions]);
+   }, [fetchTransactions, WhenTransactionIsCreateWithSuccess]);
 
    return (
       <Layout>
@@ -39,16 +44,16 @@ export const DashBoard = () => {
          <S.DashboardWrapper>
             <S.TransactionHeader>
                <h2>Transações</h2>
-               <S.AddButton>+</S.AddButton>
+               <Transaction />
             </S.TransactionHeader>
             <S.UlWrapper>
-               {transaction?.map((transaction) => (
+               {transaction?.map((transaction: any) => (
                   <Fragment key={`${transaction.id}`}>
                      <TransactionListItem
                         account={transaction.description}
                         amount={transaction.value}
                         category="Category"
-                        resolved={true}
+                        resolved={transaction.resolved}
                      />
                      <S.Divider />
                   </Fragment>

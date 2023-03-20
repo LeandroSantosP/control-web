@@ -22,6 +22,12 @@ const GlobalStyle = createGlobalStyle`
 ::-webkit-scrollbar-thumb:hover {
   background-color: #aaa; /* cor do "polegar" do scroll quando o mouse está sobre ele */
 }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 }
 
   body {

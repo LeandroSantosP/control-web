@@ -23,6 +23,8 @@ export const SingIn = () => {
 
    useEffect(() => {
       if (isLogged) {
+         console.log(isLogged);
+
          navigation('/');
       }
    }, [isLogged, navigation]);
@@ -39,7 +41,7 @@ export const SingIn = () => {
       const res = await login(data.email, data.password);
 
       if (res?.status === 200) {
-         navigation('/');
+         navigation('/home');
       }
 
       if (res?.response?.status === 400) {
@@ -63,7 +65,7 @@ export const SingIn = () => {
             <S.Form onSubmit={handleSubmit(onSubmit)}>
                <h1>Bem-Vindo!</h1>
 
-               <Label>Email</Label>
+               <Label margin="1rem 0">Email</Label>
                <Input
                   placeholder="Ex:.example@example.com"
                   fontSize="medium"
@@ -83,7 +85,7 @@ export const SingIn = () => {
                   render={({ message }) => <p>{message}</p>}
                />
 
-               <Label>Senha</Label>
+               <Label margin="1rem 0">Senha</Label>
                <Input
                   fontSize="medium"
                   placeholder="Digite sua senha"

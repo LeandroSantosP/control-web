@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
    return (
       <AuthContext.Provider
-         value={{ isLogged, logout, loading, login, singUp, error: error }}
+         value={{ isLogged, logout, loading, login, singUp, error }}
       >
          <StorageProvider persistenceAdepter={{ getItem, setItem }}>
             {children}

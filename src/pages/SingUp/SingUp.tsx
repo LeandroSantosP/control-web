@@ -62,7 +62,7 @@ export const SingUp = () => {
          <S.Box>
             <S.Form onSubmit={handleSubmit(onSubmit)}>
                <h1>Cadastre-se!</h1>
-               <Label>Nome</Label>
+               <Label margin="1rem 0">Nome</Label>
                <Input
                   placeholder="Digite seu nome"
                   fontSize="medium"
@@ -77,7 +77,7 @@ export const SingUp = () => {
                   name="name"
                   render={({ message }) => <p>{message}</p>}
                />
-               <Label>Email</Label>
+               <Label margin="1rem 0">Email</Label>
                <Input
                   fontSize="medium"
                   placeholder="Ex:.example@example.com"
@@ -100,7 +100,7 @@ export const SingUp = () => {
                   render={({ message }) => <p>{message}</p>}
                />
 
-               <Label>Senha</Label>
+               <Label margin="1rem 0">Senha</Label>
                <Input
                   fontSize="medium"
                   placeholder="Digite sua senha"

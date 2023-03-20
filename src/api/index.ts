@@ -30,24 +30,6 @@ export const SingUpAPI = async ({ name, email, password }: singUpProps) => {
    }
 };
 
-// export const AuthCredentials = () => {
-//    return {
-//       token: '',
-//       async get() {
-//          return Promise.resolve(this.token);
-//       },
-//       async set(token?: string) {
-//          console.log(token);
-
-//          if (token) {
-//             this.token = await token;
-//          }
-
-//          return true;
-//       },
-//    };
-// };
-
 const auth = {} as { token: string };
 export const AuthCredentials = (token: string) => {
    auth.token = token;
@@ -61,5 +43,26 @@ export const getTransactions = async () => {
       }
    } catch (err) {
       return Promise.reject(err);
+   }
+};
+
+export const CreateTransaction = async ({
+   value,
+   description,
+   dueDate,
+}: {
+   value: string;
+   description: string;
+   dueDate: string;
+}) => {
+   try {
+      const res = await api({ token: auth.token }).post('/transaction', {
+         value,
+         description,
+         dueDate,
+      });
+      return Promise.resolve(res.data);
+   } catch (error) {
+      return Promise.reject(error);
    }
 };

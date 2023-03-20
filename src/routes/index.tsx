@@ -9,6 +9,7 @@ import { DashBoard } from '../pages/DashBoard/DashBoard';
 import { SingIn } from '../pages/SingIn/SingIn';
 import { SingUp } from '../pages/SingUp/SingUp';
 import { useAuth } from '../shared/contexts/AuthContext';
+import { useFlashMessageContext } from '../shared/contexts/FlashMessageContext';
 
 const PrivateRoute = (Item: React.FC) => {
    const { isLogged } = useAuth();
@@ -17,14 +18,19 @@ const PrivateRoute = (Item: React.FC) => {
 };
 
 export function RoutesApp() {
+   const { FlashMessage } = useFlashMessageContext();
+
    return (
-      <Router>
-         <Routes>
-            <Route element={PrivateRoute(DashBoard)} path="/" />
-            <Route element={<SingIn />} path="/entrar" />
-            <Route element={<SingUp />} path="/cadastre" />
-            <Route path="*" element={<Navigate to="/" />} />
-         </Routes>
-      </Router>
+      <>
+         {FlashMessage}
+         <Router>
+            <Routes>
+               <Route element={PrivateRoute(DashBoard)} path="/" />
+               <Route element={<SingIn />} path="/entrar" />
+               <Route element={<SingUp />} path="/cadastre" />
+               <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+         </Router>
+      </>
    );
 }

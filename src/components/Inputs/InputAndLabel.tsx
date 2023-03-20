@@ -1,10 +1,12 @@
+import { Box } from '../Box/Box';
 import { Input } from './InputBase';
 import { Label } from './Label';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
    label: string;
-   setting: any;
+   setting?: any;
    fontSize?: 'small' | 'medium' | 'large';
+   marginTopAndBottom: string;
    LabelProps?: React.LabelHTMLAttributes<HTMLLabelElement>;
 }
 
@@ -17,8 +19,10 @@ export const InputAndLabel = ({
 }: InputProps) => {
    return (
       <>
-         <Label {...LabelProps}>{label}</Label>
-         <Input fontSize={fontSize} register={setting} {...props} />
+         <Box flexDirection="column" alignItems="flex-start">
+            <Label {...LabelProps}>{label}</Label>
+            <Input fontSize={fontSize} register={setting} {...props} />
+         </Box>
       </>
    );
 };

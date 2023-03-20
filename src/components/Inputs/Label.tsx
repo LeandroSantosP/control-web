@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 
-export const Label = styled.label`
-   margin: 1.2rem 0;
-   margin-left: 1rem;
-   font-size: ${(props) => props.theme.fontSize.small};
+interface LabelProps {
+   color?: string;
+   margin?: string;
+   fontSize?: 'medium' | 'small' | 'large';
+}
+
+export const Label = styled.label<LabelProps>`
+   margin: ${(props) => props.margin || '0.6rem 0'};
+   font-size: ${(props) => props.theme.fontSize[props.fontSize || 'medium']};
+   color: ${(props) => props.color || '#fff'};
 `;

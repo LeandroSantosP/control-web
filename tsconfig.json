@@ -1,32 +1,33 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "types": [
-      "node",
-      "vite/client"
-    ]
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "pages/auth/auth.js"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+   "compilerOptions": {
+      "target": "ESNext",
+      "useDefineForClassFields": true,
+      "allowJs": false,
+      "skipLibCheck": true,
+      "esModuleInterop": false,
+      "allowSyntheticDefaultImports": true,
+      "strict": true,
+      "forceConsistentCasingInFileNames": true,
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "resolveJsonModule": true,
+      "isolatedModules": false,
+      "noEmit": true,
+      "jsx": "react-jsx",
+      "types": [
+         "node",
+         "vite/client"
+      ]
+   },
+   "include": [
+      "**/*.ts",
+      "**/*.tsx",
+      "pages/auth/auth.js",
+      "src/components/Inputs/StylesInput.jsx"
+   ],
+   "references": [
+      {
+         "path": "./tsconfig.node.json"
+      }
+   ]
 }
