@@ -1,5 +1,5 @@
 import * as S from './DashBoard.Styled';
-import logo from '../../shared/assets/logo.svg';
+import logo from '../../../shared/assets/logo.svg';
 import { useAuth } from '../../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
