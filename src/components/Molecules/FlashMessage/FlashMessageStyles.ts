@@ -14,7 +14,8 @@ export const Wrapper = styled(Box)<WrapperProps>`
    position: absolute;
    right: 1rem;
    top: 2rem;
-   width: 200px;
+   width: 300px;
+   height: 80px;
    color: #fff;
    font-size: ${(props) => props.theme.fontSize.small};
    border-radius: 0.5rem;
@@ -23,13 +24,19 @@ export const Wrapper = styled(Box)<WrapperProps>`
       (type === 'error' && '#ff3366') ||
       (type === 'warning' && '#ffcc55') ||
       (type === 'default' && '#20213b')};
-   border: 10px solid #000;
-   height: 50px;
+
+   color: ${({ type }) =>
+      (type === 'success' && '#000') ||
+      (type === 'error' && '#000') ||
+      (type === 'warning' && '#000') ||
+      (type === 'default' && '#fff')};
+
+   border: 1px solid #000;
 `;
 
 export const ProgressBar = styled('div')<ProgressBarProps>`
    height: 4px;
-   background-color: #ff3366;
+   background-color: #fff;
    border-radius: 1rem;
    position: absolute;
    bottom: 0;

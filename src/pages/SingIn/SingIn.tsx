@@ -11,6 +11,7 @@ import { Label } from '../../components/Molecules/InputAndLabel/Label';
 import { useAuth } from '../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useFlashMessageContext } from '../../shared/contexts';
 
 export interface Inputs {
    email: string;
@@ -18,6 +19,7 @@ export interface Inputs {
 }
 
 export const SingIn = () => {
+   const { handleShowingFlashMessage } = useFlashMessageContext();
    const navigation = useNavigate();
    const { login, error, loading, isLogged } = useAuth();
 
@@ -42,6 +44,11 @@ export const SingIn = () => {
 
       if (res?.status === 200) {
          navigation('/home');
+         handleShowingFlashMessage({
+            message: 'Login efetuado com sucesso!',
+            timer: 2000,
+            type: 'success',
+         });
       }
 
       if (res?.response?.status === 400) {

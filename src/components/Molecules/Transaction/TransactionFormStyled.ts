@@ -57,6 +57,7 @@ export const Form = styled('form')`
    justify-content: center;
    background-color: #111;
    height: 100%;
+
    width: 100%;
    border-radius: 1rem;
    padding: 1rem;

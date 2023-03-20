@@ -39,7 +39,7 @@ export const DashBoard = () => {
 
    return (
       <Layout>
-         {/* <h1> + DashBoard</h1> */}
+         <h1> + DashBoard</h1>
          <S.DashboardWrapper>
             <S.TransactionHeader>
                <h2>Transações</h2>

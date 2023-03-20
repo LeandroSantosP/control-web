@@ -1,5 +1,37 @@
 import styled from 'styled-components';
 
+import { Command, ChartBar, SignOut } from '@phosphor-icons/react';
+
+export const Out = styled(SignOut)`
+   cursor: pointer;
+   transition: 0.3s ease-out;
+   color: ${(props) => props.theme.colors.Verdigris};
+
+   &:hover {
+      color: ${(props) => props.theme.colors.White};
+   }
+`;
+
+export const Graph = styled(ChartBar)`
+   cursor: pointer;
+   transition: 0.3s ease-out;
+   color: ${(props) => props.theme.colors.Verdigris};
+
+   &:hover {
+      color: ${(props) => props.theme.colors.White};
+   }
+`;
+
+export const Dash = styled(Command)`
+   cursor: pointer;
+   transition: 0.3s ease-out;
+   color: ${(props) => props.theme.colors.Verdigris};
+
+   &:hover {
+      color: ${(props) => props.theme.colors.White};
+   }
+`;
+
 export const Wrapper = styled('div')`
    display: flex;
    flex: 1;
@@ -35,6 +67,7 @@ export const WrapperOptions = styled('div')`
 
 export const Main = styled('main')`
    display: flex;
+   flex-direction: column;
    height: 100%;
    flex: 1;
    max-width: 900px;

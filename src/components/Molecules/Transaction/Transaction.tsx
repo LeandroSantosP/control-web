@@ -80,7 +80,7 @@ export const Transaction = () => {
                   <S.Form onSubmit={handleSubmit(onSubmit)}>
                      <Box
                         flexDirection="column"
-                        alignItems="flex-start"
+                        alignItems="center"
                         JustifyContent="flex-start"
                      >
                         <S.Title>Cadastro de Transação</S.Title>

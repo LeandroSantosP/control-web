@@ -1,6 +1,6 @@
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { RoutesApp } from './routes';
 import { TransactionProvider } from './shared/contexts';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { FlashMessageProvider } from './shared/contexts/FlashMessageContext';
 
 function App() {
