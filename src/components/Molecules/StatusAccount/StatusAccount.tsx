@@ -22,7 +22,7 @@ export const StatusAccount = ({
          <Divider width="90%" bg="rgba(160, 160, 160, 0.46)" height="1px" />
          <S.BalenseWrapper>
             <S.CurrentBalense>{description}</S.CurrentBalense>
-            <span>R$ {amount}</span>
+            <S.Amount isNegative={Number(amount) < 0}>{amount}</S.Amount>
          </S.BalenseWrapper>
       </S.StatusContainer>
    );

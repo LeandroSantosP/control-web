@@ -17,15 +17,22 @@ export const BalenseWrapper = styled('div')`
    display: flex;
    flex-direction: column;
    gap: 4px;
-   font-size: 1.5rem;
+   font-size: 1rem;
 `;
 export const CurrentBalense = styled('span')`
-   font-size: 0.7rem;
+   font-size: 0.6rem;
 `;
 
 export const WalletImage = styled('img')`
-   width: 90px;
+   width: 50px;
    font-size: 10rem;
    margin: 0;
    border-radius: 50%;
+`;
+
+interface AmountProps {
+   isNegative: boolean;
+}
+export const Amount = styled('span')<AmountProps>`
+   color: ${(props) => props.isNegative && 'red'};
 `;

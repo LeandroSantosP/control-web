@@ -1,13 +1,17 @@
 import { Box } from '../../atoms/Box/Box';
 import { Icon } from '../../atoms/Icons/Icon';
+import * as Select from '@radix-ui/react-select';
 import * as S from './DashBoardHeaderStyles';
+import SelectDemo from '../Select/Select';
 
 export const DashBoardHeader = ({
    title,
    icon,
+   hasFilter = true,
 }: {
    title: string;
    icon?: any;
+   hasFilter?: boolean;
 }) => (
    <Box
       p="1rem"
@@ -17,16 +21,21 @@ export const DashBoardHeader = ({
       borderRadius="1rem"
       width="100%"
       alignItems="center"
+      gap="2rem"
+      position="relative"
    >
       <S.Title>
          {icon && <Icon currentIcon={icon} />}
          {title}
       </S.Title>
+      {hasFilter && (
+         <div style={{ marginRight: '5rem' }}>
+            <SelectDemo />
+         </div>
+      )}
 
-      <Box gap="2rem">
-         <S.Recurrence>
-            <option value="test">test</option>
-         </S.Recurrence>
-      </Box>
+      <S.UserImage>
+         <img src="../../../shared/assets/balense.png" />
+      </S.UserImage>
    </Box>
 );

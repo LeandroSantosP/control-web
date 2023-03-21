@@ -10,7 +10,6 @@ interface DividerProps {
 
 export const Divider = styled('div')<DividerProps>`
    ${width}
-   ${color}
    ${height}
    border-radius: 50%;
    &:not(:last-child) {

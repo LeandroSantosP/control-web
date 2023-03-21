@@ -8,6 +8,7 @@ import {
    border,
    display,
    margin,
+   position,
 } from 'styled-system';
 
 interface BoxProps {
@@ -30,10 +31,16 @@ interface BoxProps {
    flex?: string;
    display?: string;
    margin?: string;
+   position?: string;
+   right?: string;
+   left?: string;
+   top?: string;
+   bottom?: string;
 }
 
 export const Box = styled.div<BoxProps>`
    display: flex;
+   ${position}
    ${display}
    ${border}
    ${borderRadius}

@@ -5,6 +5,7 @@ interface TransactionListItemProps {
    category: string;
    amount: number;
    resolved: boolean;
+   isNegative: boolean;
 }
 
 const FormatCurense = (amount: number) =>
@@ -14,7 +15,7 @@ const FormatCurense = (amount: number) =>
    }).format(amount);
 
 export const TransactionListItem = (params: TransactionListItemProps) => {
-   const { account, amount, category, resolved } = params;
+   const { account, amount, category, resolved, isNegative } = params;
 
    return (
       <>
@@ -23,7 +24,7 @@ export const TransactionListItem = (params: TransactionListItemProps) => {
                <h3>{account}</h3> <span> {category}</span>
             </S.TransactionContent>
             <S.TransactionContent>
-               <S.Amount negative={amount < 0}>
+               <S.Amount negative={isNegative}>
                   {FormatCurense(amount)}
                </S.Amount>
                <span>{resolved ? 'Pago' : 'Não Paga'}</span>
