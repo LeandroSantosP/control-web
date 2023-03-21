@@ -10,6 +10,7 @@ declare module 'styled-components' {
          Vanila: string;
          Verdigris: string;
          White: string;
+         TimberWhite: string;
       };
       fontSize: {
          extraSmall: string;

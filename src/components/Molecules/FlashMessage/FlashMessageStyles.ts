@@ -10,6 +10,8 @@ interface ProgressBarProps {
 }
 
 export const Wrapper = styled(Box)<WrapperProps>`
+   width: 50px;
+   height: 50px;
    z-index: 9999;
    position: absolute;
    right: 1rem;

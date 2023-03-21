@@ -1,20 +1,42 @@
 import styled from 'styled-components';
+import { flex } from 'styled-system';
 
-export const DashboardWrapper = styled('section')`
+interface DashboardWrapperProps {
+   flex?: number;
+   flexDirection?: string;
+   gap?: string;
+   overflowY?: string;
+   background?: string;
+   width?: string;
+}
+
+export const DashboardWrapper = styled('section')<DashboardWrapperProps>`
    display: flex;
-   flex-direction: column;
-   flex: 1;
-   overflow-y: scroll;
+   flex-direction: ${(props) => props.flexDirection || 'column'};
+   overflow-y: ${(props) => props.overflowY || 'scroll'};
+   gap: ${(props) => props.gap};
+
+   ${flex}
 
    ::-webkit-scrollbar {
       background-color: #000; /* cor de fundo do scroll */
       border-radius: 0 1rem 1rem 0;
    }
 
-   max-height: 500px;
+   height: 100%;
    padding: 1rem;
-   border-radius: 1rem 0 0 1rem;
-   background-color: #000;
+   border-radius: 0.8rem;
+   background-color: ${(props) => props.theme.colors.RaisinBlack};
+`;
+
+export const StatusWrapper = styled('div')<DashboardWrapperProps>`
+   display: flex;
+   ${flex}
+   flex-direction: ${(props) => props.flexDirection || 'column'};
+   height: 100%;
+   gap: 1rem;
+   background-color: ${(props) => props.background};
+   width: ${(props) => props.width};
 `;
 
 export const TransactionHeader = styled('section')`
@@ -46,14 +68,4 @@ export const UlWrapper = styled('ul')`
    display: flex;
    flex-direction: column;
    flex: 1;
-`;
-
-export const Divider = styled('div')`
-   width: 100%;
-   height: 1px;
-
-   &:not(:last-child) {
-      background-color: rgba(255, 255, 255, 0.36);
-      border-radius: 1rem;
-   }
 `;

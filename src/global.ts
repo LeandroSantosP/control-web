@@ -38,18 +38,13 @@ input[type=number]::-webkit-outer-spin-button {
     flex-direction: column;
     font-size: 62.5%; // 62.5% = 10px
     box-sizing: border-box;
-    color: ${(props) => props.theme.colors.White};
+    color: ${(props) => props.theme.colors.TimberWhite};
     background-color: ${({ theme }) => theme.colors.Dark};
     font-family:"Roboto", Helvetica, Sans-Serif;
   }
   html, body > div {
   height: 100%;
-
-
-
-
 }
-
 
 `;
 

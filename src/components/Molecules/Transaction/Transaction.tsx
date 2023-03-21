@@ -81,7 +81,8 @@ export const Transaction = () => {
                      <Box
                         flexDirection="column"
                         alignItems="center"
-                        JustifyContent="flex-start"
+                        width="100%"
+                        height="100%"
                      >
                         <S.Title>Cadastro de Transação</S.Title>
 
@@ -110,7 +111,7 @@ export const Transaction = () => {
                         <Input
                            background_color_custom="#0000004b"
                            fontSize="medium"
-                           margin_bottom="1rem"
+                           margin_bottom="4rem"
                            register={{
                               ...register('description', {
                                  required: 'Campo Obrigatório',

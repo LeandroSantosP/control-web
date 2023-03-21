@@ -57,9 +57,9 @@ export const Form = styled('form')`
    justify-content: center;
    background-color: #111;
    height: 100%;
-
    width: 100%;
    border-radius: 1rem;
+   align-items: center;
    padding: 1rem;
    font-size: 1rem;
    border: 5px solid #111;
@@ -70,14 +70,14 @@ export const Form = styled('form')`
 `;
 
 export const InputTransactionValue = styled('input')`
+   display: flex;
+   margin: 0 auto;
+   margin-bottom: 3rem;
    background-color: transparent;
    width: 300px;
    border: none;
    text-align: center;
-
    font-size: 2rem;
-   margin: 0 auto;
-   margin-bottom: 3rem;
    color: ${(props) => props.theme.colors.Verdigris};
    border-bottom: 1px solid #fff;
    outline: none;

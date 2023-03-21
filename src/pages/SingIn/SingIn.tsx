@@ -1,6 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { Box } from '../../components/atoms/Box/Box';
 
 import * as S from './SingInStyles';
 
@@ -59,7 +58,7 @@ export const SingIn = () => {
 
    return (
       <S.Wrapper>
-         <Box
+         <S.Box
             style={{
                backgroundImage: `url(${dollarBg})`,
                backgroundPosition: 'center center',
@@ -68,7 +67,7 @@ export const SingIn = () => {
             }}
          />
 
-         <Box>
+         <S.Box>
             <S.Form onSubmit={handleSubmit(onSubmit)}>
                <h1>Bem-Vindo!</h1>
 
@@ -111,16 +110,16 @@ export const SingIn = () => {
 
                <p>{error?.message}</p>
 
-               <Box JustifyContent="space-between">
+               <S.Box JustifyContent="space-between">
                   <Button fontSize="small" type="submit" ISdisabled={loading}>
                      {loading ? 'Carregando...' : 'Logar!'}
                   </Button>
                   <S.NotHaveAccount onClick={() => navigation('/cadastre')}>
                      Ainda não tem conta?
                   </S.NotHaveAccount>
-               </Box>
+               </S.Box>
             </S.Form>
-         </Box>
+         </S.Box>
       </S.Wrapper>
    );
 };

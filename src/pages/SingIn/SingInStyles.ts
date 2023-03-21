@@ -7,6 +7,19 @@ export const Wrapper = styled.main`
    height: 100%;
 `;
 
+interface BoxProps {
+   JustifyContent?: string;
+}
+
+export const Box = styled.div<BoxProps>`
+   width: 100%;
+   height: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: ${(props) => props.JustifyContent || 'center'};
+   flex: 1;
+`;
+
 export const NotHaveAccount = styled.p`
    text-decoration: underline;
    font-size: ${(props) => props.theme.fontSize.small};

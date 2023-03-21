@@ -44,10 +44,11 @@ export const Menu = styled('aside')`
    display: flex;
    flex-direction: column;
    align-items: center;
+   width: 70px;
 `;
 
 export const Logo = styled('img')`
-   width: 90px;
+   width: 110%;
 `;
 
 export const MenuContent = styled('div')`
@@ -70,7 +71,7 @@ export const Main = styled('main')`
    flex-direction: column;
    height: 100%;
    flex: 1;
-   max-width: 900px;
+   max-width: 1000px;
    margin: 0 auto;
    padding: 1rem;
 `;

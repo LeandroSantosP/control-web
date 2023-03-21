@@ -1,9 +1,10 @@
 const BaseColors = {
-   RaisinBlack: '#231F20',
+   RaisinBlack: '#0a0a0a',
    Vanila: '#F3DFA2',
    Linen: '#EFE6DD',
    White: '#fff',
    Dark: '#111',
+   TimberWhite: '#D6D6D6',
 };
 
 const BrandColor = {
