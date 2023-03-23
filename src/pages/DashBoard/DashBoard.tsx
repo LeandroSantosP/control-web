@@ -8,7 +8,7 @@ import { Layout } from '../../components/providers/Layout/';
 import { useStorage } from '../../shared/modules/Storage';
 import { useTransactionContext } from '../../shared/contexts';
 import { Box } from '../../components/atoms/Box/Box';
-import { getTransactions } from '../../api';
+
 import Wallet from '../../shared/assets/wallet.svg';
 import GraphUp from '../../shared/assets/graphUp.svg';
 import GraphDown from '../../shared/assets/graphDown.svg';
@@ -19,7 +19,7 @@ import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { toMoney } from 'vanilla-masker';
 
-interface TransactionDTO {
+interface Transaction {
    id: string;
    description: string;
    due_date: string | null;
@@ -35,74 +35,60 @@ interface TransactionDTO {
 
 export const DashBoard = () => {
    const { state } = useStorage();
-   const { open: WhenTransactionIsCreateWithSuccess } = useTransactionContext();
-   const [transaction, setTransaction] = useState<TransactionDTO[]>([]);
+   const {
+      open: WhenTransactionIsCreateWithSuccess,
+      GetTransaction,
+      transaction,
+      balenseData,
+   } = useTransactionContext();
+
+   const [accountInfosList2, setAccountInfosList2] = useState<any[]>([]);
 
    const fetchTransactions = useCallback(async () => {
       if (state.token !== undefined) {
-         const result = await getTransactions();
-
-         setTransaction(result);
+         await GetTransaction({});
       }
-   }, [state.token]);
+   }, [GetTransaction, state.token]);
+
+   useEffect(() => {
+      console.log(balenseData?.data?.balense);
+
+      setAccountInfosList2([
+         {
+            description: 'Saldo Atual',
+            amount: balenseData?.data?.balense || '0',
+            logo: Wallet,
+            alt: 'Wallet',
+         },
+         {
+            description: 'Receita',
+            amount: transaction?.balense.revenue || '0',
+            logo: GraphUp,
+            alt: 'Wallet',
+         },
+         {
+            description: 'Despesas',
+            amount: transaction?.balense.expense || '0',
+            logo: GraphDown,
+            alt: 'Despesas',
+         },
+         {
+            description: 'Balanco',
+            amount: transaction?.balense.total || '0',
+            logo: Balense,
+            alt: 'Balense',
+         },
+      ]);
+   }, [
+      balenseData?.data?.balense,
+      transaction?.balense.expense,
+      transaction?.balense.revenue,
+      transaction?.balense.total,
+   ]);
 
    useEffect(() => {
       fetchTransactions();
    }, [fetchTransactions, WhenTransactionIsCreateWithSuccess]);
-
-   const accountInfosList = [
-      {
-         description: 'Saldo Atual',
-         amount: '100.30',
-         logo: Wallet,
-         alt: 'Wallet',
-      },
-      {
-         description: 'Receita',
-         amount: '1000.90',
-         logo: GraphUp,
-         alt: 'Wallet',
-      },
-      {
-         description: 'Despesas',
-         amount: '100.11',
-         logo: GraphDown,
-         alt: 'Despesas',
-      },
-      {
-         description: 'Balanco',
-         amount: '0',
-         logo: Balense,
-         alt: 'Balense',
-      },
-   ];
-
-   let balancoAmount = accountInfosList
-      .find((item) => item.description === 'Balanco')
-      ?.amount.replace(',', '.');
-
-   let amountReceita = 0;
-   let amountDespesas = 0;
-   accountInfosList.forEach((item) => {
-      if (item.description == 'Receita' || item.description == 'Despesas') {
-         if (item.description === 'Receita') {
-            amountReceita = parseFloat(item.amount.replace(',', '.'));
-         } else {
-            amountDespesas = parseFloat(item.amount.replace(',', '.'));
-         }
-      }
-   });
-
-   const finalResult = amountReceita - amountDespesas;
-
-   balancoAmount = finalResult.toString();
-   console.log(balancoAmount);
-
-   accountInfosList.forEach((item) => {
-      if (item.description == 'Balanco') {
-         item.amount = balancoAmount || '0';
-      }
-   });
 
    return (
       <Layout>
@@ -126,7 +112,7 @@ export const DashBoard = () => {
                gap="1rem"
             >
                <S.StatusWrapper flex={1 / 4}>
-                  {accountInfosList.map((accountInfos) => {
+                  {accountInfosList2?.map((accountInfos) => {
                      return (
                         <StatusAccount
                            key={accountInfos.logo}
@@ -149,7 +135,7 @@ export const DashBoard = () => {
                   <Transaction />
                </S.TransactionHeader>
                <S.UlWrapper>
-                  {transaction?.map((transaction) => (
+                  {transaction?.transactions?.map((transaction) => (
                      <Fragment key={`${transaction.id}`}>
                         <TransactionListItem
                            account={transaction.description}

@@ -28,5 +28,8 @@ interface AmountProps {
 }
 
 export const Amount = styled('div')<AmountProps>`
-   color: ${(props) => (props.negative ? 'red' : 'green')};
+   color: ${(props) =>
+      props.negative
+         ? props.theme.colors.PersianRed
+         : props.theme.colors.Verdigris};
 `;

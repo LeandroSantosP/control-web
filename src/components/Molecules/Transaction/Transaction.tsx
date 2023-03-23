@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useTransactionContext } from '../../../shared/contexts';
 
 import * as S from './TransactionFormStyled';
+import { SelectCustom } from '../Select/Select';
 
 interface Inputs {
    description: string;
@@ -36,6 +37,12 @@ export const Transaction = () => {
       const inputDate = new Date(date);
       return inputDate > currentDate;
    }
+   const [transactionType, setTransactionType] = useState<string>('Receita');
+
+   const monthlyList = [
+      { value: 'Despesa', Name: 'Despesa' },
+      { value: 'Receita', Name: 'Receita' },
+   ];
 
    const handleChange = (event: any) => {
       const newValue = toMoney(event.target.value, {
@@ -55,7 +62,10 @@ export const Transaction = () => {
             .toString()
             .trim();
 
-         data.value = convertedForDecimal;
+         data.value =
+            transactionType === 'Receita'
+               ? convertedForDecimal
+               : '-' + convertedForDecimal;
 
          CreateMutation.mutate(data);
 
@@ -78,6 +88,13 @@ export const Transaction = () => {
                      <X />
                   </S.DialogClose>
                   <S.Form onSubmit={handleSubmit(onSubmit)}>
+                     <S.SelectWrapper>
+                        <SelectCustom
+                           setCurrentValue={setTransactionType}
+                           currentValue={transactionType}
+                           fieldList={monthlyList}
+                        />
+                     </S.SelectWrapper>
                      <Box
                         flexDirection="column"
                         alignItems="center"
@@ -87,6 +104,7 @@ export const Transaction = () => {
                         <S.Title>Cadastro de Transação</S.Title>
 
                         <S.InputTransactionValue
+                           color={transactionType}
                            value={value || 'R$ 0,00'}
                            {...register('value', {
                               required: 'Campo Obrigatório',

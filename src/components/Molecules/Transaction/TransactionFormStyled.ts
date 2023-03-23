@@ -69,7 +69,11 @@ export const Form = styled('form')`
    }
 `;
 
-export const InputTransactionValue = styled('input')`
+interface InputTransactionValuePros {
+   color: string;
+}
+
+export const InputTransactionValue = styled('input')<InputTransactionValuePros>`
    display: flex;
    margin: 0 auto;
    margin-bottom: 3rem;
@@ -78,9 +82,13 @@ export const InputTransactionValue = styled('input')`
    border: none;
    text-align: center;
    font-size: 2rem;
-   color: ${(props) => props.theme.colors.Verdigris};
+   color: ${(props) =>
+      props.color === 'Receita'
+         ? props.theme.colors.Verdigris
+         : props.theme.colors.PersianRed};
    border-bottom: 1px solid #fff;
    outline: none;
+   transition: 0.4s ease;
 `;
 
 export const Title = styled('h2')`
@@ -93,4 +101,12 @@ export const ErrorMessage = styled('span')`
    margin-bottom: 1rem;
    font-size: ${(props) => props.theme.fontSize.small};
    color: ${(props) => props.theme.colors.PersianRed};
+`;
+export const SelectWrapper = styled('div')`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   position: absolute;
+   top: 0.7rem;
+   right: 3rem;
 `;

@@ -5,8 +5,20 @@ import * as S from './SelectStyles';
 
 import './styles.css';
 
-const SelectDemo = () => (
-   <Select.Root onValueChange={(e) => console.log(e)}>
+interface SelectCustom2 {
+   setCurrentValue: React.Dispatch<React.SetStateAction<string>> | any;
+   currentValue: string | undefined;
+   fieldList: Array<{
+      value: string;
+      Name: string;
+   }>;
+}
+
+export const SelectCustom = (props: SelectCustom2) => (
+   <Select.Root
+      onValueChange={props?.setCurrentValue}
+      value={props.currentValue}
+   >
       <S.SelectTrigger className="SelectTrigger" aria-label="Food">
          <Select.Value placeholder="Selecione um mes" />
          <S.SelectIcon className="SelectIcon">
@@ -15,29 +27,22 @@ const SelectDemo = () => (
       </S.SelectTrigger>
       <Select.Portal>
          <S.SelectContent className="SelectContent">
-            {/* <Select.ScrollUpButton className="SelectScrollButton">
+            <Select.ScrollUpButton className="SelectScrollButton">
                <p>Subir</p>
-            </Select.ScrollUpButton> */}
+            </Select.ScrollUpButton>
             <S.SelectView className="SelectViewport">
                <Select.Group>
-                  <S.SelectItem value="01">
-                     <Select.ItemText>Janeiro</Select.ItemText>
-                     <S.SelectItemIndicator>
-                        <Check />
-                     </S.SelectItemIndicator>
-                  </S.SelectItem>
-
-                  <S.SelectItem value="02">
-                     <Select.ItemText>Marco</Select.ItemText>
-                     <S.SelectItemIndicator>
-                        <Check />
-                     </S.SelectItemIndicator>
-                  </S.SelectItem>
+                  {props.fieldList.map((month) => (
+                     <S.SelectItem value={month.value} key={month.value}>
+                        <Select.ItemText>{month.Name}</Select.ItemText>
+                        <S.SelectItemIndicator>
+                           <Check />
+                        </S.SelectItemIndicator>
+                     </S.SelectItem>
+                  ))}
                </Select.Group>
             </S.SelectView>
          </S.SelectContent>
       </Select.Portal>
    </Select.Root>
 );
-
-export default SelectDemo;

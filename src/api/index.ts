@@ -6,7 +6,7 @@ interface LoginProps {
 }
 
 export const loginAPI = async ({ email, password }: LoginProps) =>
-   await api().get('/auth', {
+   await api({}).get('/auth', {
       headers: {
          Authorization: 'Basic ' + btoa(email + ':' + password),
       },
@@ -18,7 +18,7 @@ interface singUpProps extends LoginProps {
 
 export const SingUpAPI = async ({ name, email, password }: singUpProps) => {
    try {
-      const res = await api().post('/user/create', {
+      const res = await api({}).post('/user/create', {
          name,
          email,
          password,
@@ -35,10 +35,13 @@ export const AuthCredentials = (token: string) => {
    auth.token = token;
 };
 
-export const getTransactions = async () => {
+export const getTransactions = async ({ month }: { month?: string }) => {
    try {
-      if (auth?.token) {
-         const res = await api({ token: auth.token }).get('/transaction');
+      if (auth.token) {
+         const res = await api({ token: auth.token, params: { month } }).get(
+            `/transaction`
+         );
+
          return Promise.resolve(res.data);
       }
    } catch (err) {
@@ -64,5 +67,19 @@ export const CreateTransaction = async ({
       return Promise.resolve(res.data);
    } catch (error) {
       return Promise.reject(error);
+   }
+};
+
+export const GetBalense = async () => {
+   try {
+      if (auth.token) {
+         const res = await api({ token: auth.token }).get(
+            `/transaction/balense`
+         );
+
+         return Promise.resolve(res.data);
+      }
+   } catch (err) {
+      return Promise.reject(err);
    }
 };

@@ -24,8 +24,6 @@ export const SingIn = () => {
 
    useEffect(() => {
       if (isLogged) {
-         console.log(isLogged);
-
          navigation('/');
       }
    }, [isLogged, navigation]);
