@@ -34,5 +34,5 @@ interface AmountProps {
    isNegative: boolean;
 }
 export const Amount = styled('span')<AmountProps>`
-   color: ${(props) => props.isNegative && 'red'};
+   color: ${(props) => props.isNegative && props.theme.colors.PersianRed};
 `;

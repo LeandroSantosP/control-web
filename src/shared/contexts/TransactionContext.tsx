@@ -5,13 +5,8 @@ import {
    useContext,
    useState,
 } from 'react';
-import { CreateTransaction, GetBalense, getTransactions } from '../../api';
-import {
-   useMutation,
-   UseMutationResult,
-   useQuery,
-   UseQueryResult,
-} from 'react-query';
+import { CreateTransaction, getTransactions } from '../../api';
+import { useMutation, UseMutationResult, UseQueryResult } from 'react-query';
 import { useFlashMessageContext } from './FlashMessageContext';
 
 interface FilterTransactionByMonthProps {
@@ -47,7 +42,8 @@ interface TransactionProps {
    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
    GetTransaction: ({ month }: FilterTransactionByMonthProps) => Promise<any>;
    transaction: TransactionDTO | undefined;
-   balenseData: UseQueryResult<any, unknown>;
+
+   getTotalBalense: () => Promise<any>;
 }
 
 const TransactionContext = createContext({} as TransactionProps);
@@ -65,20 +61,15 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
          return await CreateTransaction(data);
       },
 
-      onSuccess: (data) => {
+      onSuccess: () => {
          setOpen(false);
          handleShowingFlashMessage({
             message: 'Transação Criada com sucesso!',
             timer: 2000,
             type: 'success',
          });
-         return console.log(data);
+         return;
       },
-   });
-
-   const data = useQuery({
-      queryKey: ['balance'],
-      queryFn: async () => await GetBalense(),
    });
 
    const GetTransaction = useCallback(
@@ -100,15 +91,20 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       },
       []
    );
+
+   const getTotalBalense = useCallback(async () => {
+      const result = await getTransactions({});
+      return result;
+   }, []);
    return (
       <TransactionContext.Provider
          value={{
             CreateMutation,
+            getTotalBalense,
             open,
             setOpen,
             GetTransaction,
             transaction,
-            balenseData: data,
          }}
       >
          {children}

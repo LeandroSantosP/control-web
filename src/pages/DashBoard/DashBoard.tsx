@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
+import Decimal from 'decimal.js';
 
 import { TransactionListItem } from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
@@ -18,6 +19,7 @@ import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { toMoney } from 'vanilla-masker';
+import { loadConfigFromFile } from 'vite';
 
 interface Transaction {
    id: string;
@@ -39,7 +41,7 @@ export const DashBoard = () => {
       open: WhenTransactionIsCreateWithSuccess,
       GetTransaction,
       transaction,
-      balenseData,
+      getTotalBalense,
    } = useTransactionContext();
 
    const [accountInfosList2, setAccountInfosList2] = useState<any[]>([]);
@@ -51,39 +53,39 @@ export const DashBoard = () => {
    }, [GetTransaction, state.token]);
 
    useEffect(() => {
-      console.log(balenseData?.data?.balense);
-
-      setAccountInfosList2([
-         {
-            description: 'Saldo Atual',
-            amount: balenseData?.data?.balense || '0',
-            logo: Wallet,
-            alt: 'Wallet',
-         },
-         {
-            description: 'Receita',
-            amount: transaction?.balense.revenue || '0',
-            logo: GraphUp,
-            alt: 'Wallet',
-         },
-         {
-            description: 'Despesas',
-            amount: transaction?.balense.expense || '0',
-            logo: GraphDown,
-            alt: 'Despesas',
-         },
-         {
-            description: 'Balanco',
-            amount: transaction?.balense.total || '0',
-            logo: Balense,
-            alt: 'Balense',
-         },
-      ]);
+      getTotalBalense().then((response) => {
+         setAccountInfosList2([
+            {
+               description: 'Saldo Atual',
+               amount: response?.balense?.total || '0',
+               logo: Wallet,
+               alt: 'Wallet',
+            },
+            {
+               description: 'Receita',
+               amount: transaction?.balense?.revenue || '0',
+               logo: GraphUp,
+               alt: 'Wallet',
+            },
+            {
+               description: 'Despesas',
+               amount: transaction?.balense?.expense || '0',
+               logo: GraphDown,
+               alt: 'Despesas',
+            },
+            {
+               description: 'Balanco',
+               amount: transaction?.balense?.total || '0',
+               logo: Balense,
+               alt: 'Balense',
+            },
+         ]);
+      });
    }, [
-      balenseData?.data?.balense,
-      transaction?.balense.expense,
-      transaction?.balense.revenue,
-      transaction?.balense.total,
+      getTotalBalense,
+      transaction?.balense?.expense,
+      transaction?.balense?.revenue,
+      transaction?.balense?.total,
    ]);
 
    useEffect(() => {
@@ -118,7 +120,7 @@ export const DashBoard = () => {
                            key={accountInfos.logo}
                            Logo={accountInfos.logo}
                            alt={accountInfos.alt}
-                           amount={toMoney(accountInfos.amount, { unit: 'R$' })}
+                           amount={accountInfos.amount}
                            description={accountInfos.description}
                         />
                      );
@@ -131,7 +133,6 @@ export const DashBoard = () => {
 
             <S.DashboardWrapper flex={1 / 3}>
                <S.TransactionHeader>
-                  <h2>Transações</h2>
                   <Transaction />
                </S.TransactionHeader>
                <S.UlWrapper>

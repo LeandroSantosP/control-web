@@ -15,6 +15,7 @@ export const Wrapper = styled(Box)<WrapperProps>`
    z-index: 9999;
    position: absolute;
    right: 1rem;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
    top: 2rem;
    width: 300px;
    height: 80px;
@@ -34,6 +35,22 @@ export const Wrapper = styled(Box)<WrapperProps>`
       (type === 'default' && '#fff')};
 
    border: 1px solid #000;
+   animation: popover 0.6s ease-in-out;
+   animation-fill-mode: forwards;
+
+   @keyframes popover {
+      0% {
+         opacity: 0;
+         transform: scale(0);
+      }
+      50% {
+         opacity: 1;
+         transform: scale(1.05);
+      }
+      100% {
+         transform: scale(1);
+      }
+   }
 `;
 
 export const ProgressBar = styled('div')<ProgressBarProps>`
@@ -44,9 +61,10 @@ export const ProgressBar = styled('div')<ProgressBarProps>`
    bottom: 0;
    left: 0;
    right: 0;
-   width: 0%;
-   transition: width ${(props) => props.time / 1000}s linear;
-   &.progress {
-      width: 100%;
-   }
+   width: ${(props) => {
+      console.log(props.time);
+
+      return props.time;
+   }}%;
+   transition: width linear;
 `;

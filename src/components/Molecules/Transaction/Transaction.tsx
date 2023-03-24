@@ -21,12 +21,17 @@ interface Inputs {
 }
 
 export const Transaction = () => {
-   const { CreateMutation, open, setOpen } = useTransactionContext();
+   const {
+      CreateMutation: { mutate, isLoading },
+      open,
+      setOpen,
+   } = useTransactionContext();
    const [value, setValue] = useState('');
 
    const {
       register,
       handleSubmit,
+      reset,
       formState: { errors },
    } = useForm<Inputs>({
       mode: 'all',
@@ -67,16 +72,21 @@ export const Transaction = () => {
                ? convertedForDecimal
                : '-' + convertedForDecimal;
 
-         CreateMutation.mutate(data);
-
+         mutate(data);
+         reset();
+         setValue('');
          return;
       } catch (err) {
          return Promise.reject(err);
       }
    };
 
+   if (isLoading) {
+      return <h1>Carregando</h1>;
+   }
    return (
       <>
+         <S.TitleTransaction>Transações</S.TitleTransaction>
          <Dialog.Root open={open} onOpenChange={setOpen}>
             <S.DialogTrigger>
                <PlusCircle />
@@ -180,8 +190,8 @@ export const Transaction = () => {
                      <Button
                         fontSize="medium"
                         type="submit"
-                        bg="#ccc"
-                        ISdisabled={false}
+                        bg="transparent"
+                        ISdisabled={isLoading}
                      >
                         Salvar
                      </Button>

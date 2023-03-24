@@ -97,6 +97,11 @@ export const Title = styled('h2')`
    margin: 2rem 0;
 `;
 
+export const TitleTransaction = styled('h2')`
+   font-size: ${(props) => props.theme.fontSize.medium};
+   color: #fff;
+`;
+
 export const ErrorMessage = styled('span')`
    margin-bottom: 1rem;
    font-size: ${(props) => props.theme.fontSize.small};

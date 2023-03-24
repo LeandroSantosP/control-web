@@ -12,6 +12,7 @@ interface SelectCustom2 {
       value: string;
       Name: string;
    }>;
+   haveDefaultValue?: boolean;
 }
 
 export const SelectCustom = (props: SelectCustom2) => (
@@ -32,6 +33,14 @@ export const SelectCustom = (props: SelectCustom2) => (
             </Select.ScrollUpButton>
             <S.SelectView className="SelectViewport">
                <Select.Group>
+                  {props.haveDefaultValue && (
+                     <S.SelectItem value={'all'} key={'2ss'}>
+                        <Select.ItemText>Todas as transações</Select.ItemText>
+                        <S.SelectItemIndicator>
+                           <Check />
+                        </S.SelectItemIndicator>
+                     </S.SelectItem>
+                  )}
                   {props.fieldList.map((month) => (
                      <S.SelectItem value={month.value} key={month.value}>
                         <Select.ItemText>{month.Name}</Select.ItemText>

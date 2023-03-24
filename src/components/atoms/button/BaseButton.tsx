@@ -17,6 +17,7 @@ function Button({
    return (
       <S.ButtonStyled
          ISdisabled={ISdisabled}
+         disabled={ISdisabled}
          fontSize={fontSize}
          bg={bg}
          {...props}

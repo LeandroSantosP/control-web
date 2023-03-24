@@ -41,13 +41,11 @@ export const FlashMessageProvider = ({
       setMessageContent(message);
       setShowFlashMessage(true);
       setTimer(timer);
-
       setTimeout(() => {
          setShowFlashMessage(false);
       }, timer);
       return;
    };
-
    return (
       <FlashMessageContext.Provider
          value={{

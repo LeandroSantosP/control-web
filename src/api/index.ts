@@ -69,17 +69,3 @@ export const CreateTransaction = async ({
       return Promise.reject(error);
    }
 };
-
-export const GetBalense = async () => {
-   try {
-      if (auth.token) {
-         const res = await api({ token: auth.token }).get(
-            `/transaction/balense`
-         );
-
-         return Promise.resolve(res.data);
-      }
-   } catch (err) {
-      return Promise.reject(err);
-   }
-};

@@ -13,10 +13,9 @@ const ButtonStyled = styled.button<ButtonProps>`
    max-width: 140px;
    padding: 12px 18px;
    ${color}
-   cursor: pointer;
+   cursor: ${(props) => (props.ISdisabled ? 'normal' : 'pointer')};
    border-radius: 200px;
    opacity: ${(props) => props.ISdisabled && 0.5};
-
    margin: 2rem 0;
 `;
 

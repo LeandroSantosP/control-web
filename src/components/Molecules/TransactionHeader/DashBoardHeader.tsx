@@ -3,6 +3,7 @@ import { Icon } from '../../atoms/Icons/Icon';
 import * as S from './DashBoardHeaderStyles';
 import { SelectCustom } from '../Select/Select';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
 
@@ -16,7 +17,8 @@ export const DashBoardHeader = ({
    hasFilter?: boolean;
 }) => {
    const { GetTransaction } = useTransactionContext();
-   const [month, setMonth] = useState();
+   const [searchParams, setSearchParams] = useSearchParams({ month: 'all' });
+   const [month, setMonth] = useState(searchParams.get('month'));
 
    const monthlyList = [
       { value: '1', Name: 'Janeiro' },
@@ -34,8 +36,20 @@ export const DashBoardHeader = ({
    ];
 
    useEffect(() => {
-      GetTransaction({ month });
-   }, [GetTransaction, month]);
+      if (month == 'all') {
+         GetTransaction({});
+         setSearchParams({});
+         return;
+      }
+
+      if (month) {
+         setSearchParams({ month });
+         setTimeout(() => {
+            GetTransaction({ month });
+         }, 1);
+         return;
+      }
+   }, [GetTransaction, month, setSearchParams]);
 
    return (
       <Box
@@ -56,8 +70,9 @@ export const DashBoardHeader = ({
          {hasFilter && (
             <div style={{ marginRight: '5rem' }}>
                <SelectCustom
+                  haveDefaultValue={true}
                   setCurrentValue={setMonth}
-                  currentValue={month}
+                  currentValue={month || 'Todas as transações'}
                   fieldList={monthlyList}
                />
             </div>
