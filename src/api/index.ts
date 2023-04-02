@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { api } from '../shared/axios';
 
 interface LoginProps {
@@ -38,14 +39,38 @@ export const AuthCredentials = (token: string) => {
 export const getTransactions = async ({ month }: { month?: string }) => {
    try {
       if (auth.token) {
-         const res = await api({ token: auth.token, params: { month } }).get(
-            `/transaction`
-         );
+         const response = await api({
+            token: auth.token,
+            params: { month },
+         }).get(`/transaction`);
 
-         return Promise.resolve(res.data);
+         return Promise.resolve(response.data);
       }
-   } catch (err) {
+   } catch (err: any) {
       return Promise.reject(err);
+   }
+};
+
+export interface getTransactionBySubscriptionProps {
+   month?: string;
+   isSubscription?: string;
+}
+
+export const getTransactionBySubscription = async <T>({
+   month,
+   isSubscription,
+}: getTransactionBySubscriptionProps) => {
+   try {
+      if (auth.token) {
+         const response = await api({
+            token: auth.token,
+            params: { month, isSubscription },
+         }).get<T>('/transaction/bySubscriptions');
+
+         return Promise.resolve(response.data);
+      }
+   } catch (error) {
+      return Promise.reject(error);
    }
 };
 
@@ -67,5 +92,21 @@ export const CreateTransaction = async ({
       return Promise.resolve(res.data);
    } catch (error) {
       return Promise.reject(error);
+   }
+};
+
+export const GetUserNotification = async (NotificationToken: string) => {
+   try {
+      if (auth.token) {
+         const res = await api({
+            token: auth.token,
+         }).post('/push', {
+            token: NotificationToken,
+         });
+
+         return Promise.resolve(res);
+      }
+   } catch (err: any) {
+      return Promise.reject(err);
    }
 };

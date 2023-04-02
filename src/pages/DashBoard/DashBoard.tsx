@@ -1,6 +1,5 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
-import Decimal from 'decimal.js';
 
 import { TransactionListItem } from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
@@ -18,8 +17,6 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
-import { toMoney } from 'vanilla-masker';
-import { loadConfigFromFile } from 'vite';
 
 interface Transaction {
    id: string;
@@ -44,7 +41,7 @@ export const DashBoard = () => {
       getTotalBalense,
    } = useTransactionContext();
 
-   const [accountInfosList2, setAccountInfosList2] = useState<any[]>([]);
+   const [accountInfosList, setAccountInfosList] = useState<any[]>([]);
 
    const fetchTransactions = useCallback(async () => {
       if (state.token !== undefined) {
@@ -54,7 +51,7 @@ export const DashBoard = () => {
 
    useEffect(() => {
       getTotalBalense().then((response) => {
-         setAccountInfosList2([
+         setAccountInfosList([
             {
                description: 'Saldo Atual',
                amount: response?.balense?.total || '0',
@@ -114,7 +111,7 @@ export const DashBoard = () => {
                gap="1rem"
             >
                <S.StatusWrapper flex={1 / 4}>
-                  {accountInfosList2?.map((accountInfos) => {
+                  {accountInfosList?.map((accountInfos) => {
                      return (
                         <StatusAccount
                            key={accountInfos.logo}

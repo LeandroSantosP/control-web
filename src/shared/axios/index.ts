@@ -10,7 +10,7 @@ export const api = ({ token, params }: AxiosParams) => {
       return axios.create({
          baseURL: import.meta.env.VITE_API_HOST_DEVELOPMENT,
          headers: { Authorization: `Bearer ${token}` },
-         params: { month: params.month },
+         params,
       });
    }
 

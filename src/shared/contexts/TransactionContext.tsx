@@ -3,11 +3,18 @@ import {
    ReactNode,
    useCallback,
    useContext,
+   useEffect,
    useState,
 } from 'react';
-import { CreateTransaction, getTransactions } from '../../api';
-import { useMutation, UseMutationResult, UseQueryResult } from 'react-query';
+import {
+   CreateTransaction,
+   getTransactionBySubscription,
+   getTransactionBySubscriptionProps,
+   getTransactions,
+} from '../../api';
+import { useMutation, UseMutationResult } from 'react-query';
 import { useFlashMessageContext } from './FlashMessageContext';
+import { useAuth } from './AuthContext';
 
 interface FilterTransactionByMonthProps {
    month?: string;
@@ -36,13 +43,20 @@ interface TransactionDTO {
    };
 }
 
+type GetTransactionBySubscriptionProps = {
+   balense: { expense: string; revenue: string; total: string };
+   transactions: any[];
+};
+
 interface TransactionProps {
    CreateMutation: UseMutationResult<any, unknown, any, unknown>;
    open: boolean;
    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
    GetTransaction: ({ month }: FilterTransactionByMonthProps) => Promise<any>;
+   GetTransactionBySubscription: (
+      props: getTransactionBySubscriptionProps
+   ) => Promise<any>;
    transaction: TransactionDTO | undefined;
-
    getTotalBalense: () => Promise<any>;
 }
 
@@ -51,6 +65,7 @@ const TransactionContext = createContext({} as TransactionProps);
 export const useTransactionContext = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
+   const { logout } = useAuth();
    const [transaction, setTransition] = useState<TransactionDTO>();
 
    const { handleShowingFlashMessage } = useFlashMessageContext();
@@ -72,30 +87,72 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       },
    });
 
+   const GetTransactionBySubscription = useCallback(
+      async ({ isSubscription, month }: getTransactionBySubscriptionProps) => {
+         try {
+            const result =
+               await getTransactionBySubscription<GetTransactionBySubscriptionProps>(
+                  {
+                     isSubscription,
+                     month,
+                  }
+               );
+
+            if (result?.balense) {
+               setTransition({
+                  balense: result.balense,
+                  transactions: result.transactions,
+               });
+            }
+
+            return;
+         } catch (error: any) {
+            if (
+               error.response.status &&
+               error.response.data.message === 'Invalid Token'
+            ) {
+               logout();
+            }
+         }
+      },
+      [logout]
+   );
+
    const GetTransaction = useCallback(
       async ({ month }: FilterTransactionByMonthProps) => {
-         const result = await getTransactions({
-            month,
-         });
-
-         if (result?.monthBalense) {
-            setTransition({
-               balense: result.monthBalense,
-               transactions: result.transactions,
+         try {
+            const result = await getTransactions({
+               month,
             });
-            return;
-         }
 
-         setTransition(result);
-         return;
+            if (result?.monthBalense) {
+               setTransition({
+                  balense: result.monthBalense,
+                  transactions: result.transactions,
+               });
+               return;
+            }
+
+            setTransition(result);
+            return;
+         } catch (err: any) {
+            if (
+               err.response.status &&
+               err.response.data.message === 'Invalid Token'
+            ) {
+               logout();
+            }
+         }
       },
-      []
+      [logout]
    );
 
    const getTotalBalense = useCallback(async () => {
       const result = await getTransactions({});
+
       return result;
    }, []);
+
    return (
       <TransactionContext.Provider
          value={{
@@ -105,6 +162,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             setOpen,
             GetTransaction,
             transaction,
+            GetTransactionBySubscription,
          }}
       >
          {children}

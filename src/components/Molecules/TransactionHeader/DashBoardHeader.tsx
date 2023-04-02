@@ -6,6 +6,11 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
+import { ThreeOptionSwitch } from '../ThreeOptionSwitch/ThreeOptionSwitch';
+
+export interface handleChangeProps {
+   option: string;
+}
 
 export const DashBoardHeader = ({
    title,
@@ -16,8 +21,13 @@ export const DashBoardHeader = ({
    icon?: any;
    hasFilter?: boolean;
 }) => {
-   const { GetTransaction } = useTransactionContext();
-   const [searchParams, setSearchParams] = useSearchParams({ month: 'all' });
+   const { GetTransaction, GetTransactionBySubscription, transaction } =
+      useTransactionContext();
+
+   const [searchParams, setSearchParams] = useSearchParams({
+      month: 'all',
+   });
+
    const [month, setMonth] = useState(searchParams.get('month'));
 
    const monthlyList = [
@@ -35,21 +45,29 @@ export const DashBoardHeader = ({
       { value: '12', Name: 'Dezembro' },
    ];
 
-   useEffect(() => {
-      if (month == 'all') {
-         GetTransaction({});
-         setSearchParams({});
-         return;
-      }
+   const handleChange = (value: handleChangeProps) => {
+      return;
+   };
 
-      if (month) {
-         setSearchParams({ month });
-         setTimeout(() => {
-            GetTransaction({ month });
-         }, 1);
-         return;
-      }
-   }, [GetTransaction, month, setSearchParams]);
+   useEffect(() => {
+      /* Continue... */
+      GetTransactionBySubscription({ month: '10' });
+      console.log(transaction);
+
+      // if (month == 'all') {
+      //    GetTransaction({});
+      //    setSearchParams({});
+      //    return;
+      // }
+
+      // if (month) {
+      //    setSearchParams({ month });
+      //    setTimeout(() => {
+      //       GetTransaction({ month });
+      //    }, 1);
+      //    return;
+      // }
+   }, [GetTransaction, GetTransactionBySubscription, month, setSearchParams]);
 
    return (
       <Box
@@ -67,6 +85,7 @@ export const DashBoardHeader = ({
             {icon && <Icon currentIcon={icon} />}
             {title}
          </S.Title>
+         <ThreeOptionSwitch initialValue={'all'} handleChange={handleChange} />
          {hasFilter && (
             <div style={{ marginRight: '5rem' }}>
                <SelectCustom

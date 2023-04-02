@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { FlashMessage } from '../../components/Molecules/FlashMessage/FlashMessage';
+import GetNotifications from '../../interfaces/firebase/GetRegistrationToken';
 
 interface handleShowingFlashMessageProps {
    message: string;
@@ -31,6 +32,12 @@ export const FlashMessageProvider = ({
    const [type, setType] = useState<
       'success' | 'warning' | 'error' | 'default' | undefined
    >();
+
+   useEffect(() => {
+      GetNotifications.getMessages();
+   }, []);
+
+   // GetRegistrationToken.getMessages();
 
    const handleShowingFlashMessage = ({
       message,
