@@ -17,6 +17,7 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
+import { TransactionDetails } from '../../components/Molecules/TransactionDetails/TransactionDetails';
 
 interface Transaction {
    id: string;
@@ -51,32 +52,33 @@ export const DashBoard = () => {
 
    useEffect(() => {
       getTotalBalense().then((response) => {
-         setAccountInfosList([
-            {
-               description: 'Saldo Atual',
-               amount: response?.balense?.total || '0',
-               logo: Wallet,
-               alt: 'Wallet',
-            },
-            {
-               description: 'Receita',
-               amount: transaction?.balense?.revenue || '0',
-               logo: GraphUp,
-               alt: 'Wallet',
-            },
-            {
-               description: 'Despesas',
-               amount: transaction?.balense?.expense || '0',
-               logo: GraphDown,
-               alt: 'Despesas',
-            },
-            {
-               description: 'Balanco',
-               amount: transaction?.balense?.total || '0',
-               logo: Balense,
-               alt: 'Balense',
-            },
-         ]);
+         response?.balense?.total || '0',
+            setAccountInfosList([
+               {
+                  description: 'Saldo Atual',
+                  amount: response?.balense?.total || '0',
+                  logo: Wallet,
+                  alt: 'Wallet',
+               },
+               {
+                  description: 'Receita',
+                  amount: transaction?.balense?.revenue || '0',
+                  logo: GraphUp,
+                  alt: 'Wallet',
+               },
+               {
+                  description: 'Despesas',
+                  amount: transaction?.balense?.expense || '0',
+                  logo: GraphDown,
+                  alt: 'Despesas',
+               },
+               {
+                  description: 'Balanco',
+                  amount: transaction?.balense?.total || '0',
+                  logo: Balense,
+                  alt: 'Balense',
+               },
+            ]);
       });
    }, [
       getTotalBalense,
@@ -133,22 +135,19 @@ export const DashBoard = () => {
                   <Transaction />
                </S.TransactionHeader>
                <S.UlWrapper>
-                  {transaction?.transactions?.map((transaction) => (
-                     <Fragment key={`${transaction.id}`}>
-                        <TransactionListItem
-                           account={transaction.description}
-                           amount={transaction.value}
-                           isNegative={transaction.value < 0}
-                           category="Category"
-                           resolved={transaction.resolved}
-                        />
-                        <Divider
-                           width="90%"
-                           bg="rgba(160, 160, 160, 0.46)"
-                           height="1px"
-                        />
-                     </Fragment>
-                  ))}
+                  {transaction?.transactions?.map((transaction) => {
+                     return (
+                        <Fragment key={`${transaction.id}`}>
+                           <TransactionListItem {...transaction} />
+                           <TransactionDetails />
+                           <Divider
+                              width="90%"
+                              bg="rgba(160, 160, 160, 0.46)"
+                              height="1px"
+                           />
+                        </Fragment>
+                     );
+                  })}
                </S.UlWrapper>
             </S.DashboardWrapper>
          </Box>

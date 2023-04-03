@@ -2,7 +2,7 @@ import { Box } from '../../atoms/Box/Box';
 import { Icon } from '../../atoms/Icons/Icon';
 import * as S from './DashBoardHeaderStyles';
 import { SelectCustom } from '../Select/Select';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
@@ -21,7 +21,7 @@ export const DashBoardHeader = ({
    icon?: any;
    hasFilter?: boolean;
 }) => {
-   const { GetTransaction, GetTransactionBySubscription, transaction } =
+   const { GetTransaction, GetTransactionBySubscription } =
       useTransactionContext();
 
    const [searchParams, setSearchParams] = useSearchParams({
@@ -45,28 +45,19 @@ export const DashBoardHeader = ({
       { value: '12', Name: 'Dezembro' },
    ];
 
-   const handleChange = (value: handleChangeProps) => {
-      return;
-   };
-
    useEffect(() => {
-      /* Continue... */
-      GetTransactionBySubscription({ month: '10' });
-      console.log(transaction);
-
-      // if (month == 'all') {
-      //    GetTransaction({});
-      //    setSearchParams({});
-      //    return;
-      // }
-
-      // if (month) {
-      //    setSearchParams({ month });
-      //    setTimeout(() => {
-      //       GetTransaction({ month });
-      //    }, 1);
-      //    return;
-      // }
+      if (month === 'all') {
+         GetTransaction({});
+         setSearchParams({});
+         return;
+      }
+      if (month) {
+         setSearchParams({ month });
+         setTimeout(() => {
+            GetTransaction({ month });
+         }, 1);
+         return;
+      }
    }, [GetTransaction, GetTransactionBySubscription, month, setSearchParams]);
 
    return (
@@ -85,7 +76,8 @@ export const DashBoardHeader = ({
             {icon && <Icon currentIcon={icon} />}
             {title}
          </S.Title>
-         <ThreeOptionSwitch initialValue={'all'} handleChange={handleChange} />
+
+         <ThreeOptionSwitch initialValue={'all'} month={month} />
          {hasFilter && (
             <div style={{ marginRight: '5rem' }}>
                <SelectCustom

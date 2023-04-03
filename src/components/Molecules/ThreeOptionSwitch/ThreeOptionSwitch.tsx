@@ -1,20 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useTransactionContext } from '../../../shared/contexts';
 import { handleChangeProps } from '../TransactionHeader/DashBoardHeader';
 
 import * as S from './ThreeOptionSwitchStyles';
 
 interface ThreeOptionSwitchProps {
    initialValue: any;
-   handleChange: (value: handleChangeProps) => void;
+   month: string | null;
 }
 
 export const ThreeOptionSwitch = ({
    initialValue,
-   handleChange,
+   month,
 }: ThreeOptionSwitchProps) => {
+   const { GetTransactionBySubscription } = useTransactionContext();
    const [value, setValue] = useState<{ option: string }>({
       option: initialValue,
    });
+
+   const handleChange = useCallback(
+      (value: handleChangeProps) => {
+         GetTransactionBySubscription({
+            month: month ?? undefined,
+            isSubscription:
+               value.option === 'all'
+                  ? undefined
+                  : value.option === 'isSubscription'
+                  ? 'true'
+                  : 'false',
+         });
+
+         return;
+      },
+      [GetTransactionBySubscription, month]
+   );
+
+   useEffect(() => {
+      setValue({ option: 'all' });
+   }, [month]);
 
    useEffect(() => {
       handleChange(value);
@@ -25,10 +48,10 @@ export const ThreeOptionSwitch = ({
          <span>||</span>
          <S.Wrapper>
             <S.Button
-               selected={value.option === 'resolved'}
-               onClick={() => setValue({ option: 'resolved' })}
+               selected={value.option === 'isSubscription'}
+               onClick={() => setValue({ option: 'isSubscription' })}
             >
-               Finalizadas
+               Inscrições
             </S.Button>
             <S.Button
                selected={value.option === 'all'}
@@ -38,10 +61,10 @@ export const ThreeOptionSwitch = ({
             </S.Button>
 
             <S.Button
-               selected={value.option === 'subscription'}
-               onClick={() => setValue({ option: 'subscription' })}
+               selected={value.option === 'isNotSubscription'}
+               onClick={() => setValue({ option: 'isNotSubscription' })}
             >
-               Subscription
+               Recorrentes
             </S.Button>
          </S.Wrapper>
       </S.MainWrapper>

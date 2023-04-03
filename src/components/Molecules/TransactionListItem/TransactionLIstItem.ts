@@ -14,10 +14,8 @@ export const TransactionContent = styled('div')`
    display: flex;
    flex-direction: column;
    font-size: small;
-   gap: 2px;
-
+   gap: 9px;
    margin: 0 1rem;
-
    span {
       font-weight: 50;
    }
@@ -32,4 +30,11 @@ export const Amount = styled('div')<AmountProps>`
       props.negative
          ? props.theme.colors.PersianRed
          : props.theme.colors.Verdigris};
+`;
+
+export const DueDate = styled('span')<any>`
+   display: flex;
+   flex-direction: column;
+   font-size: 10px;
+   gap: 19px;
 `;
