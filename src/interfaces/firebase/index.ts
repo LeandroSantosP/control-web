@@ -1,7 +1,6 @@
 import { getMessaging } from 'firebase/messaging/sw';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
    apiKey: 'AIzaSyCy8LYdcSUUSUz6Ry2r9VRKhYPzAoKHwcA',

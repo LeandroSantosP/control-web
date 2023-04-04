@@ -1,5 +1,7 @@
 import * as S from './TransactionLIstItem';
 import { format } from 'date-fns';
+import { PopoverDetails } from '../PopoverTest/PopoverDetails';
+import { useRef, useState } from 'react';
 
 export interface TransactionListItemProps {
    id: string;
@@ -23,8 +25,19 @@ const FormatCurense = (amount: number) =>
       currency: 'BRL',
    }).format(amount);
 
-export const TransactionListItem = (params: TransactionListItemProps) => {
-   const { value: amount, resolved, due_date, type } = params;
+export const TransactionListItem = ({ params }: { params: any }) => {
+   const LiRef = useRef<HTMLDivElement>(null);
+   const [showPopOver, setShowPopover] = useState(false);
+   const [popOverPosition, setPopoverPosition] = useState({
+      top: 0,
+      left: 0,
+   });
+   const {
+      value: amount,
+      resolved,
+      due_date,
+      type,
+   } = params as TransactionListItemProps;
 
    let currentDueDateFormatted;
    if (due_date !== null) {
@@ -34,9 +47,41 @@ export const TransactionListItem = (params: TransactionListItemProps) => {
       ).replace(/-/g, '/');
    }
 
+   const handleMouseIn = () => {
+      const { left, bottom } = LiRef.current?.getBoundingClientRect() as {
+         left: number;
+         bottom: number;
+      };
+
+      setPopoverPosition({
+         left: left,
+         top: bottom,
+      });
+
+      setShowPopover(true);
+      return;
+   };
+
+   const handleMouseOut = () => {
+      setShowPopover(false);
+      return;
+   };
+
    return (
       <>
-         <S.TransactionItemLi>
+         <S.TransactionItemLi
+            ref={LiRef}
+            as="div"
+            onMouseEnter={handleMouseIn}
+            onMouseLeave={handleMouseOut}
+         >
+            {showPopOver && (
+               <PopoverDetails
+                  content={params}
+                  left={popOverPosition.left}
+                  top={popOverPosition.top}
+               />
+            )}
             <S.TransactionContent>
                <S.DueDate>
                   {due_date !== null && 'Data De Vencimento'}

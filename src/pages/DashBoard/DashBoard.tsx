@@ -17,7 +17,6 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
-import { TransactionDetails } from '../../components/Molecules/TransactionDetails/TransactionDetails';
 
 interface Transaction {
    id: string;
@@ -138,8 +137,7 @@ export const DashBoard = () => {
                   {transaction?.transactions?.map((transaction) => {
                      return (
                         <Fragment key={`${transaction.id}`}>
-                           <TransactionListItem {...transaction} />
-                           <TransactionDetails />
+                           <TransactionListItem params={transaction} />
                            <Divider
                               width="90%"
                               bg="rgba(160, 160, 160, 0.46)"

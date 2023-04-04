@@ -6,7 +6,6 @@ import {
    getToken,
    GetTokenOptions,
    Messaging,
-   onMessage,
 } from 'firebase/messaging';
 import 'firebase/messaging';
 

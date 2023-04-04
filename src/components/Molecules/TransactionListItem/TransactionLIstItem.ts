@@ -7,6 +7,7 @@ export const TransactionItemLi = styled('li')`
    justify-content: space-between;
    max-height: 4rem;
    text-align: center;
+   overflow: hidden;
    margin: 1rem 0;
 `;
 

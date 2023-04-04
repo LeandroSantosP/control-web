@@ -2,7 +2,7 @@ import { Box } from '../../atoms/Box/Box';
 import { Icon } from '../../atoms/Icons/Icon';
 import * as S from './DashBoardHeaderStyles';
 import { SelectCustom } from '../Select/Select';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
