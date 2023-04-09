@@ -71,7 +71,7 @@ export const Main = styled('main')`
    flex-direction: column;
    height: 100%;
    flex: 1;
-   max-width: 1000px;
+   max-width: 1200px;
    margin: 0 auto;
    padding: 1rem;
 `;

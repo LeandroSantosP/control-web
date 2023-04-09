@@ -10,9 +10,8 @@ export const PopOver = styled('div')<PopOver>`
    display: flex;
    background-color: '#111';
    flex-direction: row;
-   width: 190px;
-   height: 74px;
-
+   width: 220px;
+   height: 120px;
    padding: 0.2rem;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    border-radius: 0.8rem;
@@ -43,27 +42,43 @@ export const SubDetailsWrapper = styled('div')<SubDetailsWrapperProps>`
    display: flex;
    flex-direction: column;
    width: 100%;
-   justify-content: space-around;
    align-items: center;
-   gap: 0.2rem;
    background-color: ${(props) => props.theme.colors.Dark};
-
-   font-size: 9px;
+   justify-content: center;
+   gap: 2px;
+   font-size: 0.8rem;
    ${flex}
 
    &:first-child {
-      border-right: 1px solid #fff;
+      border-right: 1px solid ${(props) => props.theme.colors.TimberWhite};
+   }
+`;
+
+export const FinishedButton = styled('button')`
+   border: none;
+   padding: 10px 5px;
+   cursor: pointer;
+   left: 0;
+   border-radius: 0.3rem;
+   top: 0.5rem;
+   background-color: ${(props) => props.theme.colors.RaisinBlack};
+
+   &:hover {
+      filter: brightness(1.2);
    }
 `;
 
 export const Info = styled('p')`
-   font-size: 9px;
    text-align: center;
+   margin: 3px;
 `;
-interface InfoProps {
-   type?: string;
-}
 
-export const Type = styled('span')<InfoProps>`
-   color: ${(props) => (props.type === 'expense' ? 'red' : 'green')};
+export const Type = styled('span')`
+   color: ${(props) => props.theme.colors.TimberWhite};
+`;
+
+export const SubContent = styled('div')`
+   display: flex;
+   flex-direction: column;
+   text-align: flex-start;
 `;

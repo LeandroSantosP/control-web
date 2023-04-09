@@ -35,13 +35,28 @@ export const AuthCredentials = (token: string) => {
    auth.token = token;
 };
 
-export const getTransactions = async ({ month }: { month?: string }) => {
+export const ResolvedTransactionApi = async (
+   transactionId: string
+): Promise<void | any> => {
+   try {
+      if (auth.token) {
+         const response = await api({
+            token: auth.token,
+         }).patch<void>(`/transaction/resolved/${transactionId}`);
+         return Promise.resolve(response);
+      }
+   } catch (error) {
+      return Promise.resolve(error);
+   }
+};
+
+export const getTransactions = async <T>({ month }: { month?: string }) => {
    try {
       if (auth.token) {
          const response = await api({
             token: auth.token,
             params: { month },
-         }).get(`/transaction`);
+         }).get<T>(`/transaction`);
 
          return Promise.resolve(response.data);
       }
@@ -50,20 +65,24 @@ export const getTransactions = async ({ month }: { month?: string }) => {
    }
 };
 
-export interface getTransactionBySubscriptionProps {
+export interface getTransactionByParamsProps {
    month?: string;
    isSubscription?: string;
+   resolved?: string;
+   revenue?: string;
 }
 
-export const getTransactionBySubscription = async <T>({
+export const getTransactionByParams = async <T>({
    month,
    isSubscription,
-}: getTransactionBySubscriptionProps) => {
+   resolved,
+   revenue,
+}: getTransactionByParamsProps) => {
    try {
       if (auth.token) {
          const response = await api({
             token: auth.token,
-            params: { month, isSubscription },
+            params: { month, isSubscription, resolved, revenue },
          }).get<T>('/transaction/bySubscriptions');
 
          return Promise.resolve(response.data);
@@ -73,21 +92,55 @@ export const getTransactionBySubscription = async <T>({
    }
 };
 
-export const CreateTransaction = async ({
+export const CreateTransaction = async <T>({
    value,
    description,
-   dueDate,
+   date,
+   installments,
+   isSubscription,
+   category,
+   recurrency,
+   transactionType,
 }: {
    value: string;
    description: string;
-   dueDate: string;
+   date: string;
+   category: string;
+   recurrency: string;
+   transactionType: string;
+   isSubscription: boolean;
+   installments: number;
 }) => {
+   if (transactionType === 'Receita') {
+      try {
+         const res = await api({ token: auth.token }).post<T>('/transaction', {
+            value,
+            description,
+            categoryType: category,
+            dueDate: (Number(value) < 0 && date) || undefined,
+            filingDate: (Number(value) > 0 && date) || undefined,
+         });
+
+         return Promise.resolve(res.data);
+      } catch (error) {
+         return Promise.reject(error);
+      }
+   }
+
    try {
-      const res = await api({ token: auth.token }).post('/transaction', {
-         value,
-         description,
-         dueDate,
-      });
+      const res = await api({ token: auth.token }).post<T>(
+         '/transaction/recurrent',
+         {
+            value,
+            description,
+            isSubscription,
+            installments,
+            categoryType: category,
+            recurrence: recurrency,
+            due_date: Number(value) < 0 && date,
+         }
+      );
+
       return Promise.resolve(res.data);
    } catch (error) {
       return Promise.reject(error);

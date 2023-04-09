@@ -1,16 +1,18 @@
-import { TransactionListItemProps } from '../TransactionListItem/TransactionListItem';
 import { CheckCircle, XCircle } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import * as S from './PopoverDetailsStyles';
+import { Transaction, useTransactionContext } from '../../../shared/contexts';
 
 interface PopOverTest {
    top: number;
    left: number;
-   content: TransactionListItemProps;
+   content: Transaction;
 }
 
 export const PopoverDetails = (props: PopOverTest) => {
-   const subscription = props.content.isSubscription;
+   const { ResolvedTransaction } = useTransactionContext();
+   const { isSubscription, resolved, type, installments, recurrence, id } =
+      props.content;
 
    let currentCreatedAtFormatted;
    if (props.content.created_at !== null) {
@@ -20,31 +22,43 @@ export const PopoverDetails = (props: PopOverTest) => {
       ).replace(/-/g, '/');
    }
 
+   ResolvedTransaction;
+   const handleResolvedTransaction = async () => {
+      await ResolvedTransaction(id);
+   };
+
+   // pending: Cadastra um debito que nao tenha seja uma inscrição e nem tenha recorrência.
    return (
       <>
          <S.PopOver left={props.left} top={props.top}>
             <S.SubDetailsWrapper flex={1 / 2}>
                <S.Info>
                   Inscrição?{' '}
-                  {subscription === null || subscription === false ? (
+                  {isSubscription === null || isSubscription === false ? (
                      <XCircle color="red" />
                   ) : (
                      <CheckCircle color="green" />
                   )}
                </S.Info>
-               <S.Info>Recorrência {props.content.recurrence}</S.Info>
                <S.Info>
                   Finalizada?{' '}
-                  {props.content.resolved ? (
+                  {resolved ? (
                      <CheckCircle color="green" />
                   ) : (
                      <XCircle color="red" />
                   )}
                </S.Info>
+
+               {!resolved && (
+                  <S.FinishedButton onClick={handleResolvedTransaction}>
+                     Finalizar!
+                  </S.FinishedButton>
+               )}
+
                <S.Info>
                   Tipo{' '}
-                  {props.content.type === 'expense' ? (
-                     <S.Type type={props.content.type}>Dispensa</S.Type>
+                  {type === 'expense' ? (
+                     <S.Type>Dispensa</S.Type>
                   ) : (
                      <S.Type>Receita</S.Type>
                   )}
@@ -52,9 +66,11 @@ export const PopoverDetails = (props: PopOverTest) => {
             </S.SubDetailsWrapper>
 
             <S.SubDetailsWrapper flex={1 / 2}>
-               <S.Info>Parcelas {props.content.installments}</S.Info>
-               {props.content.installments !== null && (
-                  <S.Info>Recorrência {props.content.recurrence}</S.Info>
+               {installments !== null && installments !== 0 && (
+                  <S.Info>Numero de vezes {installments}x</S.Info>
+               )}
+               {installments !== null && (
+                  <S.Info>Recorrência {recurrence}</S.Info>
                )}
                <S.Info>Data de criação {currentCreatedAtFormatted}</S.Info>
             </S.SubDetailsWrapper>

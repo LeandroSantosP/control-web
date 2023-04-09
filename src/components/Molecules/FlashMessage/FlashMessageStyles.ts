@@ -11,15 +11,13 @@ interface ProgressBarProps {
 
 export const Wrapper = styled(Box)<WrapperProps>`
    width: 50px;
-   height: 50px;
    z-index: 9999;
    position: absolute;
    right: 1rem;
    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
    top: 2rem;
    width: 300px;
-   height: 80px;
-   color: #fff;
+   padding: 1rem;
    font-size: ${(props) => props.theme.fontSize.small};
    border-radius: 0.5rem;
    background-color: ${({ type }) =>
@@ -53,6 +51,14 @@ export const Wrapper = styled(Box)<WrapperProps>`
    }
 `;
 
+export const ContentMessage = styled('p')<WrapperProps>`
+   color: ${({ type }) =>
+      (type === 'success' && '#000') ||
+      (type === 'error' && '#000') ||
+      (type === 'warning' && '#000') ||
+      (type === 'default' && '#fff')};
+`;
+
 export const ProgressBar = styled('div')<ProgressBarProps>`
    height: 4px;
    background-color: #fff;
@@ -62,9 +68,40 @@ export const ProgressBar = styled('div')<ProgressBarProps>`
    left: 0;
    right: 0;
    width: ${(props) => {
-      console.log(props.time);
-
       return props.time;
    }}%;
    transition: width linear;
+`;
+
+export const ButtonWrapper = styled('div')`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 0.3rem;
+   height: 100%;
+   flex-direction: column;
+   gap: 1rem;
+   text-align: center;
+
+   div {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+   }
+`;
+
+export const Button = styled('button')`
+   display: flex;
+   flex-direction: row;
+   border: none;
+   width: 60px;
+   color: ${(props) => props.theme.colors.TimberWhite};
+   justify-content: center;
+   outline: none;
+   border-radius: 0.3rem;
+   background-color: ${(props) => props.theme.colors.RaisinBlack};
+   padding: 0.5rem 0.3rem;
 `;

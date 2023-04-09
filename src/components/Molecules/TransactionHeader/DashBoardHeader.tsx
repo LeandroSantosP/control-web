@@ -21,8 +21,7 @@ export const DashBoardHeader = ({
    icon?: any;
    hasFilter?: boolean;
 }) => {
-   const { GetTransaction, GetTransactionBySubscription } =
-      useTransactionContext();
+   const { GetTransaction, GetTransactionByParams } = useTransactionContext();
 
    const [searchParams, setSearchParams] = useSearchParams({
       month: 'all',
@@ -58,7 +57,7 @@ export const DashBoardHeader = ({
          }, 1);
          return;
       }
-   }, [GetTransaction, GetTransactionBySubscription, month, setSearchParams]);
+   }, [GetTransaction, GetTransactionByParams, month, setSearchParams]);
 
    return (
       <Box

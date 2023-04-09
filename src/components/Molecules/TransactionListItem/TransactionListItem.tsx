@@ -2,6 +2,7 @@ import * as S from './TransactionLIstItem';
 import { format } from 'date-fns';
 import { PopoverDetails } from '../PopoverTest/PopoverDetails';
 import { useRef, useState } from 'react';
+import { Transaction } from '../../../shared/contexts';
 
 export interface TransactionListItemProps {
    id: string;
@@ -25,26 +26,21 @@ const FormatCurense = (amount: number) =>
       currency: 'BRL',
    }).format(amount);
 
-export const TransactionListItem = ({ params }: { params: any }) => {
+export const TransactionListItem = ({ params }: { params: Transaction }) => {
    const LiRef = useRef<HTMLDivElement>(null);
    const [showPopOver, setShowPopover] = useState(false);
    const [popOverPosition, setPopoverPosition] = useState({
       top: 0,
       left: 0,
    });
-   const {
-      value: amount,
-      resolved,
-      due_date,
-      type,
-   } = params as TransactionListItemProps;
+   const { value: amount, resolved, due_date, type, filingDate } = params;
 
-   let currentDueDateFormatted;
-   if (due_date !== null) {
-      currentDueDateFormatted = format(
-         new Date(due_date),
-         'dd-MM-yyyy'
-      ).replace(/-/g, '/');
+   let dateFormatted = '';
+
+   if (due_date) {
+      dateFormatted = format(new Date(due_date), 'dd/MM/yyyy');
+   } else if (filingDate) {
+      dateFormatted = format(new Date(filingDate), 'dd/MM/yyyy');
    }
 
    const handleMouseIn = () => {
@@ -70,6 +66,7 @@ export const TransactionListItem = ({ params }: { params: any }) => {
    return (
       <>
          <S.TransactionItemLi
+            currentState={params.type}
             ref={LiRef}
             as="div"
             onMouseEnter={handleMouseIn}
@@ -85,8 +82,9 @@ export const TransactionListItem = ({ params }: { params: any }) => {
             <S.TransactionContent>
                <S.DueDate>
                   {due_date !== null && 'Data De Vencimento'}
+                  {filingDate !== null && 'Data De Recebimento'}
                </S.DueDate>
-               <S.DueDate>{currentDueDateFormatted}</S.DueDate>
+               <S.DueDate>{dateFormatted}</S.DueDate>
             </S.TransactionContent>
             <S.TransactionContent>
                <S.Amount negative={Number(amount) <= 0}>

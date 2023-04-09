@@ -13,14 +13,16 @@ export const ThreeOptionSwitch = ({
    initialValue,
    month,
 }: ThreeOptionSwitchProps) => {
-   const { GetTransactionBySubscription } = useTransactionContext();
+   const { GetTransactionByParams } = useTransactionContext();
    const [value, setValue] = useState<{ option: string }>({
       option: initialValue,
    });
 
    const handleChange = useCallback(
       (value: handleChangeProps) => {
-         GetTransactionBySubscription({
+         const props = value.option;
+
+         GetTransactionByParams({
             month: month ?? undefined,
             isSubscription:
                value.option === 'all'
@@ -28,11 +30,13 @@ export const ThreeOptionSwitch = ({
                   : value.option === 'isSubscription'
                   ? 'true'
                   : 'false',
+            revenue: props === 'revenue' ? 'true' : undefined,
+            resolved: props === 'resolved' ? 'true' : undefined,
          });
 
          return;
       },
-      [GetTransactionBySubscription, month]
+      [GetTransactionByParams, month]
    );
 
    useEffect(() => {
@@ -65,6 +69,19 @@ export const ThreeOptionSwitch = ({
                onClick={() => setValue({ option: 'isNotSubscription' })}
             >
                Recorrentes
+            </S.Button>
+
+            <S.Button
+               selected={value.option === 'revenue'}
+               onClick={() => setValue({ option: 'revenue' })}
+            >
+               Receitas
+            </S.Button>
+            <S.Button
+               selected={value.option === 'resolved'}
+               onClick={() => setValue({ option: 'resolved' })}
+            >
+               Finalizadas
             </S.Button>
          </S.Wrapper>
       </S.MainWrapper>

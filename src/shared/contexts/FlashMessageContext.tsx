@@ -6,6 +6,9 @@ interface handleShowingFlashMessageProps {
    message: string;
    timer: number;
    type: 'success' | 'warning' | 'error' | 'default' | undefined;
+   haveButton: boolean;
+   FistTextButton?: string;
+   SecondTextButton?: string;
 }
 
 interface FlashMessageProviderProps {
@@ -15,6 +18,7 @@ interface FlashMessageProviderProps {
         }
       | undefined;
    handleShowingFlashMessage: (props: handleShowingFlashMessageProps) => void;
+   answer?: 'accept' | 'reject' | undefined;
 }
 
 const FlashMessageContext = createContext({} as FlashMessageProviderProps);
@@ -26,8 +30,15 @@ export const FlashMessageProvider = ({
 }: {
    children: React.ReactNode;
 }) => {
+   const [FistButtonText, setFistButtonText] = useState<string | undefined>(
+      'Clicar'
+   );
+   const [secondButtonText, setSecondButtonText] = useState<string | undefined>(
+      'Clicar'
+   );
    const [showFlashMessage, setShowFlashMessage] = useState(false);
-   const [timer, setTimer] = useState(0);
+   const [haveButton, setHaveButton] = useState(false);
+   const [answer, setAnswer] = useState<'accept' | 'reject' | undefined>();
    const [messageContent, setMessageContent] = useState('');
    const [type, setType] = useState<
       'success' | 'warning' | 'error' | 'default' | undefined
@@ -37,32 +48,55 @@ export const FlashMessageProvider = ({
       GetNotifications.getMessages();
    }, []);
 
-   // GetRegistrationToken.getMessages();
+   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if ((e.target as HTMLButtonElement).innerText === 'Confirmar') {
+         setAnswer('accept');
+         return;
+      } else if ((e.target as HTMLButtonElement).innerText === 'Cancelar') {
+         setAnswer('reject');
+         return;
+      }
+
+      setAnswer(undefined);
+      return;
+   };
 
    const handleShowingFlashMessage = ({
       message,
       timer,
       type,
+      haveButton,
+      FistTextButton,
+      SecondTextButton,
    }: handleShowingFlashMessageProps) => {
+      setFistButtonText(FistTextButton);
+      setSecondButtonText(SecondTextButton);
+
+      setHaveButton(haveButton);
       setType(type);
       setMessageContent(message);
       setShowFlashMessage(true);
-      setTimer(timer);
+
       setTimeout(() => {
          setShowFlashMessage(false);
       }, timer);
       return;
    };
+
    return (
       <FlashMessageContext.Provider
          value={{
             FlashMessage: showFlashMessage ? (
                <FlashMessage
-                  timeout={timer}
+                  haveButton={haveButton}
+                  handleClick={handleClick}
                   message={messageContent}
+                  FistButtonText={FistButtonText}
+                  SecondButtonText={secondButtonText}
                   type={type}
                />
             ) : undefined,
+            answer: answer,
             handleShowingFlashMessage,
          }}
       >

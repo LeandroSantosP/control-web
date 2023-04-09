@@ -7,6 +7,7 @@ import './styles.css';
 
 interface SelectCustom2 {
    setCurrentValue: React.Dispatch<React.SetStateAction<string>> | any;
+   disable?: boolean;
    currentValue: string | undefined;
    fieldList: Array<{
       value: string;
@@ -17,21 +18,22 @@ interface SelectCustom2 {
 
 export const SelectCustom = (props: SelectCustom2) => (
    <Select.Root
+      disabled={props.disable || false}
       onValueChange={props?.setCurrentValue}
       value={props.currentValue}
    >
-      <S.SelectTrigger className="SelectTrigger" aria-label="Food">
+      <S.SelectTrigger>
          <Select.Value placeholder="Selecione um mes" />
-         <S.SelectIcon className="SelectIcon">
+         <S.SelectIcon>
             <Check />
          </S.SelectIcon>
       </S.SelectTrigger>
       <Select.Portal>
-         <S.SelectContent className="SelectContent">
+         <S.SelectContent>
             <Select.ScrollUpButton className="SelectScrollButton">
                <p>Subir</p>
             </Select.ScrollUpButton>
-            <S.SelectView className="SelectViewport">
+            <S.SelectView>
                <Select.Group>
                   {props.haveDefaultValue && (
                      <S.SelectItem value={'all'} key={'2ss'}>

@@ -8,6 +8,7 @@ import { Layout } from '../../components/providers/Layout/';
 import { useStorage } from '../../shared/modules/Storage';
 import { useTransactionContext } from '../../shared/contexts';
 import { Box } from '../../components/atoms/Box/Box';
+import { TransactionGraphs } from '../../components/Molecules/TransactionGraphs/TransactionGraphs';
 
 import Wallet from '../../shared/assets/wallet.svg';
 import GraphUp from '../../shared/assets/graphUp.svg';
@@ -124,8 +125,8 @@ export const DashBoard = () => {
                      );
                   })}
                </S.StatusWrapper>
-               <S.StatusWrapper background="red" flex={3 / 4}>
-                  <h1>oi</h1>
+               <S.StatusWrapper flex={3 / 4}>
+                  <TransactionGraphs />
                </S.StatusWrapper>
             </S.DashboardWrapper>
 

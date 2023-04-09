@@ -1,9 +1,20 @@
 import styled from 'styled-components';
+import { Check } from '@phosphor-icons/react';
 
-export const TransactionItemLi = styled('li')`
+interface TransactionItemLiProps {
+   currentState: string;
+}
+
+export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    display: flex;
    width: 100%;
    align-items: center;
+   background-color: ${(props) =>
+      props.currentState == 'revenue'
+         ? 'rgba(0, 107, 3, 0.54)'
+         : 'rgba(107, 0, 0, 0.54)'};
+   padding: 0.5rem 0;
+   border-radius: 10px;
    justify-content: space-between;
    max-height: 4rem;
    text-align: center;

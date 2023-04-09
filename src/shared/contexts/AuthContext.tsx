@@ -18,7 +18,7 @@ interface AuthContextProps {
       password,
    }: signUpProps) => Promise<void | AxiosResponse<any, any>>;
 
-   error: { message: string } | undefined;
+   error: any;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -56,7 +56,7 @@ export interface ErrosAxios {
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-   const [error, setError] = useState<{ message: string }>();
+   const [error, setError] = useState('');
    const [loading, setLoading] = useState(false);
    const [isLogged, setIsLogged] = useState(() => {
       const token = localStorage.getItem('auth');
@@ -103,8 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       try {
          const result = await SingUpAPI({ email, name, password });
-
-         setError({ message: '' });
+         setError('');
          return result;
       } catch (erro: any) {
          setError(erro.response?.data);

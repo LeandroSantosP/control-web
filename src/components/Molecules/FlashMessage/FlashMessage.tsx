@@ -5,28 +5,20 @@ import { Warning, SealWarning } from '@phosphor-icons/react';
 interface FlashMessageProps {
    message?: string;
    type?: 'success' | 'warning' | 'error' | 'default';
-   timeout?: number;
+   haveButton?: boolean;
+   handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => any;
+   FistButtonText?: string;
+   SecondButtonText?: string;
 }
 
 export const FlashMessage = ({
    message = 'Digite um mensagem',
    type = 'default',
-   timeout = 0,
+   haveButton,
+   handleClick,
+   FistButtonText = 'Clicar',
+   SecondButtonText = 'Clicar',
 }: FlashMessageProps) => {
-   const [progress, setProgress] = useState(0);
-   const numUpdates = 100;
-   const updateInterval = timeout / numUpdates;
-
-   useEffect(() => {
-      const timer = setTimeout(() => {
-         if (progress < 100) {
-            setProgress(progress + 10);
-         }
-      }, updateInterval);
-
-      return () => clearTimeout(timer);
-   }, [progress, updateInterval]);
-
    return (
       <>
          <S.Wrapper type={type}>
@@ -34,8 +26,20 @@ export const FlashMessage = ({
             {type === 'default' && <Warning size={40} />}
             {type === 'success' && <Warning size={40} />}
             {type === 'error' && <SealWarning size={40} />}
-            {message}
-            {/* <S.ProgressBar time={progress} className="progress-bar" /> */}
+
+            {haveButton ? (
+               <S.ButtonWrapper>
+                  <S.ContentMessage>{message}</S.ContentMessage>
+                  <div>
+                     <S.Button onClick={handleClick}>{FistButtonText}</S.Button>
+                     <S.Button onClick={handleClick}>
+                        {SecondButtonText}
+                     </S.Button>
+                  </div>
+               </S.ButtonWrapper>
+            ) : (
+               <S.ContentMessage>{message}</S.ContentMessage>
+            )}
          </S.Wrapper>
       </>
    );

@@ -7,9 +7,10 @@ import {
 } from 'react';
 import {
    CreateTransaction,
-   getTransactionBySubscription,
-   getTransactionBySubscriptionProps,
+   getTransactionByParams,
+   getTransactionByParamsProps,
    getTransactions,
+   ResolvedTransactionApi,
 } from '../../api';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useFlashMessageContext } from './FlashMessageContext';
@@ -19,23 +20,30 @@ interface FilterTransactionByMonthProps {
    month?: string;
 }
 
-interface Transaction {
+export interface Transaction {
    id: string;
    description: string;
    due_date: string | null;
    userId: string;
    isSubscription: boolean | null;
    installments: number | null;
-   create_at: Date;
+   created_at: Date;
    recurrence: null;
-   value: number;
+   type: string;
+   filingDate: string | null;
+   value: string;
    resolved: boolean;
    updated_at: Date;
 }
 
 interface TransactionDTO {
    transactions: Transaction[];
-   balense: {
+   balense?: {
+      expense: string;
+      revenue: string;
+      total: string;
+   };
+   monthBalense?: {
       expense: string;
       revenue: string;
       total: string;
@@ -52,11 +60,10 @@ interface TransactionProps {
    open: boolean;
    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
    GetTransaction: ({ month }: FilterTransactionByMonthProps) => Promise<any>;
-   GetTransactionBySubscription: (
-      props: getTransactionBySubscriptionProps
-   ) => Promise<any>;
+   GetTransactionByParams: (props: getTransactionByParamsProps) => Promise<any>;
    transaction: TransactionDTO | undefined;
    getTotalBalense: () => Promise<any>;
+   ResolvedTransaction: (props: string) => Promise<void | any>;
 }
 
 const TransactionContext = createContext({} as TransactionProps);
@@ -65,7 +72,14 @@ export const useTransactionContext = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
    const { logout } = useAuth();
-   const [transaction, setTransition] = useState<TransactionDTO>();
+   const [transaction, setTransition] = useState<TransactionDTO>({
+      balense: {
+         expense: '0',
+         revenue: '0',
+         total: '0',
+      },
+      transactions: [],
+   });
 
    const { handleShowingFlashMessage } = useFlashMessageContext();
    const [open, setOpen] = useState(false);
@@ -79,23 +93,100 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
          setOpen(false);
          handleShowingFlashMessage({
             message: 'Transação Criada com sucesso!',
-            timer: 2000,
             type: 'success',
+            haveButton: false,
+            timer: 2000,
          });
          return;
       },
    });
 
-   const GetTransactionBySubscription = useCallback(
-      async ({ isSubscription, month }: getTransactionBySubscriptionProps) => {
+   const ResolvedTransaction = useCallback(
+      async (transactionId: string): Promise<void> => {
+         try {
+            const confirmeFinalization = confirm(
+               'Realmente deseja finalizar essa transação ?'
+            );
+
+            if (confirmeFinalization) {
+               const response = await ResolvedTransactionApi(transactionId);
+               handleShowingFlashMessage({
+                  message: 'Transação finalizada com sucesso!',
+                  timer: 3000,
+                  type: 'success',
+                  haveButton: false,
+               });
+               return response;
+            }
+
+            handleShowingFlashMessage({
+               message: 'Finalização Cancela!',
+               timer: 3000,
+               type: 'error',
+               haveButton: false,
+            });
+            return;
+         } catch (err: any) {
+            if (
+               err.response.status &&
+               err.response.data.message === 'Invalid Token'
+            ) {
+               logout();
+            }
+         }
+      },
+      [handleShowingFlashMessage, logout]
+   );
+
+   const GetTransaction = useCallback(
+      async ({ month }: FilterTransactionByMonthProps) => {
+         try {
+            const result = await getTransactions<TransactionDTO>({
+               month,
+            });
+
+            if (!result) {
+               return;
+            }
+
+            if (result?.monthBalense) {
+               setTransition({
+                  balense: result.monthBalense,
+                  transactions: result.transactions,
+               });
+               return;
+            }
+
+            setTransition(result);
+
+            return;
+         } catch (err: any) {
+            if (
+               err.response.status &&
+               err.response.data.message === 'Invalid Token'
+            ) {
+               logout();
+            }
+         }
+      },
+      [logout]
+   );
+
+   const GetTransactionByParams = useCallback(
+      async ({
+         isSubscription,
+         month,
+         resolved,
+         revenue,
+      }: getTransactionByParamsProps) => {
          try {
             const result =
-               await getTransactionBySubscription<GetTransactionBySubscriptionProps>(
-                  {
-                     isSubscription,
-                     month,
-                  }
-               );
+               await getTransactionByParams<GetTransactionBySubscriptionProps>({
+                  isSubscription,
+                  month,
+                  resolved,
+                  revenue,
+               });
 
             if (result?.balense) {
                setTransition({
@@ -117,37 +208,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       [logout]
    );
 
-   const GetTransaction = useCallback(
-      async ({ month }: FilterTransactionByMonthProps) => {
-         try {
-            const result = await getTransactions({
-               month,
-            });
-
-            if (result?.monthBalense) {
-               setTransition({
-                  balense: result.monthBalense,
-                  transactions: result.transactions,
-               });
-               return;
-            }
-
-            setTransition(result);
-            return;
-         } catch (err: any) {
-            if (
-               err.response.status &&
-               err.response.data.message === 'Invalid Token'
-            ) {
-               logout();
-            }
-         }
-      },
-      [logout]
-   );
-
    const getTotalBalense = useCallback(async () => {
-      const result = await getTransactions({});
+      const result = await getTransactions<TransactionDTO>({});
 
       return result;
    }, []);
@@ -156,12 +218,13 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       <TransactionContext.Provider
          value={{
             CreateMutation,
+            ResolvedTransaction,
             getTotalBalense,
             open,
             setOpen,
             GetTransaction,
             transaction,
-            GetTransactionBySubscription,
+            GetTransactionByParams,
          }}
       >
          {children}
