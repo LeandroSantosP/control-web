@@ -34,6 +34,12 @@ export interface Transaction {
    value: string;
    resolved: boolean;
    updated_at: Date;
+   category: {
+      id: string;
+      name: string;
+      created_at: string;
+      updated_at: string;
+   };
 }
 
 interface TransactionDTO {
@@ -169,7 +175,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             }
          }
       },
-      [logout]
+      [logout, ResolvedTransaction]
    );
 
    const GetTransactionByParams = useCallback(

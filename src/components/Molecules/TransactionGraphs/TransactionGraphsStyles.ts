@@ -1,12 +1,22 @@
 import styled from 'styled-components';
+import { Info } from '@phosphor-icons/react';
+import Chart from 'react-apexcharts';
 
 export const WrapperMain = styled('section')`
    display: flex;
    height: 100%;
+   flex-direction: column;
    position: relative;
+   text-align: center;
 `;
 
-export const ToggleButton = styled('button')`
+interface ToggleButtonProps {
+   top?: number;
+   right?: number;
+   left?: number;
+}
+
+export const ToggleButton = styled('button')<ToggleButtonProps>`
    display: flex;
    justify-content: center;
    align-items: center;
@@ -14,11 +24,53 @@ export const ToggleButton = styled('button')`
    background-color: ${(props) => props.theme.colors.Dark};
    border: 1px solid ${(props) => props.theme.colors.TimberWhite};
    padding: 0.2rem;
-   top: 0;
+   top: ${(props) => props.top ?? undefined};
+   right: ${(props) => props.right ?? undefined};
+   left: ${(props) => props.left ?? undefined};
    border-radius: 0.3rem;
-   z-index: 1;
    cursor: pointer;
    &:hover {
       filter: brightness(1.9);
    }
+`;
+
+export const InfosButton = styled(Info)`
+   position: absolute;
+   right: 0;
+   z-index: 999;
+   cursor: pointer;
+
+   &:hover {
+      filter: brightness(1.5);
+   }
+`;
+
+interface ChartTittle {
+   type: string;
+}
+
+export const ChartTittle = styled('h1')<ChartTittle>`
+   font-size: 1rem;
+   font-weight: 500;
+   margin: 0.5rem 0;
+
+   span:nth-child(1) {
+      color: ${(props) => {
+         return props.type !== 'expense'
+            ? 'rgba(80, 176, 149, 0.66)'
+            : props.theme.colors.TimberWhite;
+      }};
+   }
+
+   span:nth-child(2) {
+      color: ${(props) => {
+         return props.type !== 'revenue'
+            ? 'rgba(176, 159, 80, 0.66)'
+            : props.theme.colors.TimberWhite;
+      }};
+   }
+`;
+
+export const ChartCustoms = styled(Chart)`
+   display: flex;
 `;

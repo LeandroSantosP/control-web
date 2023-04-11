@@ -18,6 +18,7 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
+import { GraphsInfos } from '../../components/atoms/GraphsInfos/GraphsInfos';
 
 interface Transaction {
    id: string;

@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Switch from '@radix-ui/react-switch';
 
 export const DialogContent = styled(Dialog.Content)`
+   z-index: 999;
    position: absolute;
    margin: 0 auto;
    width: 450px;
@@ -32,6 +33,7 @@ export const DialogOverlay = styled(Dialog.Overlay)`
    width: 100%;
    position: absolute;
    height: 100%;
+
    background-color: #1e1d1dbf;
 `;
 
@@ -139,6 +141,7 @@ export const ErrorMessage = styled('span')`
 `;
 export const SelectWrapper = styled('div')`
    display: flex;
+   z-index: 999;
    justify-content: space-around;
    align-items: center;
    right: 3rem;
@@ -146,6 +149,8 @@ export const SelectWrapper = styled('div')`
 
 export const SelectWrapperChildren = styled('div')`
    display: flex;
+   z-index: 999;
+
    flex-direction: column;
 `;
 

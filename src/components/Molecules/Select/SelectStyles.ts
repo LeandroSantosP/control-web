@@ -23,7 +23,7 @@ export const SelectTrigger = styled(Select.Trigger)`
 
 export const SelectContent = styled(Select.Content)`
    background-color: #000;
-
+   z-index: 999;
    border: 1px solid ${(props) => props.theme.colors.RaisinBlack};
 `;
 

@@ -33,7 +33,16 @@ export const TransactionListItem = ({ params }: { params: Transaction }) => {
       top: 0,
       left: 0,
    });
-   const { value: amount, resolved, due_date, type, filingDate } = params;
+   const {
+      value: amount,
+      resolved,
+      due_date,
+      type,
+      filingDate,
+      isSubscription,
+      installments,
+      category,
+   } = params;
 
    let dateFormatted = '';
 
@@ -63,6 +72,38 @@ export const TransactionListItem = ({ params }: { params: Transaction }) => {
       return;
    };
 
+   let NumberFormatted;
+
+   if (isSubscription == false && installments !== null && installments !== 0) {
+      NumberFormatted =
+         installments +
+         'X' +
+         ' ' +
+         FormatCurense(Number(amount) / installments);
+   } else {
+      NumberFormatted = FormatCurense(Number(amount));
+   }
+
+   type categoryMappingType = {
+      [key: string]: string;
+   };
+
+   const categoryMapping: categoryMappingType = {
+      transport: 'Transporte',
+      food: 'Comida',
+      habitation: 'Habitação',
+      health: 'Saúde',
+      education: 'Educação',
+      leisure: 'Lazer',
+      products: 'Produtos',
+      debts: 'Débitos',
+      Taxes: 'Taxas',
+      Investments: 'Investimentos',
+   };
+
+   const formattedCategoryName =
+      categoryMapping[category.name] || 'Desconhecida';
+
    return (
       <>
          <S.TransactionItemLi
@@ -74,11 +115,21 @@ export const TransactionListItem = ({ params }: { params: Transaction }) => {
          >
             {showPopOver && (
                <PopoverDetails
-                  content={params}
+                  content={{
+                     ...params,
+                     value: FormatCurense(Number(amount)),
+                     category: {
+                        name: formattedCategoryName,
+                        created_at: category.created_at,
+                        id: category.id,
+                        updated_at: category.updated_at,
+                     },
+                  }}
                   left={popOverPosition.left}
                   top={popOverPosition.top}
                />
             )}
+
             <S.TransactionContent>
                <S.DueDate>
                   {due_date !== null && 'Data De Vencimento'}
@@ -88,7 +139,7 @@ export const TransactionListItem = ({ params }: { params: Transaction }) => {
             </S.TransactionContent>
             <S.TransactionContent>
                <S.Amount negative={Number(amount) <= 0}>
-                  {FormatCurense(Number(amount))}
+                  {NumberFormatted}
                </S.Amount>
                <span>
                   {type === 'revenue'

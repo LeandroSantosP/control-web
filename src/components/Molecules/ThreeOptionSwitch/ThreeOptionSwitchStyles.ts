@@ -7,7 +7,7 @@ export const MainWrapper = styled('div')`
       position: absolute;
       right: 8px;
       top: 9px;
-      z-index: 1000;
+      z-index: 15;
    }
    &:hover {
       color: transparent;

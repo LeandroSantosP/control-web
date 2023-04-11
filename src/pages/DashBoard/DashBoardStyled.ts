@@ -30,8 +30,8 @@ export const DashboardWrapper = styled('section')<DashboardWrapperProps>`
 `;
 
 export const StatusWrapper = styled('div')<DashboardWrapperProps>`
-   display: flex;
    ${flex}
+   display: flex;
    flex-direction: ${(props) => props.flexDirection || 'column'};
    height: 100%;
    gap: 1rem;

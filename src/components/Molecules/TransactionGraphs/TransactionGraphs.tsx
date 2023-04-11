@@ -1,30 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
 import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import * as S from './TransactionGraphsStyles';
-import { toMoney } from 'vanilla-masker';
+import { GraphsInfos } from '../../atoms/GraphsInfos/GraphsInfos';
 
 export const TransactionGraphs = () => {
+   const [showInfo, setShowInfo] = useState(false);
    const [currentTransactionType, setCurrentTransactionType] = useState<
       'revenue' | 'expense'
-   >('revenue');
+   >('expense');
    const { transaction } = useTransactionContext();
    const [muOptions, setMuOptions] = useState<
       ApexCharts.ApexOptions | undefined
    >(undefined);
+   console.log(transaction);
 
    const GetTransactionType = useCallback(
       (type: 'expense' | 'revenue') => {
          const TransactionType = transaction?.transactions
             .filter((item) => {
+               const currentYear = new Date().getFullYear();
                const getCorrespondeDateType =
                   type === 'expense' ? item.due_date : item.filingDate;
-               const currentYear = new Date(
+               const currentYearOfTransaction = new Date(
                   getCorrespondeDateType as string
                ).getFullYear();
 
-               return item.type === type && currentYear === 2023;
+               return (
+                  item.type === type && currentYearOfTransaction === currentYear
+               );
             })
             .sort((a, b) => {
                let typeChoses = {} as any;
@@ -91,13 +95,23 @@ export const TransactionGraphs = () => {
          result[month] = {
             max: -Infinity,
             min: Infinity,
+            instalment: false,
+            gols: Infinity,
          };
 
          for (const item of group) {
-            const value = parseFloat(item.value);
+            let value = parseFloat(item.value);
             if (isNaN(value)) continue;
+
+            if (item.installments !== 0 && item.installments !== null) {
+               result[month].instalment = true;
+               value = value / item.installments;
+               value = Number(value.toFixed(2));
+            }
+
             result[month].max = Math.max(result[month].max, value);
             result[month].min = Math.min(result[month].min, value);
+            result[month].gols = 21;
          }
       }
 
@@ -105,6 +119,7 @@ export const TransactionGraphs = () => {
          month,
          minimalCurrentValue: result[month].max,
          majorCurrentValue: result[month].min,
+         gols: result[month].gols,
       }));
 
       const Months = [
@@ -158,28 +173,48 @@ export const TransactionGraphs = () => {
          },
       ];
 
+      /*
+         Uma Rota no backend onde eu tenho que mandar o id do user o mes que onde a ele deseja adicionar uma meta(Revenue Expense) /
+
+      */
+
       setMuOptions({
          legend: {
             position: 'top',
+         },
+         chart: {
+            zoom: {
+               enabled: true,
+               type: 'x',
+               autoScaleYaxis: false,
+               zoomedArea: {
+                  fill: {
+                     color: '#90CAF9',
+                     opacity: 0.4,
+                  },
+                  stroke: {
+                     color: '#0D47A1',
+                     opacity: 0.4,
+                     width: 1,
+                  },
+               },
+            },
          },
          tooltip: {
             enabled: true,
             fillSeriesColor: true,
             theme: 'dark',
          },
+
          plotOptions: {
             bar: {
+               horizontal: true,
                borderRadiusApplication: 'around',
                borderRadiusWhenStacked: 'last',
+               borderRadius: 2,
                dataLabels: {
                   position: 'top',
                   orientation: 'horizontal',
-                  total: {
-                     enabled: true,
-                     style: {
-                        fontSize: '1px',
-                     },
-                  },
                },
                columnWidth: '40px',
             },
@@ -196,28 +231,54 @@ export const TransactionGraphs = () => {
                }).filter((i) => i !== undefined);
                return response;
             }),
+
             labels: {
                formatter: function (value) {
                   return value;
                },
             },
-            type: 'category',
          },
 
          series: [
             {
                name: `Menores Despesas (Por MES)`,
                color: 'rgba(176, 159, 80, 0.66)',
+
                data: data.map((item) => {
-                  return item.majorCurrentValue;
+                  return {
+                     x: '2013',
+                     y: item.minimalCurrentValue,
+                     goals: [
+                        {
+                           name: 'Expected',
+                           value: item.gols,
+                           strokeWidth: 10,
+                           strokeHeight: 0,
+                           strokeLineCap: 'round',
+                           strokeColor: '#775DD0',
+                        },
+                     ],
+                  };
                }),
             },
             {
                name: 'Maiores Despesas (Por MES)',
-
                color: 'rgba(80, 176, 149, 0.66)',
-               data: data?.map((item) => {
-                  return item.minimalCurrentValue;
+               data: data.map((item) => {
+                  return {
+                     x: '2013',
+                     y: item.majorCurrentValue,
+                     goals: [
+                        {
+                           name: 'Expected',
+                           value: item.gols,
+                           strokeWidth: 10,
+                           strokeHeight: 0,
+                           strokeLineCap: 'round',
+                           strokeColor: '#775DD0',
+                        },
+                     ],
+                  };
                }),
             },
          ],
@@ -226,6 +287,7 @@ export const TransactionGraphs = () => {
 
    return (
       <S.WrapperMain>
+         {' '}
          <S.ToggleButton
             onClick={() =>
                setCurrentTransactionType((prev) => {
@@ -239,13 +301,45 @@ export const TransactionGraphs = () => {
             <ArrowsCounterClockwise size={20} />
             {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
          </S.ToggleButton>
+         <S.ToggleButton
+            onClick={() =>
+               setCurrentTransactionType((prev) => {
+                  if (prev === 'expense') {
+                     return 'revenue';
+                  }
+                  return 'expense';
+               })
+            }
+         >
+            <ArrowsCounterClockwise size={20} />
+            {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
+         </S.ToggleButton>
+         <S.InfosButton
+            size={15}
+            onClick={() => setShowInfo((prev) => !prev)}
+         />
+         {showInfo && <GraphsInfos />}
          {muOptions && (
-            <Chart
-               options={muOptions}
-               series={muOptions?.series}
-               width={500}
-               type="bar"
-            />
+            <>
+               <S.ChartTittle type={currentTransactionType}>
+                  <span>Receita</span>/<span>Despesas</span>
+               </S.ChartTittle>
+               <S.ChartCustoms
+                  options={muOptions}
+                  series={muOptions?.series}
+                  height="260px"
+                  type="bar"
+               />
+               <S.ChartTittle type={currentTransactionType}>
+                  <span>Receita</span>/<span>Despesas</span>
+               </S.ChartTittle>
+               <S.ChartCustoms
+                  options={muOptions}
+                  series={muOptions?.series}
+                  height="200px"
+                  type="bar"
+               />
+            </>
          )}
       </S.WrapperMain>
    );
