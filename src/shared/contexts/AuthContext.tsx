@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
    getItem,
    setItem,
@@ -60,6 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    const [loading, setLoading] = useState(false);
    const [isLogged, setIsLogged] = useState(() => {
       const token = localStorage.getItem('auth');
+
       return token ? true : false;
    });
 

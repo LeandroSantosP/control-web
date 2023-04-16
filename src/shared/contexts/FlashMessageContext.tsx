@@ -38,11 +38,13 @@ export const FlashMessageProvider = ({
    );
    const [showFlashMessage, setShowFlashMessage] = useState(false);
    const [haveButton, setHaveButton] = useState(false);
-   const [answer, setAnswer] = useState<'accept' | 'reject' | undefined>();
    const [messageContent, setMessageContent] = useState('');
+   const [answer, setAnswer] = useState<'accept' | 'reject' | undefined>(
+      undefined
+   );
    const [type, setType] = useState<
       'success' | 'warning' | 'error' | 'default' | undefined
-   >();
+   >(undefined);
 
    useEffect(() => {
       GetNotifications.getMessages();

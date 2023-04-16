@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { PopoverDetails } from '../PopoverTest/PopoverDetails';
 import { useRef, useState } from 'react';
 import { Transaction } from '../../../shared/contexts';
+import { memo } from 'react';
 
 export interface TransactionListItemProps {
    id: string;
@@ -26,7 +27,7 @@ const FormatCurense = (amount: number) =>
       currency: 'BRL',
    }).format(amount);
 
-export const TransactionListItem = ({ params }: { params: Transaction }) => {
+function TransactionListItem({ params }: { params: Transaction }) {
    const LiRef = useRef<HTMLDivElement>(null);
    const [showPopOver, setShowPopover] = useState(false);
    const [popOverPosition, setPopoverPosition] = useState({
@@ -152,4 +153,6 @@ export const TransactionListItem = ({ params }: { params: Transaction }) => {
          </S.TransactionItemLi>
       </>
    );
-};
+}
+
+export default memo(TransactionListItem);

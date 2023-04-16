@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Check } from '@phosphor-icons/react';
 
 interface TransactionItemLiProps {
    currentState: string;

@@ -1,14 +1,14 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
 
-import { TransactionListItem } from '../../components/Molecules/TransactionListItem/TransactionListItem';
+import TransactionListItem from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
 import { Transaction } from '../../components/Molecules/Transaction/Transaction';
 import { Layout } from '../../components/providers/Layout/';
 import { useStorage } from '../../shared/modules/Storage';
 import { useTransactionContext } from '../../shared/contexts';
 import { Box } from '../../components/atoms/Box/Box';
-import { TransactionGraphs } from '../../components/Molecules/TransactionGraphs/TransactionGraphs';
+import TransactionGraphs from '../../components/Molecules/TransactionGraphs/TransactionGraphs';
 
 import Wallet from '../../shared/assets/wallet.svg';
 import GraphUp from '../../shared/assets/graphUp.svg';
@@ -18,7 +18,6 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
-import { GraphsInfos } from '../../components/atoms/GraphsInfos/GraphsInfos';
 
 interface Transaction {
    id: string;

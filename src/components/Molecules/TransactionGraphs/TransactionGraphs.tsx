@@ -1,19 +1,38 @@
-import { useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import * as S from './TransactionGraphsStyles';
 import { GraphsInfos } from '../../atoms/GraphsInfos/GraphsInfos';
+import { UserGoalsManagement } from '../../../shared/helpers/GetUserGoals';
+import { toMoney } from 'vanilla-masker';
 
-export const TransactionGraphs = () => {
+type Goals = {
+   name: string;
+   number: number;
+   expectated_expense: string;
+   expectated_revenue: string;
+};
+
+type DataItem = {
+   month: string;
+   minimalCurrentValue: any;
+   majorCurrentValue: any;
+   goals: Goals | undefined;
+};
+
+type DataResponse = Array<DataItem>;
+
+function TransactionGraphs() {
+   const [data, setDate] = useState<DataResponse>([]);
+   const { transaction } = useTransactionContext();
    const [showInfo, setShowInfo] = useState(false);
+
    const [currentTransactionType, setCurrentTransactionType] = useState<
       'revenue' | 'expense'
    >('expense');
-   const { transaction } = useTransactionContext();
    const [muOptions, setMuOptions] = useState<
       ApexCharts.ApexOptions | undefined
    >(undefined);
-   console.log(transaction);
 
    const GetTransactionType = useCallback(
       (type: 'expense' | 'revenue') => {
@@ -79,104 +98,93 @@ export const TransactionGraphs = () => {
       []
    );
 
-   useEffect(() => {
-      const TransactionsResult = GetTransactionType(currentTransactionType);
+   interface GoalsProps {
+      user: {
+         avatar: any;
+         created_at: string;
+         id: string;
+         name: string;
+      };
+      MonthFormatted: Array<{
+         name: string;
+         number: number;
+         expectated_expense: string;
+         expectated_revenue: string;
+      }>;
+   }
 
-      const groupedByMonthExpense = GroupedByMonth(
-         TransactionsResult,
-         currentTransactionType
-      );
+   const GraphConfiguration = useCallback(async () => {
+      const Months = [] as {
+         name: string;
+         ref: string;
+      }[];
 
-      const result = {} as { [key: string]: any };
+      for (let i = 0; i < 12; i++) {
+         const ref = i < 10 ? `0${i}` : i.toString();
+         const name = new Date(2000, i - 1, 1).toLocaleString('default', {
+            month: 'short',
+         });
 
-      for (const month in groupedByMonthExpense) {
-         const group = groupedByMonthExpense[month];
-
-         result[month] = {
-            max: -Infinity,
-            min: Infinity,
-            instalment: false,
-            gols: Infinity,
-         };
-
-         for (const item of group) {
-            let value = parseFloat(item.value);
-            if (isNaN(value)) continue;
-
-            if (item.installments !== 0 && item.installments !== null) {
-               result[month].instalment = true;
-               value = value / item.installments;
-               value = Number(value.toFixed(2));
-            }
-
-            result[month].max = Math.max(result[month].max, value);
-            result[month].min = Math.min(result[month].min, value);
-            result[month].gols = 21;
-         }
+         Months.push({ name, ref });
       }
 
-      const data = Object.keys(result).map((month) => ({
-         month,
-         minimalCurrentValue: result[month].max,
-         majorCurrentValue: result[month].min,
-         gols: result[month].gols,
-      }));
+      const UserGoals = new UserGoalsManagement<GoalsProps>({
+         route: '/goals',
+         type: 'get',
+      });
 
-      const Months = [
-         {
-            name: 'Jan',
-            ref: '01',
-         },
-         {
-            name: 'Fev',
-            ref: '02',
-         },
-         {
-            name: 'mar',
-            ref: '03',
-         },
-         {
-            name: 'abr',
-            ref: '04',
-         },
-         {
-            name: 'mai',
-            ref: '05',
-         },
-         {
-            name: 'jun',
-            ref: '06',
-         },
-         {
-            name: 'jul',
-            ref: '07',
-         },
-         {
-            name: 'ago',
-            ref: '08',
-         },
-         {
-            name: 'set',
-            ref: '09',
-         },
-         {
-            name: 'out',
-            ref: '10',
-         },
-         {
-            name: 'nov',
-            ref: '11',
-         },
-         {
-            name: 'dez',
-            ref: '12',
-         },
-      ];
+      await UserGoals.ListUserGoals();
 
-      /*
-         Uma Rota no backend onde eu tenho que mandar o id do user o mes que onde a ele deseja adicionar uma meta(Revenue Expense) /
+      const sut = data.reduce((storage, acc) => {
+         const currentMonth = Number(
+            acc['month'].slice(-2).replace('0', '').trim()
+         );
 
-      */
+         const currentMonthGoals = UserGoals.goals.MonthFormatted.find(
+            (month) => month.number === currentMonth
+         );
+
+         acc = {
+            ...acc,
+            goals: currentMonthGoals || undefined,
+         };
+
+         storage.push(acc);
+
+         return storage;
+      }, [] as DataResponse);
+
+      let TransactionTypeName: 'Despesas' | 'Receita' = 'Receita';
+
+      if (Number(sut[0]?.majorCurrentValue) < 0) {
+         TransactionTypeName = 'Despesas';
+      }
+
+      function GetGoals(item: DataItem) {
+         let goalsConfig: any;
+
+         if (item.goals !== undefined) {
+            const value =
+               item.minimalCurrentValue < 0
+                  ? item.goals.expectated_expense
+                  : item.goals.expectated_revenue;
+
+            console.log(value);
+
+            goalsConfig = [
+               {
+                  name: 'Valor esperado para o mes de ' + item.goals?.name,
+                  value: value,
+                  strokeWidth: 10,
+                  strokeHeight: 0,
+                  strokeLineCap: 'round',
+                  strokeColor: '#775DD0',
+               },
+            ];
+         }
+
+         return goalsConfig;
+      }
 
       setMuOptions({
          legend: {
@@ -241,48 +249,83 @@ export const TransactionGraphs = () => {
 
          series: [
             {
-               name: `Menores Despesas (Por MES)`,
+               name: `Menores ${TransactionTypeName} (Por MES)`,
                color: 'rgba(176, 159, 80, 0.66)',
 
-               data: data.map((item) => {
+               data: sut.map((item) => {
+                  const goalsConfig = GetGoals(item);
+
                   return {
                      x: '2013',
                      y: item.minimalCurrentValue,
-                     goals: [
-                        {
-                           name: 'Expected',
-                           value: item.gols,
-                           strokeWidth: 10,
-                           strokeHeight: 0,
-                           strokeLineCap: 'round',
-                           strokeColor: '#775DD0',
-                        },
-                     ],
+                     goals: goalsConfig,
                   };
                }),
             },
             {
-               name: 'Maiores Despesas (Por MES)',
+               name: `Maiores ${TransactionTypeName} (Por MES)`,
                color: 'rgba(80, 176, 149, 0.66)',
-               data: data.map((item) => {
+               data: sut.map((item) => {
+                  const goalsConfig = GetGoals(item);
+
                   return {
                      x: '2013',
                      y: item.majorCurrentValue,
-                     goals: [
-                        {
-                           name: 'Expected',
-                           value: item.gols,
-                           strokeWidth: 10,
-                           strokeHeight: 0,
-                           strokeLineCap: 'round',
-                           strokeColor: '#775DD0',
-                        },
-                     ],
+                     goals: goalsConfig,
                   };
                }),
             },
          ],
       });
+   }, [data]);
+
+   useEffect(() => {
+      GraphConfiguration();
+   }, [GraphConfiguration]);
+
+   useEffect(() => {
+      const TransactionsResult = GetTransactionType(currentTransactionType);
+
+      const groupedByMonthExpense = GroupedByMonth(
+         TransactionsResult,
+         currentTransactionType
+      );
+
+      const result = {} as { [key: string]: any };
+
+      for (const month in groupedByMonthExpense) {
+         const group = groupedByMonthExpense[month];
+
+         result[month] = {
+            max: -Infinity,
+            min: Infinity,
+            instalment: false,
+            gols: Infinity,
+         };
+
+         for (const item of group) {
+            let value = parseFloat(item.value);
+            if (isNaN(value)) continue;
+
+            if (item.installments !== 0 && item.installments !== null) {
+               result[month].instalment = true;
+               value = value / item.installments;
+               value = Number(value.toFixed(2));
+            }
+
+            result[month].max = Math.max(result[month].max, value);
+            result[month].min = Math.min(result[month].min, value);
+         }
+      }
+
+      const data = Object.keys(result).map((month) => ({
+         month,
+         minimalCurrentValue: result[month].max,
+         majorCurrentValue: result[month].min,
+         goals: undefined,
+      }));
+
+      setDate(data);
    }, [currentTransactionType, GroupedByMonth, GetTransactionType]);
 
    return (
@@ -343,4 +386,6 @@ export const TransactionGraphs = () => {
          )}
       </S.WrapperMain>
    );
-};
+}
+
+export default memo(TransactionGraphs);
