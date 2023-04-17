@@ -2,9 +2,9 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import * as S from './TransactionGraphsStyles';
-import { GraphsInfos } from '../../atoms/GraphsInfos/GraphsInfos';
 import { UserGoalsManagement } from '../../../shared/helpers/GetUserGoals';
 import { toMoney } from 'vanilla-masker';
+import { FormatCurense } from '../../../shared/helpers/FommatedFunction';
 
 type Goals = {
    name: string;
@@ -23,9 +23,8 @@ type DataItem = {
 type DataResponse = Array<DataItem>;
 
 function TransactionGraphs() {
-   const [data, setDate] = useState<DataResponse>([]);
    const { transaction } = useTransactionContext();
-   const [showInfo, setShowInfo] = useState(false);
+   const [data, setDate] = useState<DataResponse>([]);
 
    const [currentTransactionType, setCurrentTransactionType] = useState<
       'revenue' | 'expense'
@@ -160,7 +159,7 @@ function TransactionGraphs() {
          TransactionTypeName = 'Despesas';
       }
 
-      function GetGoals(item: DataItem) {
+      function FormattedGoalsItems(item: DataItem) {
          let goalsConfig: any;
 
          if (item.goals !== undefined) {
@@ -168,8 +167,6 @@ function TransactionGraphs() {
                item.minimalCurrentValue < 0
                   ? item.goals.expectated_expense
                   : item.goals.expectated_revenue;
-
-            console.log(value);
 
             goalsConfig = [
                {
@@ -246,14 +243,44 @@ function TransactionGraphs() {
                },
             },
          },
+         yaxis: {
+            labels: {
+               formatter: (val: any) => {
+                  const res = FormatCurense(val as number);
 
+                  if ((typeof val[0] as any) === 'string') {
+                     return val;
+                  }
+
+                  return (
+                     `${res.includes('-') ? '-' : ''} ` +
+                     toMoney(res, {
+                        unit: 'RS',
+                     })
+                  );
+               },
+               align: 'center',
+            },
+         },
+         dataLabels: {
+            formatter: (val, opt) => {
+               const goals =
+                  opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
+                     .goals;
+
+               if (goals && goals.length) {
+                  return `R$ ${val}`;
+               }
+               return `R$ ${val}`;
+            },
+         },
          series: [
             {
-               name: `Menores ${TransactionTypeName} (Por MES)`,
+               name: `Menores ${TransactionTypeName} (Do MES)`,
                color: 'rgba(176, 159, 80, 0.66)',
 
                data: sut.map((item) => {
-                  const goalsConfig = GetGoals(item);
+                  const goalsConfig = FormattedGoalsItems(item);
 
                   return {
                      x: '2013',
@@ -263,10 +290,10 @@ function TransactionGraphs() {
                }),
             },
             {
-               name: `Maiores ${TransactionTypeName} (Por MES)`,
+               name: `Maiores ${TransactionTypeName} ( MES)`,
                color: 'rgba(80, 176, 149, 0.66)',
                data: sut.map((item) => {
-                  const goalsConfig = GetGoals(item);
+                  const goalsConfig = FormattedGoalsItems(item);
 
                   return {
                      x: '2013',
@@ -357,11 +384,6 @@ function TransactionGraphs() {
             <ArrowsCounterClockwise size={20} />
             {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
          </S.ToggleButton>
-         <S.InfosButton
-            size={15}
-            onClick={() => setShowInfo((prev) => !prev)}
-         />
-         {showInfo && <GraphsInfos />}
          {muOptions && (
             <>
                <S.ChartTittle type={currentTransactionType}>
@@ -371,15 +393,6 @@ function TransactionGraphs() {
                   options={muOptions}
                   series={muOptions?.series}
                   height="260px"
-                  type="bar"
-               />
-               <S.ChartTittle type={currentTransactionType}>
-                  <span>Receita</span>/<span>Despesas</span>
-               </S.ChartTittle>
-               <S.ChartCustoms
-                  options={muOptions}
-                  series={muOptions?.series}
-                  height="200px"
                   type="bar"
                />
             </>

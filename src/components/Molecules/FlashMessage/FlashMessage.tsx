@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import * as S from './FlashMessageStyles';
 import { Warning, SealWarning } from '@phosphor-icons/react';
 

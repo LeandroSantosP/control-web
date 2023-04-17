@@ -1,10 +1,8 @@
 import styled from 'styled-components';
-import { Info } from '@phosphor-icons/react';
 import Chart from 'react-apexcharts';
 
 export const WrapperMain = styled('section')`
    display: flex;
-   height: 100%;
    flex-direction: column;
    position: relative;
    text-align: center;
@@ -31,17 +29,6 @@ export const ToggleButton = styled('button')<ToggleButtonProps>`
    cursor: pointer;
    &:hover {
       filter: brightness(1.9);
-   }
-`;
-
-export const InfosButton = styled(Info)`
-   position: absolute;
-   right: 0;
-   z-index: 999;
-   cursor: pointer;
-
-   &:hover {
-      filter: brightness(1.5);
    }
 `;
 

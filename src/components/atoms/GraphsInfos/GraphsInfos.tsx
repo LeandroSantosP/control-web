@@ -8,8 +8,7 @@ export const GraphsInfos = () => {
             {' '}
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
             quos eaque nostrum aut ipsum earum aliquid nesciunt, officiis,
-            repellat deserunt quis vero autem, vel rerum tempore dicta in
-            exercitationem totam?
+            repellat deserunt ?
          </p>
       </S.Whapper>
    );

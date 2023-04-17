@@ -1,9 +1,10 @@
 import * as S from './TransactionLIstItem';
 import { format } from 'date-fns';
-import { PopoverDetails } from '../PopoverTest/PopoverDetails';
+import { PopoverDetails } from '../Popover/PopoverDetails';
 import { useRef, useState } from 'react';
 import { Transaction } from '../../../shared/contexts';
 import { memo } from 'react';
+import { FormatCurense } from '../../../shared/helpers/FommatedFunction';
 
 export interface TransactionListItemProps {
    id: string;
@@ -20,12 +21,6 @@ export interface TransactionListItemProps {
    userId: string;
    transactionsCategoryId: string;
 }
-
-const FormatCurense = (amount: number) =>
-   new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-   }).format(amount);
 
 function TransactionListItem({ params }: { params: Transaction }) {
    const LiRef = useRef<HTMLDivElement>(null);

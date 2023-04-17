@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
+import { lazy, Suspense } from 'react';
 
 import TransactionListItem from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
@@ -8,7 +9,11 @@ import { Layout } from '../../components/providers/Layout/';
 import { useStorage } from '../../shared/modules/Storage';
 import { useTransactionContext } from '../../shared/contexts';
 import { Box } from '../../components/atoms/Box/Box';
-import TransactionGraphs from '../../components/Molecules/TransactionGraphs/TransactionGraphs';
+
+const TransactionGraphs = lazy(
+   () =>
+      import('../../components/Molecules/TransactionGraphs/TransactionGraphs')
+);
 
 import Wallet from '../../shared/assets/wallet.svg';
 import GraphUp from '../../shared/assets/graphUp.svg';
@@ -18,6 +23,8 @@ import Balense from '../../shared/assets/balense.png';
 import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
+import { Progress } from '../../components/atoms/Progress/Progress';
+import { GraphHeader } from '../../components/Molecules/GraphHeader/GraphHeader';
 
 interface Transaction {
    id: string;
@@ -126,7 +133,10 @@ export const DashBoard = () => {
                   })}
                </S.StatusWrapper>
                <S.StatusWrapper flex={3 / 4}>
-                  <TransactionGraphs />
+                  <GraphHeader />
+                  <Suspense fallback={<Progress />}>
+                     <TransactionGraphs />
+                  </Suspense>
                </S.StatusWrapper>
             </S.DashboardWrapper>
 

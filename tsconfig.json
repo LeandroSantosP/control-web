@@ -24,7 +24,7 @@
       "**/*.tsx",
       "pages/auth/auth.js",
       "src/components/Molecules/InputAndLabel/StylesInput.jsx",
-      "src/components/Molecules/PopoverTest"
+      "src/components/Molecules/Popover"
    ],
    "references": [
       {
