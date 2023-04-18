@@ -1,5 +1,4 @@
 import { api } from '../shared/axios';
-import { IRequestRequest } from '../shared/helpers/GetUserGoals';
 
 interface LoginProps {
    email: string;
@@ -164,45 +163,28 @@ export const GetUserNotification = async (NotificationToken: string) => {
    }
 };
 
-export const CreateGoalsUser = async <T>({
-   ...params
-}: IRequestRequest): Promise<T | any> => {
-   try {
-      if (auth.token) {
-         const res = await api({
-            token: auth.token,
-         }).post<T>('/goals', {
-            params,
-         });
-
-         return Promise.resolve(res);
-      }
-   } catch (erro: any) {
-      return Promise.reject(erro);
-   }
-};
-
-interface GoalsUserRequestsProps<T, P> {
-   type: 'get' | 'post' | 'delete';
+interface GoalsUserRequestsProps<B, P> {
+   type: 'get' | 'post' | 'delete' | 'patch';
    route: string;
-   body?: T;
+   body?: B;
    params?: P;
 }
 
-export const GoalsUserRequests = async <T, P>({
+export const GoalsUserRequests = async <B, P, R>({
    route,
    type,
    body,
    params,
-}: GoalsUserRequestsProps<T, P>) => {
+}: GoalsUserRequestsProps<B, P>) => {
    try {
       if (auth.token) {
          const res = await api({
             token: auth.token,
             params,
-         })[type]<T>(route, {
+         })[type]<R>(route, {
             ...body,
          });
+
          return Promise.resolve(res);
       }
    } catch (erro: any) {

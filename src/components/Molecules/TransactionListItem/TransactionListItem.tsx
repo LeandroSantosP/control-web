@@ -4,7 +4,7 @@ import { PopoverDetails } from '../Popover/PopoverDetails';
 import { useRef, useState } from 'react';
 import { Transaction } from '../../../shared/contexts';
 import { memo } from 'react';
-import { FormatCurense } from '../../../shared/helpers/FommatedFunction';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 
 export interface TransactionListItemProps {
    id: string;

@@ -43,7 +43,8 @@
     "styled-system": "^5.1.5",
     "vanilla-masker": "^1.2.0",
     "vite-plugin-eslint": "^1.8.1",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/date-fns": "^2.6.0",

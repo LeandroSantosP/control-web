@@ -2,9 +2,9 @@ import * as S from './TransactionGraphsStyles';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
-import { UserGoalsManagement } from '../../../shared/helpers/GetUserGoals';
 import { toMoney } from 'vanilla-masker';
-import { FormatCurense } from '../../../shared/helpers/FommatedFunction';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { useGoalsStorage } from '../../../shared/store/goals/GoalsStorage';
 
 type Goals = {
    name: string;
@@ -23,6 +23,10 @@ type DataItem = {
 type DataResponse = Array<DataItem>;
 
 function TransactionGraphs() {
+   const {
+      state: { goals },
+      actions: { list: ListGoals },
+   } = useGoalsStorage();
    const { transaction } = useTransactionContext();
    const [data, setDate] = useState<DataResponse>([]);
 
@@ -97,21 +101,6 @@ function TransactionGraphs() {
       []
    );
 
-   interface GoalsProps {
-      user: {
-         avatar: any;
-         created_at: string;
-         id: string;
-         name: string;
-      };
-      MonthFormatted: Array<{
-         name: string;
-         number: number;
-         expectated_expense: string;
-         expectated_revenue: string;
-      }>;
-   }
-
    const GraphConfiguration = useCallback(async () => {
       const Months = [] as {
          name: string;
@@ -127,19 +116,14 @@ function TransactionGraphs() {
          Months.push({ name, ref });
       }
 
-      const UserGoals = new UserGoalsManagement<GoalsProps>({
-         route: '/goals',
-         type: 'get',
-      });
-
-      await UserGoals.ListUserGoals();
+      await ListGoals();
 
       const sut = data.reduce((storage, acc) => {
          const currentMonth = Number(
             acc['month'].slice(-2).replace('0', '').trim()
          );
 
-         const currentMonthGoals = UserGoals.goals.MonthFormatted.find(
+         const currentMonthGoals = goals?.MonthFormatted?.find(
             (month) => month.number === currentMonth
          );
 

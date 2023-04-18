@@ -1,4 +1,3 @@
-/* eslint-disable no-async-promise-executor */
 import { GoalsUserRequests } from '../../api';
 
 export interface IRequestRequest {
@@ -11,16 +10,19 @@ export class UserGoalsManagement<T> {
    private params;
    public goals: T;
 
-   constructor(params: { route: string; type: 'get' | 'post' | 'delete' }) {
+   constructor(params: {
+      route: string;
+      type: 'get' | 'post' | 'delete' | 'patch';
+   }) {
       this.params = params;
       this.goals = {} as T;
    }
 
    async ListUserGoals() {
       try {
-         const res = await GoalsUserRequests<T, undefined>({
-            route: '/goals',
-            type: 'get',
+         const res = await GoalsUserRequests<T, undefined, any>({
+            route: this.params.route,
+            type: this.params.type,
          });
          if (res) {
             this.goals = res.data;
@@ -31,17 +33,27 @@ export class UserGoalsManagement<T> {
       }
    }
 
-   async create(body: any): Promise<any> {
+   async create<B, R>(body: B) {
       try {
-         const response = await GoalsUserRequests({
+         const response = await GoalsUserRequests<B, undefined, R>({
             route: this.params.route,
             type: this.params.type,
             body,
          });
+         console.log({ response });
 
          return Promise.resolve(response);
       } catch (err) {
          return Promise.reject(err);
       }
+   }
+
+   async remove<B, R>(body: B) {
+      const response = await GoalsUserRequests<B, any, R>({
+         route: this.params.route,
+         type: this.params.type,
+         body,
+      });
+      return response;
    }
 }

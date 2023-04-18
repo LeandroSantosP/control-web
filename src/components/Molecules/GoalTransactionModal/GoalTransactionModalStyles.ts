@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
 
 export const DialogRoot = styled(Dialog.Root)``;
@@ -85,21 +85,46 @@ export const GoalsGraphs = styled('div')<GoalsGraphsProps>`
    }
 `;
 
-export const Form = styled('form')`
+const fadeIn = keyframes`
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+`;
+
+interface FormProps {
+   hide: boolean;
+}
+
+export const Form = styled('form')<FormProps>`
    display: flex;
-   position: absolute;
    min-width: 118px;
+   height: 140px;
+   position: absolute;
    flex-direction: row;
    gap: 2rem;
    overflow-y: scroll;
    width: 800px;
-   height: 140px;
    padding: 0.8rem;
-   left: 1.2rem;
+   left: 3.5rem;
    bottom: 1.9rem;
-
    border-radius: 0.4rem;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
+   transform-origin: ${(props) => (props.hide ? 'left' : 'right')};
+   animation: ${(props) => (props.hide ? fadeIn : fadeOut)} 0.2s forwards;
 `;
 
 interface InputProps {
@@ -124,8 +149,7 @@ export const WrapperButtons = styled('div')`
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   padding: 0.4rem;
-   gap: 10px;
+   gap: 5px;
 `;
 
 export const Button = styled('button')`
@@ -155,6 +179,7 @@ export const LabelAndInputWrapper = styled('div')`
    flex-direction: column;
    padding: 10px;
    width: 100%;
+   bottom: 2rem;
    background-color: ${(props) => props.theme.colors.Dark};
 `;
 
@@ -181,4 +206,36 @@ export const RemoveButton = styled('button')`
    &:hover {
       background-color: red;
    }
+`;
+
+export const ButtonCreateGoals = styled('button')`
+   position: absolute;
+   display: flex;
+   justify-content: center;
+   text-align: center;
+   align-items: center;
+   cursor: pointer;
+   border: none z;
+   background-color: rgba(59, 59, 59, 0.62);
+   height: 30px;
+   width: 30px;
+   left: 1rem;
+   bottom: 5.5rem;
+   border-radius: 99999%;
+   transition: transform 0.3s ease-out;
+
+   &:hover {
+      transform: translateY(-2px);
+   }
+
+   &:active {
+      transform: translateY(2px);
+   }
+`;
+
+export const IconWrapper = styled('div')`
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: transform 0.3s ease-out;
 `;

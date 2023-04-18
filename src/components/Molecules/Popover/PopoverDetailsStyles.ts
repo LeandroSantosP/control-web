@@ -21,8 +21,8 @@ export const PopOver = styled('div')<PopOver>`
    z-index: 15;
    top: ${(props) => props.top - 57}px;
    left: ${(props) => props.left - 350}px;
-   animation: popover 0.2s forwards;
    transform-origin: right;
+   animation: popover 0.2s forwards;
 
    @keyframes popover {
       from {
