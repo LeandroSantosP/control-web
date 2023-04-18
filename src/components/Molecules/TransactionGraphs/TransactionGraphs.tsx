@@ -1,7 +1,7 @@
+import * as S from './TransactionGraphsStyles';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
-import * as S from './TransactionGraphsStyles';
 import { UserGoalsManagement } from '../../../shared/helpers/GetUserGoals';
 import { toMoney } from 'vanilla-masker';
 import { FormatCurense } from '../../../shared/helpers/FommatedFunction';

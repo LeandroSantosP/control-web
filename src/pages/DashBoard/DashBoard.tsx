@@ -139,7 +139,6 @@ export const DashBoard = () => {
                   </Suspense>
                </S.StatusWrapper>
             </S.DashboardWrapper>
-
             <S.DashboardWrapper flex={1 / 3}>
                <S.TransactionHeader>
                   <Transaction />
