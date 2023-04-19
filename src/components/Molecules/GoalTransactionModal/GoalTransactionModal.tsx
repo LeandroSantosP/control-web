@@ -1,18 +1,20 @@
-import * as S from './GoalTransactionModalStyles';
-import { ChangeEvent, useEffect } from 'react';
-import { CaretDown, CaretRight, Target, Trash, X } from '@phosphor-icons/react';
-import { Label } from '../InputAndLabel/Label';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AxiosError } from 'axios';
-
 import { z } from 'zod';
+import { useState, ChangeEvent, useEffect } from 'react';
+import { AxiosError } from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import VMasker, { toMoney } from 'vanilla-masker';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import Chart from 'react-apexcharts';
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
+import { CaretDown, CaretRight, Target, Trash, X } from '@phosphor-icons/react';
+
+import * as S from './GoalTransactionModalStyles';
+import { Label } from '../InputAndLabel/Label';
 import { InputMF } from '../../atoms/InputMF/InputMF';
 // import { ErrorMessageMF } from '../../atoms/ErrorMessageMF/ErrorMessageMF';
-import VMasker, { toMoney } from 'vanilla-masker';
-import { useState } from 'react';
 import { useGoalsStorage } from '../../../shared/store';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { SelectCustom } from '../Select/Select';
+import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 
 type ValidMonthsType = {
    [key: string]: string;
@@ -55,19 +57,36 @@ const createGoalsSchema = z.object({
       .nonempty(),
 });
 
-type createGoalsData = z.infer<typeof createGoalsSchema>;
+export type createGoalsData = z.infer<typeof createGoalsSchema>;
+const monthNames = [
+   'Janeiro',
+   'Fevereiro',
+   'Março',
+   'Abril',
+   'Maio',
+   'Junho',
+   'Julho',
+   'Agosto',
+   'Setembro',
+   'Outubro',
+   'Novembro',
+   'Dezembro',
+];
 
 export const GoalsTransactionModal = () => {
+   const [showCreateGoals, setShowCreateGoals] = useState(false);
+
+   const [showDeleteGoals, setShowDeleteGoals] = useState(false);
+
+   const [charOptions, setCharOptions] = useState<
+      ApexCharts.ApexOptions | undefined
+   >({});
+
    const {
       state: { goals },
-      actions: { list, createOrUpdated },
+      actions: { createOrUpdated, list },
    } = useGoalsStorage();
 
-   const [showCreateGoals, setShowCreateGoals] = useState(false);
-   const [valueExpense, setValueExpense] = useState('');
-   const [valueRevenue, setValueRevenue] = useState('');
-
-   //fieldNameExpense
    const createGoalForm = useForm<createGoalsData>({
       resolver: zodResolver(createGoalsSchema),
       defaultValues: {
@@ -79,8 +98,10 @@ export const GoalsTransactionModal = () => {
 
    const {
       handleSubmit,
-      formState: { errors },
+      reset,
       control,
+      setValue,
+      formState: { errors },
    } = createGoalForm;
 
    const createGaols = async (data: createGoalsData) => {
@@ -125,18 +146,19 @@ export const GoalsTransactionModal = () => {
       });
 
       try {
-         const response = await createOrUpdated({
+         await createOrUpdated({
             createIfNotExist: true,
             dataForUpdate: result,
          });
-
          await list();
-
+         reset();
+         setShowCreateGoals(false);
          return;
       } catch (err) {
          if (err instanceof AxiosError) {
             console.error(err.response?.data.message);
          }
+         reset();
          return err;
       }
    };
@@ -149,6 +171,95 @@ export const GoalsTransactionModal = () => {
    });
 
    useEffect(() => {
+      const goalsData = monthNames.map((monthName) => {
+         const dataForMonth = goals?.MonthFormatted?.find(
+            (d) => d.name === monthName
+         );
+
+         if (dataForMonth) {
+            return dataForMonth;
+         } else {
+            return {
+               name: monthName,
+               expectated_expense: '0',
+               expectated_revenue: '0',
+            };
+         }
+      });
+
+      setCharOptions(() => ({
+         tooltip: {
+            enabled: true,
+            fillSeriesColor: true,
+            theme: 'dark',
+         },
+         fill: {
+            type: 'gradient',
+            colors: ['#e61239', '#12e864'],
+            gradient: {
+               shadeIntensity: 1,
+               opacityFrom: 0.7,
+               opacityTo: 0,
+            },
+         },
+         plotOptions: {
+            area: {
+               fillTo: 'end',
+            },
+         },
+         colors: ['#B01E68', '#3D5656'],
+         chart: {
+            type: 'area',
+            animations: {
+               enabled: true,
+               easing: 'easeinout',
+
+               speed: 800,
+               animateGradually: {
+                  enabled: true,
+                  delay: 150,
+               },
+            },
+         },
+
+         stroke: {
+            curve: 'smooth',
+            type: 'gradient',
+            colors: ['#fff'],
+         },
+         xaxis: {
+            categories: monthNames.map((month) => month),
+         },
+
+         yaxis: {
+            labels: {
+               formatter: function (value) {
+                  const FormattedToMoney = FormatCurense(Number(value));
+
+                  return `${FormattedToMoney}`;
+               },
+               align: 'center',
+            },
+         },
+
+         series: [
+            {
+               name: 'Meta de Despesas',
+               data: goalsData.map((goal) => {
+                  return Number(goal.expectated_expense);
+               }),
+            },
+            {
+               name: 'Meta de Receita',
+               data: goalsData.map((goal) => {
+                  return Number(goal.expectated_revenue);
+               }),
+            },
+         ],
+      }));
+   }, [goals, goals?.MonthFormatted]);
+
+   useEffect(() => {
       if (fields.length === 0) {
          setShowCreateGoals(false);
          createGoalForm.resetField('dataForUpdate');
@@ -159,25 +270,42 @@ export const GoalsTransactionModal = () => {
       append({ expectated_expense: '', expectated_revenue: '', month: '' });
    };
 
-   /* O gradino deve ser capaz de mostra todos os meses, e en cada mes dele ter a meta em gestão justamente com as metas atual, caso  */
+   const handleChange = (
+      event: ChangeEvent<HTMLInputElement>,
+      index: number
+   ) => {
+      const { name, value } = event.target;
 
-   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      const valueFormatted = toMoney(e.target.value, {
+      const valueFormatted = toMoney(value, {
          unit: 'R$',
       }) as string;
 
-      const currentInput = e.target.name.split('.').splice(-1)[0];
+      const currentInput = name.split('.').splice(-1)[0] as
+         | 'expectated_revenue'
+         | 'expectated_expense';
 
-      if (currentInput === 'expectated_revenue') {
-         setValueRevenue(valueFormatted);
+      if (['expectated_revenue'].includes(currentInput)) {
+         setValue(`dataForUpdate.${index}.${currentInput}`, valueFormatted);
          return;
       }
-
-      setValueExpense(valueFormatted);
+      setValue(`dataForUpdate.${index}.${currentInput}`, valueFormatted);
+      return;
    };
 
    const handleClick = () => {
       setShowCreateGoals((prev) => !prev);
+   };
+
+   const CreateNewGoalsProps = {
+      addNewGoal,
+      createGaols,
+      dataForUpdate,
+      errors,
+      fields,
+      handleChange,
+      handleSubmit,
+      remove,
+      showCreateGoals,
    };
 
    return (
@@ -188,12 +316,20 @@ export const GoalsTransactionModal = () => {
          <S.DialogPortal>
             <S.DialogOverlay />
             <S.DialogContent>
-               <S.DialogTitle>Goals</S.DialogTitle>
+               {' '}
+               <S.DialogTitle>Meta (POR MES)</S.DialogTitle>
                <S.DialogDescription as="div">
-                  Make changes to your profile here. Click save when you re
-                  done.
+                  Trace metas financeiras e alcance a estabilidade financeira
+                  com sucesso!
                </S.DialogDescription>
-               <S.ButtonCreateGoals onClick={handleClick}>
+               <S.ButtonCreateGoals visible={'visible'} bottom="8rem">
+                  {showDeleteGoals ? (
+                     <CaretRight size={30} />
+                  ) : (
+                     <CaretDown size={30} />
+                  )}
+               </S.ButtonCreateGoals>
+               <S.ButtonCreateGoals visible={'visible'} onClick={handleClick}>
                   {showCreateGoals ? (
                      <CaretRight size={30} />
                   ) : (
@@ -202,187 +338,20 @@ export const GoalsTransactionModal = () => {
                </S.ButtonCreateGoals>
                {showCreateGoals && (
                   <FormProvider {...createGoalForm}>
-                     <S.Form
-                        hide={showCreateGoals}
-                        onSubmit={handleSubmit(createGaols)}
-                     >
-                        <>
-                           <div style={{ width: '100%' }}>
-                              {fields.map((field, index) => {
-                                 const fieldNameMonth = `dataForUpdate.${index}.month`;
-                                 const fieldNameExpense = `dataForUpdate.${index}.expectated_expense`;
-                                 const fieldNameRevenue = `dataForUpdate.${index}.expectated_revenue`;
-                                 return (
-                                    <S.WrapperMúltiplosFields key={field.id}>
-                                       <S.LabelAndInputWrapper>
-                                          <S.RemoveButton
-                                             type="button"
-                                             onClick={() => remove(index)}
-                                          >
-                                             <Trash />
-                                          </S.RemoveButton>
-                                          <Label
-                                             fontWeight="700"
-                                             margin="0"
-                                             fontSize={'small'}
-                                             color="#fff"
-                                          >
-                                             Mes
-                                          </Label>
-                                          <InputMF
-                                             name={fieldNameMonth}
-                                             type={fieldNameMonth}
-                                          />
-
-                                          {dataForUpdate &&
-                                             dataForUpdate[index]?.month && (
-                                                <S.ErrorMessage>
-                                                   {
-                                                      dataForUpdate[index]
-                                                         ?.month?.message
-                                                   }
-                                                </S.ErrorMessage>
-                                             )}
-                                       </S.LabelAndInputWrapper>
-                                       <S.LabelAndInputWrapper>
-                                          <Label
-                                             fontWeight="700"
-                                             margin="0"
-                                             fontSize={'small'}
-                                             color="#fff"
-                                          >
-                                             Despesa esperada
-                                          </Label>
-
-                                          <InputMF
-                                             value={valueExpense || 'R$ 00,00'}
-                                             onChange={handleChange}
-                                             name={fieldNameExpense}
-                                             type={fieldNameExpense}
-                                          />
-
-                                          {dataForUpdate &&
-                                             dataForUpdate[index]
-                                                ?.expectated_expense && (
-                                                <S.ErrorMessage>
-                                                   {
-                                                      dataForUpdate[index]
-                                                         ?.expectated_expense
-                                                         ?.message
-                                                   }
-                                                </S.ErrorMessage>
-                                             )}
-                                       </S.LabelAndInputWrapper>
-                                       <S.LabelAndInputWrapper>
-                                          <Label
-                                             fontWeight="700"
-                                             margin="0"
-                                             fontSize={'small'}
-                                             color="#fff"
-                                          >
-                                             Receita esperada
-                                          </Label>
-
-                                          <InputMF
-                                             value={valueRevenue || 'R$ 00,00'}
-                                             onChange={handleChange}
-                                             name={fieldNameRevenue}
-                                             type={fieldNameRevenue}
-                                          />
-
-                                          {dataForUpdate &&
-                                             dataForUpdate[index]
-                                                ?.expectated_revenue && (
-                                                <S.ErrorMessage>
-                                                   {
-                                                      dataForUpdate[index]
-                                                         ?.expectated_revenue
-                                                         ?.message
-                                                   }
-                                                </S.ErrorMessage>
-                                             )}
-                                       </S.LabelAndInputWrapper>
-                                    </S.WrapperMúltiplosFields>
-                                 );
-                              })}
-                           </div>
-                           <div>
-                              <S.WrapperButtons>
-                                 <Label
-                                    fontWeight="700"
-                                    margin="0"
-                                    fontSize={'small'}
-                                    color="#fff"
-                                 >
-                                    Metas
-                                 </Label>
-                                 <S.Button onClick={addNewGoal}>
-                                    Adicionar
-                                 </S.Button>
-                                 <S.Button type="submit">criar</S.Button>
-                              </S.WrapperButtons>
-                           </div>
-                        </>
-                        {/* <div>
-                        <Label
-                           fontWeight="700"
-                           margin="0"
-                           fontSize={'small'}
-                           color="#fff"
-                        >
-                           Mes
-                        </Label>
-                        <S.Input
-                           width="70px"
-                           type="number"
-                           fontSize="2.1rem"
-                           {...register('month')}
-                        />
-                        {month && <PopOverError message={month?.message} />}
-                     </div>
-                     <div>
-                        <Label
-                           fontWeight="700"
-                           margin="0"
-                           fontSize={'small'}
-                           color="#fff"
-                        >
-                           Receita Esperada
-                        </Label>
-                        <S.Input
-                           fontSize="1rem"
-                           width="100%"
-                           type="text"
-                           {...register('revenueExpect')}
-                        />
-                        {revenueExpect && (
-                           <PopOverError message={revenueExpect?.message} />
-                        )}
-                     </div>
-                     <div>
-                        <Label
-                           fontWeight="700"
-                           margin="0"
-                           fontSize={'small'}
-                           color="#fff"
-                        >
-                           Despesa Esperada
-                        </Label>
-                        <S.Input
-                           fontSize="1rem"
-                           width="100%"
-                           type="text"
-                           {...register('expenseExpect')}
-                        />
-                        {expenseExpect && (
-                           <PopOverError message={expenseExpect?.message} />
-                        )}
-                     </div> */}
-                     </S.Form>
+                     <CreateNewGoalForm {...CreateNewGoalsProps} />
                   </FormProvider>
                )}
-
-               <S.GoalsGraphs height="82%">1</S.GoalsGraphs>
+               <S.GoalsGraphs height="100%">
+                  {charOptions?.series && (
+                     <Chart
+                        options={charOptions}
+                        series={charOptions?.series}
+                        height="480px"
+                        width={1000}
+                        type={charOptions?.chart?.type as any}
+                     />
+                  )}
+               </S.GoalsGraphs>
                <S.DialogClose asChild>
                   <button>
                      <X />

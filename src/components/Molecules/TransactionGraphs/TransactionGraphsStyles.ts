@@ -60,4 +60,6 @@ export const ChartTittle = styled('h1')<ChartTittle>`
 
 export const ChartCustoms = styled(Chart)`
    display: flex;
+   max-width: 650px;
+   margin: 35px auto;
 `;

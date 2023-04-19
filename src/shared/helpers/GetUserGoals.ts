@@ -40,7 +40,6 @@ export class UserGoalsManagement<T> {
             type: this.params.type,
             body,
          });
-         console.log({ response });
 
          return Promise.resolve(response);
       } catch (err) {

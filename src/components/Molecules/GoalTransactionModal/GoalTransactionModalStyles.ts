@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import * as Dialog from '@radix-ui/react-dialog';
-
+import Chart from 'react-apexcharts';
+import { ArrowDown } from '@phosphor-icons/react';
 export const DialogRoot = styled(Dialog.Root)``;
 
 export const DialogTrigger = styled(Dialog.Trigger)`
@@ -33,15 +34,16 @@ export const DialogOverlay = styled(Dialog.Overlay)`
 `;
 
 export const DialogContent = styled(Dialog.Content)`
-   z-index: 999;
    position: absolute;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    gap: 2rem;
-   width: 1000px;
+   width: 100%;
+   max-width: 1000px;
    padding: 0.8rem;
    border-radius: 0.5rem;
    margin: 0 auto;
-   height: 600px;
+   height: 100%;
+   max-height: 600px;
    left: 50%;
    top: 50%;
    transform: translate(-50%, -50%);
@@ -55,9 +57,9 @@ export const DialogTitle = styled(Dialog.Title)`
 `;
 
 export const DialogDescription = styled(Dialog.Description)`
-   margin: 10px 0 20px;
+   margin: 0 20px;
    color: #fff;
-   font-size: 2rem;
+   font-size: 1.5rem;
    line-height: 1.5;
 `;
 
@@ -76,9 +78,11 @@ export const GoalsGraphs = styled('div')<GoalsGraphsProps>`
    display: flex;
    justify-content: center;
    align-items: center;
-   height: ${(props) => props.height};
+   max-height: 100%;
+   width: 100%;
    border-radius: 0.4rem;
    gap: 1rem;
+
    background-color: ${(props) => props.theme.colors.Dark};
    :not(:last-child) {
       margin-bottom: 1rem;
@@ -112,6 +116,7 @@ interface FormProps {
 export const Form = styled('form')<FormProps>`
    display: flex;
    min-width: 118px;
+   z-index: 999;
    height: 140px;
    position: absolute;
    flex-direction: row;
@@ -125,6 +130,30 @@ export const Form = styled('form')<FormProps>`
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    transform-origin: ${(props) => (props.hide ? 'left' : 'right')};
    animation: ${(props) => (props.hide ? fadeIn : fadeOut)} 0.2s forwards;
+`;
+
+export const MoreContentArrow = styled(ArrowDown)`
+   font-size: 1rem;
+   color: red;
+   background-color: ${(props) => props.theme.colors.TimberWhite};
+   border-radius: 50%;
+   color: ${(props) => props.theme.colors.Dark};
+   right: 2.5rem;
+   bottom: 1rem;
+   position: absolute;
+   transform: translateX(-50%);
+   animation: arrow-animation 1s ease-in-out infinite;
+   @keyframes arrow-animation {
+      0% {
+         transform: translate(-50%, 0);
+      }
+      50% {
+         transform: translate(-50%, 10px);
+      }
+      100% {
+         transform: translate(-50%, 0);
+      }
+   }
 `;
 
 interface InputProps {
@@ -208,7 +237,11 @@ export const RemoveButton = styled('button')`
    }
 `;
 
-export const ButtonCreateGoals = styled('button')`
+export const ButtonCreateGoals = styled('button')<{
+   visible: 'hidden' | 'visible';
+   left?: string;
+   bottom?: string;
+}>`
    position: absolute;
    display: flex;
    justify-content: center;
@@ -216,12 +249,14 @@ export const ButtonCreateGoals = styled('button')`
    align-items: center;
    cursor: pointer;
    border: none z;
-   background-color: rgba(59, 59, 59, 0.62);
+   background-color: rgba(59, 59, 59, 0.26);
    height: 30px;
+   z-index: 999;
    width: 30px;
-   left: 1rem;
-   bottom: 5.5rem;
+   left: ${(props) => props.left ?? '1.5rem'};
+   bottom: ${(props) => props.bottom ?? '5.6rem'};
    border-radius: 99999%;
+   visibility: ${(props) => props.visible};
    transition: transform 0.3s ease-out;
 
    &:hover {
@@ -238,4 +273,11 @@ export const IconWrapper = styled('div')`
    align-items: center;
    justify-content: center;
    transition: transform 0.3s ease-out;
+`;
+
+//Chart
+
+export const ChartCustoms = styled(Chart)`
+   display: flex;
+   width: 80%;
 `;

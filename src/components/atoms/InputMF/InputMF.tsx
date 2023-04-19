@@ -5,6 +5,7 @@ import { useFormContext } from 'react-hook-form';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
    name: string;
    onChange?: (e: any) => void;
+   value?: string;
 }
 
 export const InputMF = (props: InputProps) => {
@@ -15,7 +16,9 @@ export const InputMF = (props: InputProps) => {
          fontSize="10px"
          {...register(props.name, {
             onChange: props.onChange,
+            value: props.value,
          })}
+         defaultValue={'R$ 00,00'}
          {...props}
       />
    );

@@ -71,7 +71,7 @@ export const useGoalsStorage = create<StoreProps>((set) => ({
             route: '/goals',
             type: 'get',
          });
-         await response.ListUserGoals();
+         await response?.ListUserGoals();
 
          const goals = response.goals;
 

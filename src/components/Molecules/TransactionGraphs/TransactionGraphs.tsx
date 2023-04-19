@@ -1,10 +1,10 @@
-import * as S from './TransactionGraphsStyles';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { ArrowsCounterClockwise } from '@phosphor-icons/react';
+import * as S from './TransactionGraphsStyles';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
-import { toMoney } from 'vanilla-masker';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import { useGoalsStorage } from '../../../shared/store/goals/GoalsStorage';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { ArrowsCounterClockwise } from '@phosphor-icons/react';
+import { toMoney } from 'vanilla-masker';
 
 type Goals = {
    name: string;
@@ -171,11 +171,16 @@ function TransactionGraphs() {
          legend: {
             position: 'top',
          },
+         tooltip: {
+            enabled: true,
+            fillSeriesColor: true,
+            theme: 'dark',
+         },
          chart: {
+            type: 'line',
+            height: 350,
             zoom: {
                enabled: true,
-               type: 'x',
-               autoScaleYaxis: false,
                zoomedArea: {
                   fill: {
                      color: '#90CAF9',
@@ -189,12 +194,6 @@ function TransactionGraphs() {
                },
             },
          },
-         tooltip: {
-            enabled: true,
-            fillSeriesColor: true,
-            theme: 'dark',
-         },
-
          plotOptions: {
             bar: {
                horizontal: true,
@@ -288,7 +287,7 @@ function TransactionGraphs() {
             },
          ],
       });
-   }, [data]);
+   }, [ListGoals, data]);
 
    useEffect(() => {
       GraphConfiguration();
@@ -341,7 +340,6 @@ function TransactionGraphs() {
 
    return (
       <S.WrapperMain>
-         {' '}
          <S.ToggleButton
             onClick={() =>
                setCurrentTransactionType((prev) => {
