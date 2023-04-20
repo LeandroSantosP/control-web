@@ -8,8 +8,8 @@ import dollarBg from '../../shared/assets/5133.jpg';
 import { Input } from '../../components/atoms/Input/InputBase';
 import { Button } from '../../components/atoms/button/BaseButton';
 import { Label } from '../../components/Molecules/InputAndLabel/Label';
-import { useAuth } from '../../shared/contexts/AuthContext';
 import { useEffect } from 'react';
+import { useAuthStorage } from '../../shared/store/AuthContext/AuthContext';
 
 export interface Inputs {
    email: string;
@@ -19,7 +19,10 @@ export interface Inputs {
 
 export const SingUp = () => {
    const navigation = useNavigate();
-   const { singUp, error, loading, isLogged } = useAuth();
+   const {
+      actions,
+      state: { isLogged, loading, errors: errorsApi },
+   } = useAuthStorage();
 
    useEffect(() => {
       if (isLogged) {
@@ -36,13 +39,13 @@ export const SingUp = () => {
    });
 
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-      const res = await singUp({
+      const response = await actions.singUp({
          email: data.email,
          name: data.name,
          password: data.password,
       });
 
-      if (res) {
+      if (response) {
          console.log('conta criada com sucesso!');
          navigation('/entrar');
       }
@@ -72,11 +75,8 @@ export const SingUp = () => {
                      }),
                   }}
                />
-               <ErrorMessage
-                  errors={errors}
-                  name="name"
-                  render={({ message }) => <p>{message}</p>}
-               />
+
+               <p>{errors.name?.message && errors.name.message}</p>
                <Label margin="1rem 0">Email</Label>
                <Input
                   fontSize="medium"
@@ -91,14 +91,11 @@ export const SingUp = () => {
                      }),
                   }}
                />
+               <p>{errors.email?.message && errors.email.message}</p>
                <p>
-                  {error?.message === 'Email already Exists!' && error?.message}
+                  {errorsApi?.message === 'Email already Exists!' &&
+                     errorsApi?.message}
                </p>
-               <ErrorMessage
-                  errors={errors}
-                  name="email"
-                  render={({ message }) => <p>{message}</p>}
-               />
 
                <Label margin="1rem 0">Senha</Label>
                <Input
@@ -121,11 +118,7 @@ export const SingUp = () => {
                      }),
                   }}
                />
-               <ErrorMessage
-                  errors={errors}
-                  name="password"
-                  render={({ message }) => <p>{message}</p>}
-               />
+               <p>{errors.password?.message && errors.password.message}</p>
                <S.Box JustifyContent="space-between">
                   <Button ISdisabled={loading} fontSize="small" type="submit">
                      {loading ? 'Carregando...' : ' Cadastra-se!'}

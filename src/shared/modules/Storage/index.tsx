@@ -39,6 +39,8 @@ const InMemoryStorageProvider = ({
    const handle = useCallback(async () => {
       const infos = await persistenceAdepter.getItem();
 
+      console.log(infos);
+
       if (infos !== null) {
          AuthCredentials(infos.token);
          setState(infos);

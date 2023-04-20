@@ -42,6 +42,7 @@ interface Transaction {
 
 export const DashBoard = () => {
    const { state } = useStorage();
+
    const {
       open: WhenTransactionIsCreateWithSuccess,
       GetTransaction,
@@ -52,10 +53,10 @@ export const DashBoard = () => {
    const [accountInfosList, setAccountInfosList] = useState<any[]>([]);
 
    const fetchTransactions = useCallback(async () => {
-      if (state.token !== undefined) {
+      if (state?.token !== undefined) {
          await GetTransaction({});
       }
-   }, [GetTransaction, state.token]);
+   }, [GetTransaction, state?.token]);
 
    useEffect(() => {
       getTotalBalense().then((response) => {

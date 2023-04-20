@@ -14,7 +14,7 @@ import {
 } from '../../api';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useFlashMessageContext } from './FlashMessageContext';
-import { useAuth } from './AuthContext';
+import { useAuthStorage } from '../store/AuthContext/AuthContext';
 
 interface FilterTransactionByMonthProps {
    month?: string;
@@ -77,7 +77,7 @@ const TransactionContext = createContext({} as TransactionProps);
 export const useTransactionContext = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-   const { logout } = useAuth();
+   const { actions } = useAuthStorage();
    const [transaction, setTransition] = useState<TransactionDTO>({
       balense: {
          expense: '0',
@@ -116,6 +116,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
             if (confirmeFinalization) {
                const response = await ResolvedTransactionApi(transactionId);
+
                handleShowingFlashMessage({
                   message: 'Transação finalizada com sucesso!',
                   timer: 3000,
@@ -137,11 +138,12 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                err.response.status &&
                err.response.data.message === 'Invalid Token'
             ) {
-               logout();
+               actions.logout();
             }
          }
+         console.log('pl');
       },
-      [handleShowingFlashMessage, logout]
+      [actions, handleShowingFlashMessage]
    );
 
    const GetTransaction = useCallback(
@@ -171,11 +173,11 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                err.response.status &&
                err.response.data.message === 'Invalid Token'
             ) {
-               logout();
+               actions.logout();
             }
          }
       },
-      [logout, ResolvedTransaction]
+      [actions.logout, ResolvedTransaction]
    );
 
    const GetTransactionByParams = useCallback(
@@ -207,11 +209,11 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                error.response.status &&
                error.response.data.message === 'Invalid Token'
             ) {
-               logout();
+               actions.logout();
             }
          }
       },
-      [logout]
+      [actions]
    );
 
    const getTotalBalense = useCallback(async () => {

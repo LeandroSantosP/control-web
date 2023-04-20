@@ -7,10 +7,10 @@ import dollarBg from '../../shared/assets/5133.jpg';
 import { Input } from '../../components/atoms/Input/InputBase';
 import { Button } from '../../components/atoms/button/BaseButton';
 import { Label } from '../../components/Molecules/InputAndLabel/Label';
-import { useAuth } from '../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useFlashMessageContext } from '../../shared/contexts';
+import { useAuthStorage } from '../../shared/store/AuthContext/AuthContext';
 
 export interface Inputs {
    email: string;
@@ -18,9 +18,12 @@ export interface Inputs {
 }
 
 export const SingIn = () => {
+   const {
+      actions,
+      state: { isLogged, loading, errors: error },
+   } = useAuthStorage();
    const { handleShowingFlashMessage } = useFlashMessageContext();
    const navigation = useNavigate();
-   const { login, error, loading, isLogged } = useAuth();
 
    useEffect(() => {
       if (isLogged) {
@@ -37,7 +40,7 @@ export const SingIn = () => {
    });
 
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
-      const res = await login(data.email, data.password);
+      const res = await actions.login(data.email, data.password);
 
       if (res?.status === 200) {
          navigation('/home');
@@ -45,6 +48,7 @@ export const SingIn = () => {
             message: 'Login efetuado com sucesso!',
             timer: 2000,
             type: 'success',
+            haveButton: false,
          });
       }
 

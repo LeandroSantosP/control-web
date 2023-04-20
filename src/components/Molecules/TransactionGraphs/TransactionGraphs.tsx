@@ -287,6 +287,8 @@ function TransactionGraphs() {
             },
          ],
       });
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [ListGoals, data]);
 
    useEffect(() => {

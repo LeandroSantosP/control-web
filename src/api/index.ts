@@ -31,6 +31,11 @@ export const SingUpAPI = async ({ name, email, password }: singUpProps) => {
 };
 
 const auth = {} as { token: string };
+
+function getToken() {
+   const res = localStorage.getItem('auth');
+   return res && JSON.parse(res);
+}
 export const AuthCredentials = (token: string) => {
    auth.token = token;
 };
@@ -38,10 +43,11 @@ export const AuthCredentials = (token: string) => {
 export const ResolvedTransactionApi = async (
    transactionId: string
 ): Promise<void | any> => {
+   const { token } = getToken();
    try {
-      if (auth.token) {
+      if (token) {
          const response = await api({
-            token: auth.token,
+            token,
          }).patch<void>(`/transaction/resolved/${transactionId}`);
          return Promise.resolve(response);
       }
@@ -51,10 +57,12 @@ export const ResolvedTransactionApi = async (
 };
 
 export const getTransactions = async <T>({ month }: { month?: string }) => {
+   const { token } = getToken();
+
    try {
-      if (auth.token) {
+      if (token) {
          const response = await api({
-            token: auth.token,
+            token,
             params: { month },
          }).get<T>(`/transaction`);
 
@@ -78,10 +86,12 @@ export const getTransactionByParams = async <T>({
    resolved,
    revenue,
 }: getTransactionByParamsProps) => {
+   const { token } = getToken();
+
    try {
-      if (auth.token) {
+      if (token) {
          const response = await api({
-            token: auth.token,
+            token: token,
             params: { month, isSubscription, resolved, revenue },
          }).get<T>('/transaction/bySubscriptions');
 
@@ -111,9 +121,10 @@ export const CreateTransaction = async <T>({
    isSubscription: boolean;
    installments: number;
 }) => {
+   const { token } = getToken();
    if (transactionType === 'Receita') {
       try {
-         const res = await api({ token: auth.token }).post<T>('/transaction', {
+         const res = await api({ token }).post<T>('/transaction', {
             value,
             description,
             categoryType: category,
@@ -128,18 +139,15 @@ export const CreateTransaction = async <T>({
    }
 
    try {
-      const res = await api({ token: auth.token }).post<T>(
-         '/transaction/recurrent',
-         {
-            value,
-            description,
-            isSubscription,
-            installments,
-            categoryType: category,
-            recurrence: recurrency,
-            due_date: Number(value) < 0 && date,
-         }
-      );
+      const res = await api({ token }).post<T>('/transaction/recurrent', {
+         value,
+         description,
+         isSubscription,
+         installments,
+         categoryType: category,
+         recurrence: recurrency,
+         due_date: Number(value) < 0 && date,
+      });
 
       return Promise.resolve(res.data);
    } catch (error) {
@@ -149,9 +157,10 @@ export const CreateTransaction = async <T>({
 
 export const GetUserNotification = async (NotificationToken: string) => {
    try {
-      if (auth.token) {
+      const { token } = getToken();
+      if (token) {
          const res = await api({
-            token: auth.token,
+            token,
          }).post('/push', {
             token: NotificationToken,
          });
@@ -176,10 +185,11 @@ export const GoalsUserRequests = async <B, P, R>({
    body,
    params,
 }: GoalsUserRequestsProps<B, P>) => {
+   const { token } = getToken();
    try {
-      if (auth.token) {
+      if (token) {
          const res = await api({
-            token: auth.token,
+            token,
             params,
          })[type]<R>(route, {
             ...body,

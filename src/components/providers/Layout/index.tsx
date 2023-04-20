@@ -1,8 +1,8 @@
 import * as S from './DashBoard.Styled';
 import logo from '../../../shared/assets/logo.svg';
-import { useAuth } from '../../../shared/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../atoms/Icons/Icon';
+import { useAuthStorage } from '../../../shared/store/AuthContext/AuthContext';
 
 interface LayoutProps {
    children: React.ReactNode;
@@ -10,7 +10,10 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
    const navigate = useNavigate();
-   const { logout, isLogged } = useAuth();
+   const {
+      actions,
+      state: { isLogged },
+   } = useAuthStorage();
    if (!isLogged) {
       navigate('/entrar');
    }
@@ -32,7 +35,7 @@ export const Layout = ({ children }: LayoutProps) => {
                      );
                   })}
                </S.WrapperOptions>
-               <S.Out fontSize="1.5rem" onClick={logout}>
+               <S.Out fontSize="1.5rem" onClick={actions.logout}>
                   sair
                </S.Out>
             </S.MenuContent>
