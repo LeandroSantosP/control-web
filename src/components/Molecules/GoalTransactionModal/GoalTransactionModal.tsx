@@ -1,35 +1,14 @@
 import { z } from 'zod';
-import { useState, ChangeEvent, useEffect } from 'react';
-import { AxiosError } from 'axios';
-import { zodResolver } from '@hookform/resolvers/zod';
-import VMasker, { toMoney } from 'vanilla-masker';
+import { useState, useEffect } from 'react';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import Chart from 'react-apexcharts';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { CaretDown, CaretRight, Target, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
 import { useGoalsStorage } from '../../../shared/store';
 import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
-
-type ValidMonthsType = {
-   [key: string]: string;
-};
-
-const ValidMonths: ValidMonthsType = {
-   '01': 'Janeiro',
-   '02': 'Fevereiro',
-   '03': 'Março',
-   '04': 'Abril',
-   '05': 'Maio',
-   '06': 'Junho',
-   '07': 'Julho',
-   '08': 'Agosto',
-   '09': 'Setembro',
-   '10': 'Outubro',
-   '11': 'Novembro',
-   '12': 'Dezembro',
-};
+import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
+import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
 
 const createGoalsSchema = z.object({
    dataForUpdate: z
@@ -70,101 +49,12 @@ const monthNames = [
 ];
 
 export const GoalsTransactionModal = () => {
-   const [showCreateGoals, setShowCreateGoals] = useState(false);
-
-   const [showDeleteGoals, setShowDeleteGoals] = useState(false);
-
    const [charOptions, setCharOptions] = useState<
       ApexCharts.ApexOptions | undefined
    >({});
-
    const {
       state: { goals },
-      actions: { createOrUpdated, list },
    } = useGoalsStorage();
-
-   const createGoalForm = useForm<createGoalsData>({
-      resolver: zodResolver(createGoalsSchema),
-      defaultValues: {
-         dataForUpdate: [
-            { expectated_expense: '', expectated_revenue: '', month: '' },
-         ],
-      },
-   });
-
-   const {
-      handleSubmit,
-      reset,
-      control,
-      setValue,
-      formState: { errors },
-   } = createGoalForm;
-
-   const createGaols = async (data: createGoalsData) => {
-      const result = data.dataForUpdate.map((data) => {
-         const curren33tValue = {
-            toDecimal: (value: string) => {
-               return parseFloat(VMasker.toNumber(value)) / 100;
-            },
-            execute: (
-               currentType: 'expectated_expense' | 'expectated_revenue'
-            ) => {
-               const value = data[currentType].replaceAll('R$', '');
-
-               if (!value || isNaN(parseFloat(value))) {
-                  console.error(
-                     'This Value is invalid for Decimal Value!',
-                     value
-                  );
-                  return;
-               }
-
-               let decimalValue = curren33tValue.toDecimal(value).toString();
-               if (currentType === 'expectated_expense') {
-                  decimalValue = '-' + decimalValue;
-               }
-
-               return decimalValue;
-            },
-         };
-
-         const expectated_expense =
-            curren33tValue.execute('expectated_expense');
-
-         const expectated_revenue =
-            curren33tValue.execute('expectated_revenue');
-
-         return {
-            month: data.month,
-            expectated_expense,
-            expectated_revenue,
-         };
-      });
-
-      try {
-         await createOrUpdated({
-            createIfNotExist: true,
-            dataForUpdate: result,
-         });
-         await list();
-         reset();
-         setShowCreateGoals(false);
-         return;
-      } catch (err) {
-         if (err instanceof AxiosError) {
-            console.error(err.response?.data.message);
-         }
-         reset();
-         return err;
-      }
-   };
-
-   const { dataForUpdate } = errors;
-
-   const { fields, append, remove } = useFieldArray({
-      control,
-      name: 'dataForUpdate',
-   });
 
    useEffect(() => {
       const goalsData = monthNames.map((monthName) => {
@@ -255,52 +145,20 @@ export const GoalsTransactionModal = () => {
       }));
    }, [goals, goals?.MonthFormatted]);
 
-   useEffect(() => {
-      if (fields.length === 0) {
-         setShowCreateGoals(false);
-         createGoalForm.resetField('dataForUpdate');
-      }
-   }, [createGoalForm, createGoalForm.resetField, fields]);
+   const [showCreateGoals, setShowCreateGoals] = useState(false);
 
-   const addNewGoal = () => {
-      append({ expectated_expense: '', expectated_revenue: '', month: '' });
-   };
+   const [showDeleteGoals, setShowDeleteGoals] = useState(false);
 
-   const handleChange = (
-      event: ChangeEvent<HTMLInputElement>,
-      index: number
-   ) => {
-      const { name, value } = event.target;
-
-      const valueFormatted = toMoney(value, {
-         unit: 'R$',
-      }) as string;
-
-      const currentInput = name.split('.').splice(-1)[0] as
-         | 'expectated_revenue'
-         | 'expectated_expense';
-
-      if (['expectated_revenue'].includes(currentInput)) {
-         setValue(`dataForUpdate.${index}.${currentInput}`, valueFormatted);
-         return;
-      }
-      setValue(`dataForUpdate.${index}.${currentInput}`, valueFormatted);
-      return;
-   };
-
-   const handleClick = () => {
+   const handleClickCreateGoal = () => {
       setShowCreateGoals((prev) => !prev);
    };
+   const handleClickDeleteGoal = () => {
+      setShowDeleteGoals((prev) => !prev);
+   };
+
+   // form
 
    const CreateNewGoalsProps = {
-      addNewGoal,
-      createGaols,
-      dataForUpdate,
-      errors,
-      fields,
-      handleChange,
-      handleSubmit,
-      remove,
       showCreateGoals,
    };
 
@@ -318,24 +176,30 @@ export const GoalsTransactionModal = () => {
                   Trace metas financeiras e alcance a estabilidade financeira
                   com sucesso!
                </S.DialogDescription>
-               <S.ButtonCreateGoals visible={'visible'} bottom="8rem">
+               <S.ButtonCreateGoals
+                  visible={'visible'}
+                  bottom="8rem"
+                  onClick={handleClickDeleteGoal}
+               >
                   {showDeleteGoals ? (
                      <CaretRight size={30} />
                   ) : (
                      <CaretDown size={30} />
                   )}
                </S.ButtonCreateGoals>
-               <S.ButtonCreateGoals visible={'visible'} onClick={handleClick}>
+               <S.ButtonCreateGoals
+                  visible={'visible'}
+                  onClick={handleClickCreateGoal}
+               >
                   {showCreateGoals ? (
                      <CaretRight size={30} />
                   ) : (
                      <CaretDown size={30} />
                   )}
                </S.ButtonCreateGoals>
+               {showDeleteGoals && <DeleteNewGoalForm />}
                {showCreateGoals && (
-                  <FormProvider {...createGoalForm}>
-                     <CreateNewGoalForm {...CreateNewGoalsProps} />
-                  </FormProvider>
+                  <CreateNewGoalForm {...CreateNewGoalsProps} />
                )}
                <S.GoalsGraphs height="100%">
                   {charOptions?.series && (

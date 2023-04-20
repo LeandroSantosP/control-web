@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Target } from '@phosphor-icons/react';
 import * as S from './ProgressStyles';
 
 export function Progress() {

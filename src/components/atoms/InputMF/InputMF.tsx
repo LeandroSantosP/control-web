@@ -10,6 +10,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const InputMF = (props: InputProps) => {
    const { register } = useFormContext();
+
    return (
       <S.Input
          id={props.name}
@@ -18,7 +19,6 @@ export const InputMF = (props: InputProps) => {
             onChange: props.onChange,
             value: props.value,
          })}
-         defaultValue={'R$ 00,00'}
          {...props}
       />
    );
