@@ -9,12 +9,12 @@ import { DashBoard } from '../pages/DashBoard/DashBoard';
 import { SingIn } from '../pages/SingIn/SingIn';
 import { SingUp } from '../pages/SingUp/SingUp';
 import { useFlashMessageContext } from '../shared/contexts/FlashMessageContext';
-import { useAuthStorage } from '../shared/store/AuthContext/AuthContext';
+import { authStorage } from '../shared/store/AuthContext/AuthContext';
 
 const PrivateRoute = (Item: React.FC) => {
    const {
       state: { isLogged },
-   } = useAuthStorage();
+   } = authStorage();
 
    return isLogged ? <Item /> : <SingIn />;
 };

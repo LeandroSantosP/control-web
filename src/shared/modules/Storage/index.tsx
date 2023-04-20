@@ -1,75 +1,52 @@
-import {
-   createContext,
-   useCallback,
-   useContext,
-   useEffect,
-   useState,
-} from 'react';
-import { AuthCredentials } from '../../../api';
+import { LocalStoreOperator } from './persistence-adepter/adepter';
 
-interface StorageProviderProps {
-   children: React.ReactNode;
-   persistenceAdepter: {
-      getItem: () => Promise<any>;
-      setItem: (data: any) => Promise<void>;
-   };
+interface UseProps<T> {
+   setItem?: (data: T) => Promise<void>;
+   getItem?: () => Promise<any>;
+   data?: T;
 }
 
-interface userInfos {
-   user?: {
-      name: string;
-      email: string;
-   };
-   token: string;
-}
+export class useLocalStorage<T> {
+   public data: any;
 
-interface test2 {
-   state: userInfos;
-   setState: () => any;
-}
+   constructor(private LocalStoreOperator: LocalStoreOperator) {
+      this.data = '';
+   }
 
-const InMemoryStorageContext = createContext({} as test2);
-
-const InMemoryStorageProvider = ({
-   persistenceAdepter,
-   children,
-}: StorageProviderProps) => {
-   const [state, setState] = useState({});
-
-   const handle = useCallback(async () => {
-      const infos = await persistenceAdepter.getItem();
-
-      console.log(infos);
-
-      if (infos !== null) {
-         AuthCredentials(infos.token);
-         setState(infos);
-         await persistenceAdepter.setItem(infos);
+   private async Use({ setItem, getItem, data }: UseProps<T>) {
+      if (setItem && data) {
+         await setItem(data);
       }
-   }, [persistenceAdepter]);
 
-   useEffect(() => {
-      handle();
-   }, [handle]);
+      if (getItem) {
+         return await getItem();
+      }
+      return;
+   }
 
-   return (
-      <InMemoryStorageContext.Provider
-         value={{ setState: setState as any, state: state as any }}
-      >
-         {children}
-      </InMemoryStorageContext.Provider>
-   );
-};
+   async StorageProvider({
+      operationType,
+      data,
+   }: {
+      operationType: 'get' | 'set';
+      data?: any;
+   }): Promise<void> {
+      if (operationType === 'get') {
+         const credentials = await this.Use({
+            getItem: this.LocalStoreOperator.getItem,
+         });
+         this.data = credentials;
+         return;
+      }
+      if (['set'].includes(operationType) && [null, undefined].includes(data)) {
+         throw new Error('data is required');
+      }
 
-export const StorageProvider = ({
-   children,
-   persistenceAdepter,
-}: StorageProviderProps) => {
-   return (
-      <InMemoryStorageProvider persistenceAdepter={persistenceAdepter}>
-         {children}
-      </InMemoryStorageProvider>
-   );
-};
+      await this.Use({
+         setItem: this.LocalStoreOperator.setItem,
+         data,
+      });
 
-export const useStorage = () => useContext(InMemoryStorageContext);
+      return;
+   }
+}

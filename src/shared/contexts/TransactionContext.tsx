@@ -14,7 +14,7 @@ import {
 } from '../../api';
 import { useMutation, UseMutationResult } from 'react-query';
 import { useFlashMessageContext } from './FlashMessageContext';
-import { useAuthStorage } from '../store/AuthContext/AuthContext';
+import { authStorage } from '../store/AuthContext/AuthContext';
 
 interface FilterTransactionByMonthProps {
    month?: string;
@@ -77,7 +77,7 @@ const TransactionContext = createContext({} as TransactionProps);
 export const useTransactionContext = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-   const { actions } = useAuthStorage();
+   const { actions } = authStorage();
    const [transaction, setTransition] = useState<TransactionDTO>({
       balense: {
          expense: '0',

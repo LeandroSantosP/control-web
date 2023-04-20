@@ -5,6 +5,11 @@ interface LoginProps {
    password: string;
 }
 
+function getToken() {
+   const res = localStorage.getItem('auth');
+   return res && JSON.parse(res);
+}
+
 export const loginAPI = async ({ email, password }: LoginProps) =>
    await api({}).get('/auth', {
       headers: {
@@ -28,16 +33,6 @@ export const SingUpAPI = async ({ name, email, password }: singUpProps) => {
    } catch (err) {
       return Promise.reject(err);
    }
-};
-
-const auth = {} as { token: string };
-
-function getToken() {
-   const res = localStorage.getItem('auth');
-   return res && JSON.parse(res);
-}
-export const AuthCredentials = (token: string) => {
-   auth.token = token;
 };
 
 export const ResolvedTransactionApi = async (

@@ -6,14 +6,10 @@ import VMasker, { toMoney } from 'vanilla-masker';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import Chart from 'react-apexcharts';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
-import { CaretDown, CaretRight, Target, Trash, X } from '@phosphor-icons/react';
+import { CaretDown, CaretRight, Target, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
-import { Label } from '../InputAndLabel/Label';
-import { InputMF } from '../../atoms/InputMF/InputMF';
-// import { ErrorMessageMF } from '../../atoms/ErrorMessageMF/ErrorMessageMF';
 import { useGoalsStorage } from '../../../shared/store';
-import { SelectCustom } from '../Select/Select';
 import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 
 type ValidMonthsType = {

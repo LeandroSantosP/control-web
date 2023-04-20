@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { create, SetState } from 'zustand';
-import { AuthCredentials, loginAPI, SingUpAPI } from '../../../api/index';
+import { loginAPI, SingUpAPI } from '../../../api/index';
+import { useLocalStorage } from '../../modules/Storage';
+import { LocalStoreOperator } from '../../modules/Storage/persistence-adepter/adepter';
 
 const isLoggedInitialValue = () => {
    const token = localStorage.getItem('auth');
@@ -13,7 +15,7 @@ interface singUpProps {
    name: string;
 }
 
-interface useAuthStorageProps {
+interface authStorageProps {
    state: {
       errors: any;
       isLogged: boolean;
@@ -23,7 +25,8 @@ interface useAuthStorageProps {
       login: (email: string, password: string) => Promise<UserResponse | void>;
       logout: () => void;
       singUp: (props: singUpProps) => any;
-      getToken: () => any;
+      getCredentials: () => Promise<any>;
+      setCredentials: (data: any) => Promise<any>;
    };
 }
 
@@ -44,9 +47,30 @@ export interface UserResponse {
    data: CredentialsProps;
 }
 
+async function storageProvider({
+   type,
+   data,
+}: {
+   type: 'get' | 'set';
+   data?: any;
+}): Promise<any | Error> {
+   const localStoreOperator = new LocalStoreOperator();
+   const UseLocalStorage = new useLocalStorage<any>(localStoreOperator);
+
+   try {
+      await UseLocalStorage.StorageProvider({
+         operationType: type,
+         data,
+      });
+      return UseLocalStorage.data || undefined;
+   } catch (error: any) {
+      return Promise.reject(error);
+   }
+}
+
 const updateAuthState =
-   (set: SetState<useAuthStorageProps>) =>
-   (newState: Partial<useAuthStorageProps['state']>) => {
+   (set: SetState<authStorageProps>) =>
+   (newState: Partial<authStorageProps['state']>) => {
       set((storage) => ({
          ...storage,
          state: {
@@ -56,12 +80,12 @@ const updateAuthState =
       }));
    };
 
-export const useAuthStorage = create<useAuthStorageProps>((set) => ({
+export const authStorage = create<authStorageProps>((set, get) => ({
    state: {
       errors: '',
       isLogged: isLoggedInitialValue(),
       loading: false,
-      token: '',
+      credentials: '',
    },
    actions: {
       login: async (email, password): Promise<UserResponse | void> => {
@@ -69,9 +93,8 @@ export const useAuthStorage = create<useAuthStorageProps>((set) => ({
             const response: UserResponse = await loginAPI({ email, password });
 
             if (response.status === 200) {
+               get().actions.setCredentials(response.data);
                updateAuthState(set)({ isLogged: true });
-               localStorage.setItem('auth', JSON.stringify(response.data));
-               AuthCredentials(response.data.token);
             }
             return response;
          } catch (error: any) {
@@ -82,7 +105,6 @@ export const useAuthStorage = create<useAuthStorageProps>((set) => ({
          }
       },
       logout: () => {
-         AuthCredentials('');
          localStorage.removeItem('auth');
          updateAuthState(set)({ isLogged: false, errors: '', loading: false });
          return;
@@ -106,9 +128,11 @@ export const useAuthStorage = create<useAuthStorageProps>((set) => ({
             return;
          }
       },
-      getToken: () => {
-         const res = localStorage.getItem('auth');
-         return res;
+      getCredentials: async () => {
+         return await storageProvider({ type: 'get' });
+      },
+      setCredentials: async (data): Promise<void | Error> => {
+         await storageProvider({ type: 'set', data });
       },
    },
 }));

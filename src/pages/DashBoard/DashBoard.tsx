@@ -6,7 +6,7 @@ import TransactionListItem from '../../components/Molecules/TransactionListItem/
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
 import { Transaction } from '../../components/Molecules/Transaction/Transaction';
 import { Layout } from '../../components/providers/Layout/';
-import { useStorage } from '../../shared/modules/Storage';
+
 import { useTransactionContext } from '../../shared/contexts';
 import { Box } from '../../components/atoms/Box/Box';
 
@@ -41,8 +41,6 @@ interface Transaction {
 }
 
 export const DashBoard = () => {
-   const { state } = useStorage();
-
    const {
       open: WhenTransactionIsCreateWithSuccess,
       GetTransaction,
@@ -53,10 +51,8 @@ export const DashBoard = () => {
    const [accountInfosList, setAccountInfosList] = useState<any[]>([]);
 
    const fetchTransactions = useCallback(async () => {
-      if (state?.token !== undefined) {
-         await GetTransaction({});
-      }
-   }, [GetTransaction, state?.token]);
+      await GetTransaction({});
+   }, [GetTransaction]);
 
    useEffect(() => {
       getTotalBalense().then((response) => {

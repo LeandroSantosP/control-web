@@ -2,7 +2,7 @@ import * as S from './DashBoard.Styled';
 import logo from '../../../shared/assets/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../atoms/Icons/Icon';
-import { useAuthStorage } from '../../../shared/store/AuthContext/AuthContext';
+import { authStorage } from '../../../shared/store/AuthContext/AuthContext';
 
 interface LayoutProps {
    children: React.ReactNode;
@@ -13,7 +13,7 @@ export const Layout = ({ children }: LayoutProps) => {
    const {
       actions,
       state: { isLogged },
-   } = useAuthStorage();
+   } = authStorage();
    if (!isLogged) {
       navigate('/entrar');
    }

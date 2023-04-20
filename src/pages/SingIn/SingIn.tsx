@@ -10,7 +10,7 @@ import { Label } from '../../components/Molecules/InputAndLabel/Label';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useFlashMessageContext } from '../../shared/contexts';
-import { useAuthStorage } from '../../shared/store/AuthContext/AuthContext';
+import { authStorage } from '../../shared/store/AuthContext/AuthContext';
 
 export interface Inputs {
    email: string;
@@ -21,7 +21,7 @@ export const SingIn = () => {
    const {
       actions,
       state: { isLogged, loading, errors: error },
-   } = useAuthStorage();
+   } = authStorage();
    const { handleShowingFlashMessage } = useFlashMessageContext();
    const navigation = useNavigate();
 
@@ -38,12 +38,12 @@ export const SingIn = () => {
    } = useForm<Inputs>({
       mode: 'all',
    });
-
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
       const res = await actions.login(data.email, data.password);
 
       if (res?.status === 200) {
-         navigation('/home');
+         navigation('/');
+
          handleShowingFlashMessage({
             message: 'Login efetuado com sucesso!',
             timer: 2000,

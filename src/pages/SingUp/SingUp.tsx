@@ -9,7 +9,7 @@ import { Input } from '../../components/atoms/Input/InputBase';
 import { Button } from '../../components/atoms/button/BaseButton';
 import { Label } from '../../components/Molecules/InputAndLabel/Label';
 import { useEffect } from 'react';
-import { useAuthStorage } from '../../shared/store/AuthContext/AuthContext';
+import { authStorage } from '../../shared/store/AuthContext/AuthContext';
 
 export interface Inputs {
    email: string;
@@ -22,7 +22,7 @@ export const SingUp = () => {
    const {
       actions,
       state: { isLogged, loading, errors: errorsApi },
-   } = useAuthStorage();
+   } = authStorage();
 
    useEffect(() => {
       if (isLogged) {
