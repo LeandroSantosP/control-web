@@ -24,6 +24,7 @@ export class UserGoalsManagement<T> {
             route: this.params.route,
             type: this.params.type,
          });
+
          if (res) {
             this.goals = res.data;
          }
@@ -48,11 +49,12 @@ export class UserGoalsManagement<T> {
    }
 
    async remove<B, R>(body: B) {
-      const response = await GoalsUserRequests<B, any, R>({
+      const response = await GoalsUserRequests<B, undefined, R>({
          route: this.params.route,
          type: this.params.type,
          body,
       });
+
       return response;
    }
 }

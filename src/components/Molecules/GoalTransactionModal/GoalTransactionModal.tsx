@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import Chart from 'react-apexcharts';
-import { CaretDown, CaretRight, Target, X } from '@phosphor-icons/react';
+import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
 import { useGoalsStorage } from '../../../shared/store';
 import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
+import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
 
 const createGoalsSchema = z.object({
    dataForUpdate: z
@@ -48,16 +49,18 @@ const monthNames = [
    'Dezembro',
 ];
 
-export const GoalsTransactionModal = () => {
-   const [charOptions, setCharOptions] = useState<
-      ApexCharts.ApexOptions | undefined
-   >({});
+export const GoalsTransactionModal = ({
+   TargetButton,
+}: {
+   TargetButton: ({ children }: { children: React.ReactNode }) => JSX.Element;
+}) => {
    const {
-      state: { goals },
+      state: { goals, isLoading },
+      actions: { remove },
    } = useGoalsStorage();
 
-   useEffect(() => {
-      const goalsData = monthNames.map((monthName) => {
+   const goalsData = useCallback(() => {
+      return monthNames.map((monthName) => {
          const dataForMonth = goals?.MonthFormatted?.find(
             (d) => d.name === monthName
          );
@@ -72,7 +75,13 @@ export const GoalsTransactionModal = () => {
             };
          }
       });
+   }, [goals]);
 
+   const [charOptions, setCharOptions] = useState<
+      ApexCharts.ApexOptions | undefined
+   >(undefined);
+
+   useEffect(() => {
       setCharOptions(() => ({
          tooltip: {
             enabled: true,
@@ -96,25 +105,14 @@ export const GoalsTransactionModal = () => {
          colors: ['#B01E68', '#3D5656'],
          chart: {
             type: 'area',
-            animations: {
-               enabled: true,
-               easing: 'easeinout',
-
-               speed: 800,
-               animateGradually: {
-                  enabled: true,
-                  delay: 150,
-               },
-            },
          },
 
          stroke: {
             curve: 'smooth',
-            type: 'gradient',
             colors: ['#fff'],
          },
          xaxis: {
-            categories: monthNames.map((month) => month),
+            categories: monthNames.map((month) => month || '0'),
          },
 
          yaxis: {
@@ -131,32 +129,40 @@ export const GoalsTransactionModal = () => {
          series: [
             {
                name: 'Meta de Despesas',
-               data: goalsData.map((goal) => {
+               data: goalsData().map((goal) => {
                   return Number(goal.expectated_expense);
                }),
             },
             {
                name: 'Meta de Receita',
-               data: goalsData.map((goal) => {
+               data: goalsData().map((goal) => {
                   return Number(goal.expectated_revenue);
                }),
             },
          ],
       }));
-   }, [goals, goals?.MonthFormatted]);
+   }, [goalsData]);
 
    const [showCreateGoals, setShowCreateGoals] = useState(false);
 
    const [showDeleteGoals, setShowDeleteGoals] = useState(false);
 
    const handleClickCreateGoal = () => {
-      setShowCreateGoals((prev) => !prev);
+      setShowCreateGoals((prev) => {
+         if (showDeleteGoals) {
+            setShowDeleteGoals(false);
+         }
+         return !prev;
+      });
    };
    const handleClickDeleteGoal = () => {
-      setShowDeleteGoals((prev) => !prev);
+      setShowDeleteGoals((prev) => {
+         if (showCreateGoals) {
+            setShowCreateGoals(false);
+         }
+         return !prev;
+      });
    };
-
-   // form
 
    const CreateNewGoalsProps = {
       showCreateGoals,
@@ -164,9 +170,7 @@ export const GoalsTransactionModal = () => {
 
    return (
       <S.DialogRoot>
-         <S.DialogTrigger>
-            <Target />
-         </S.DialogTrigger>
+         <TargetButton>Metas</TargetButton>
          <S.DialogPortal>
             <S.DialogOverlay />
             <S.DialogContent>
@@ -197,21 +201,32 @@ export const GoalsTransactionModal = () => {
                      <CaretDown size={30} />
                   )}
                </S.ButtonCreateGoals>
+               <S.ButtonCreateGoals
+                  visible={'visible'}
+                  onClick={() => HandleDeleteAllGoals(remove, goals)}
+                  bottom="10.5rem"
+               >
+                  <Trash size={25} />
+               </S.ButtonCreateGoals>
                {showDeleteGoals && <DeleteNewGoalForm />}
                {showCreateGoals && (
                   <CreateNewGoalForm {...CreateNewGoalsProps} />
                )}
-               <S.GoalsGraphs height="100%">
-                  {charOptions?.series && (
-                     <Chart
-                        options={charOptions}
-                        series={charOptions?.series}
-                        height="480px"
-                        width={1000}
-                        type={charOptions?.chart?.type as any}
-                     />
-                  )}
-               </S.GoalsGraphs>
+               {isLoading ? (
+                  <S.GoalsGraphsSkeleton />
+               ) : (
+                  <S.GoalsGraphs height="100%">
+                     {charOptions && charOptions?.series && (
+                        <Chart
+                           options={charOptions}
+                           series={charOptions?.series}
+                           height="480px"
+                           width={1000}
+                           type={'area'}
+                        />
+                     )}
+                  </S.GoalsGraphs>
+               )}
                <S.DialogClose asChild>
                   <button>
                      <X />

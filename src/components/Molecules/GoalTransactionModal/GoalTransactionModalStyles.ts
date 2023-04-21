@@ -4,25 +4,6 @@ import Chart from 'react-apexcharts';
 import { ArrowDown } from '@phosphor-icons/react';
 export const DialogRoot = styled(Dialog.Root)``;
 
-export const DialogTrigger = styled(Dialog.Trigger)`
-   width: 60px;
-   height: 20px;
-   border-radius: 20px;
-   border: 1px solid #fff;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   cursor: pointer;
-   gap: 10px;
-   transition: all 0.3s;
-   font-size: 20px;
-
-   &:hover {
-      background-color: ${(props) => props.theme.colors.White};
-      color: ${(props) => props.theme.colors.Dark};
-   }
-`;
-
 export const DialogPortal = styled(Dialog.Portal)``;
 
 export const DialogOverlay = styled(Dialog.Overlay)`
@@ -47,6 +28,7 @@ export const DialogContent = styled(Dialog.Content)`
    left: 50%;
    top: 50%;
    transform: translate(-50%, -50%);
+   z-index: 50;
 `;
 
 export const DialogTitle = styled(Dialog.Title)`
@@ -280,4 +262,28 @@ export const IconWrapper = styled('div')`
 export const ChartCustoms = styled(Chart)`
    display: flex;
    width: 80%;
+`;
+
+// Skeletons
+
+export const GoalsGraphsSkeleton = styled('div')`
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 90%;
+   width: 100%;
+   border-radius: 0.4rem;
+   gap: 1rem;
+   animation: skeleton-loading 1s linear infinite alternate;
+
+   @keyframes skeleton-loading {
+      0% {
+         background-color: rgba(34, 31, 33, 0.49);
+      }
+      100% {
+         background-color: rgba(184, 184, 184, 0.49);
+      }
+   }
+
+   background-color: ${(props) => props.theme.colors.Dark};
 `;

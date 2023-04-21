@@ -181,6 +181,7 @@ export const GoalsUserRequests = async <B, P, R>({
    params,
 }: GoalsUserRequestsProps<B, P>) => {
    const { token } = getToken();
+
    try {
       if (token) {
          const res = await api({

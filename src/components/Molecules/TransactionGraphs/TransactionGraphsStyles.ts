@@ -5,6 +5,7 @@ export const WrapperMain = styled('section')`
    display: flex;
    flex-direction: column;
    position: relative;
+   height: 80%;
    text-align: center;
 `;
 
@@ -60,6 +61,7 @@ export const ChartTittle = styled('h1')<ChartTittle>`
 
 export const ChartCustoms = styled(Chart)`
    display: flex;
+   width: 100%;
    max-width: 650px;
    margin: 35px auto;
 `;

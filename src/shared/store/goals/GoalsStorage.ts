@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, SetState } from 'zustand';
 import { UserGoalsManagement } from '../../helpers/GetUserGoals';
 import { AxiosError } from 'axios';
 
@@ -26,8 +26,8 @@ export interface GoalsProps {
    }>;
 }
 
-interface IRemoveRequest {
-   months: string[];
+export interface IRemoveRequest {
+   data: { data: { months: string[] } };
 }
 
 interface ActionProps {
@@ -41,19 +41,34 @@ interface ActionProps {
 interface StoreProps {
    state: {
       goals: GoalsProps | undefined;
+      isLoading: boolean;
    };
    actions: ActionProps;
 }
 
-export const useGoalsStorage = create<StoreProps>((set) => ({
+const updatedStates =
+   (set: SetState<StoreProps>) => (newState: Partial<StoreProps['state']>) => {
+      set((storage) => ({
+         ...storage,
+         state: {
+            ...storage.state,
+            ...newState,
+         },
+      }));
+   };
+
+export const useGoalsStorage = create<StoreProps>((set, get) => ({
    state: {
       goals: undefined,
+      isLoading: false,
    },
    actions: {
       createOrUpdated: async ({
          createIfNotExist,
          dataForUpdate,
       }: createOrUpdatedGoalsProps): Promise<void | AxiosError> => {
+         updatedStates(set)({ isLoading: true });
+
          const response = new UserGoalsManagement<GoalsProps>({
             route: '/goals',
             type: 'patch',
@@ -63,6 +78,10 @@ export const useGoalsStorage = create<StoreProps>((set) => ({
             createIfNotExist,
             dataForUpdate,
          });
+
+         await get().actions.list();
+
+         updatedStates(set)({ isLoading: false });
 
          return;
       },
@@ -77,7 +96,7 @@ export const useGoalsStorage = create<StoreProps>((set) => ({
 
          set((storage) => {
             if (storage !== undefined) {
-               return { state: { goals } };
+               return { state: { ...storage.state, goals } };
             }
 
             return storage;
@@ -85,13 +104,16 @@ export const useGoalsStorage = create<StoreProps>((set) => ({
 
          return goals;
       },
-      remove: async ({ months }: IRemoveRequest) => {
+      remove: async ({ data }: IRemoveRequest) => {
          const response = new UserGoalsManagement({
             route: '/goals',
             type: 'delete',
          });
 
-         await response.remove(months);
+         console.log(data);
+
+         await response.remove<{ data: { months: string[] } }, any>(data);
+         await get().actions.list();
 
          return;
       },

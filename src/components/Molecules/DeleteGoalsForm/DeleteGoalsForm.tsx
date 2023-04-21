@@ -7,11 +7,14 @@ import * as S from './DeleteGoalsFormStyles';
 import { Label } from '../InputAndLabel/Label';
 import { InputMF } from '../../atoms/InputMF/InputMF';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
+import { useGoalsStorage } from '../../../shared/store';
+import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
+import { ForwardedRef, forwardRef } from 'react';
 
 const DeleteGoalsSchema = z.object({
    goalsForDelete: z.array(
       z.object({
-         month: z
+         months: z
             .string()
             .nonempty('Campo Obrigatório')
             .refine((month: any) => {
@@ -28,10 +31,13 @@ const DeleteGoalsSchema = z.object({
 export type deleteGoalsType = z.infer<typeof DeleteGoalsSchema>;
 
 export const DeleteNewGoalForm = () => {
+   const {
+      actions: { remove: removeGoal },
+   } = useGoalsStorage();
    const useFormProps = useForm<deleteGoalsType>({
       resolver: zodResolver(DeleteGoalsSchema),
       defaultValues: {
-         goalsForDelete: [{ month: '00' }],
+         goalsForDelete: [{ months: '00' }],
       },
    });
 
@@ -46,12 +52,18 @@ export const DeleteNewGoalForm = () => {
       control,
    });
 
-   function DeleteGoals(data: any) {
-      console.log(data);
+   async function DeleteGoals({ goalsForDelete }: any) {
+      try {
+         console.log(goalsForDelete);
+
+         await removeGoal({ data: { data: { months: ['01'] } } });
+      } catch (error) {
+         console.log(goalsForDelete);
+      }
    }
 
    function addMonths() {
-      append({ month: '00' });
+      append({ months: '00' });
    }
 
    return (
@@ -61,7 +73,7 @@ export const DeleteNewGoalForm = () => {
                <div style={{ width: '100%' }}>
                   {fields.length > 1 && <S.MoreContentArrow />}
                   {fields.map((field, index: any) => {
-                     const fieldNameMonth = `goalsForDelete.${index}.month`;
+                     const fieldNameMonth = `goalsForDelete.${index}.months`;
 
                      return (
                         <S.WrapperMúltiplosFields key={field.id}>
@@ -86,7 +98,7 @@ export const DeleteNewGoalForm = () => {
                                  <S.ErrorMessage>
                                     {' '}
                                     {
-                                       errors.goalsForDelete[index]?.month
+                                       errors.goalsForDelete[index]?.months
                                           ?.message
                                     }
                                  </S.ErrorMessage>
@@ -106,8 +118,8 @@ export const DeleteNewGoalForm = () => {
                      >
                         Metas
                      </Label>
-                     <S.Button onClick={addMonths}>Adicionar</S.Button>
-                     <S.Button type="submit">criar</S.Button>
+                     <S.Button onClick={addMonths}>+</S.Button>
+                     <S.Button type="submit">Remover</S.Button>
                   </S.WrapperButtons>
                </div>
             </>

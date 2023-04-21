@@ -137,10 +137,10 @@ function TransactionGraphs() {
          return storage;
       }, [] as DataResponse);
 
-      let TransactionTypeName: 'Despesas' | 'Receita' = 'Receita';
+      let TransactionTypeName: 'Despesa' | 'Receita' = 'Receita';
 
       if (Number(sut[0]?.majorCurrentValue) < 0) {
-         TransactionTypeName = 'Despesas';
+         TransactionTypeName = 'Despesa';
       }
 
       function FormattedGoalsItems(item: DataItem) {
@@ -154,7 +154,7 @@ function TransactionGraphs() {
 
             goalsConfig = [
                {
-                  name: 'Valor esperado para o mes de ' + item.goals?.name,
+                  name: 'Objetivo ' + ' ( ' + item.goals?.name + ' ) ',
                   value: value,
                   strokeWidth: 10,
                   strokeHeight: 0,
@@ -259,7 +259,7 @@ function TransactionGraphs() {
          },
          series: [
             {
-               name: `Menores ${TransactionTypeName} (Do MES)`,
+               name: `Maior ${TransactionTypeName} (Do MES)`,
                color: 'rgba(176, 159, 80, 0.66)',
 
                data: sut.map((item) => {
@@ -273,7 +273,7 @@ function TransactionGraphs() {
                }),
             },
             {
-               name: `Maiores ${TransactionTypeName} ( MES)`,
+               name: `Menor ${TransactionTypeName} (Do MES)`,
                color: 'rgba(80, 176, 149, 0.66)',
                data: sut.map((item) => {
                   const goalsConfig = FormattedGoalsItems(item);
@@ -376,8 +376,8 @@ function TransactionGraphs() {
                <S.ChartCustoms
                   options={muOptions}
                   series={muOptions?.series}
-                  height="260px"
                   type="bar"
+                  height="100%"
                />
             </>
          )}

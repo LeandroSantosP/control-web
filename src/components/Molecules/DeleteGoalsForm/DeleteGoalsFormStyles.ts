@@ -36,7 +36,7 @@ export const Form = styled('form')<FormProps>`
    flex-direction: row;
    gap: 2rem;
    overflow-y: scroll;
-   width: 800px;
+   max-width: 800px;
    padding: 0.8rem;
    left: 3.5rem;
    bottom: 1.9rem;

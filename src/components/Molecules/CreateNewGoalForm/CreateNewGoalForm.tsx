@@ -43,7 +43,7 @@ interface CreateNewGoalFormProps {
 
 export const CreateNewGoalForm = (props: CreateNewGoalFormProps) => {
    const {
-      actions: { createOrUpdated, list },
+      actions: { createOrUpdated },
    } = useGoalsStorage();
    const { showCreateGoals } = props;
 
@@ -110,9 +110,8 @@ export const CreateNewGoalForm = (props: CreateNewGoalFormProps) => {
             createIfNotExist: true,
             dataForUpdate: result,
          });
-         await list();
-         reset();
 
+         reset();
          return;
       } catch (err) {
          if (err instanceof AxiosError) {
