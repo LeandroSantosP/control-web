@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { FlashMessage } from '../../components/Molecules/FlashMessage/FlashMessage';
 import GetNotifications from '../../interfaces/firebase/GetRegistrationToken';
 
-interface handleShowingFlashMessageProps {
+export interface handleShowingFlashMessageProps {
    message: string;
    timer: number;
    type: 'success' | 'warning' | 'error' | 'default' | undefined;

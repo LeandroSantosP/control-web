@@ -8,8 +8,6 @@ import { Label } from '../InputAndLabel/Label';
 import { InputMF } from '../../atoms/InputMF/InputMF';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
 import { useGoalsStorage } from '../../../shared/store';
-import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
-import { ForwardedRef, forwardRef } from 'react';
 
 const DeleteGoalsSchema = z.object({
    goalsForDelete: z.array(
@@ -45,6 +43,7 @@ export const DeleteNewGoalForm = () => {
       handleSubmit,
       formState: { errors },
       control,
+      setError,
    } = useFormProps;
 
    const { fields, append, remove } = useFieldArray({
@@ -52,13 +51,35 @@ export const DeleteNewGoalForm = () => {
       control,
    });
 
-   async function DeleteGoals({ goalsForDelete }: any) {
+   async function DeleteGoals({ goalsForDelete }: deleteGoalsType) {
       try {
-         console.log(goalsForDelete);
+         const months = [];
+         for (let i = 0; i < goalsForDelete.length; i++) {
+            months.push(goalsForDelete[i].months);
+         }
 
-         await removeGoal({ data: { data: { months: ['01'] } } });
-      } catch (error) {
-         console.log(goalsForDelete);
+         const response = await removeGoal({
+            data: { data: { months } },
+         });
+         console.log(response);
+      } catch (error: any) {
+         const messageError = error.response.data.message as string;
+
+         const pattern = /^Month \[\d+(,\s*\d+)*\] Not Found$/;
+         const monthNotFound = pattern.test(messageError);
+
+         const getMonthNumberPattern = /\[(\d+(,\s*\d+)*)\]/;
+         const match = messageError.match(getMonthNumberPattern);
+
+         if (error.response.status === 404 && monthNotFound && match !== null) {
+            const months = match[1].split(', ').map((i) => i);
+            setError('goalsForDelete', {
+               type: 'custom',
+               message: `Meses nao cadastrado. [${months}]`,
+            });
+         }
+      } finally {
+         console.log('ok');
       }
    }
 
@@ -95,13 +116,21 @@ export const DeleteNewGoalForm = () => {
                               <InputMF name={fieldNameMonth} />
 
                               {errors?.goalsForDelete && (
-                                 <S.ErrorMessage>
-                                    {' '}
-                                    {
-                                       errors.goalsForDelete[index]?.months
-                                          ?.message
-                                    }
-                                 </S.ErrorMessage>
+                                 <>
+                                    <S.ErrorMessage>
+                                       {' '}
+                                       {
+                                          errors.goalsForDelete[index]?.months
+                                             ?.message
+                                       }
+                                    </S.ErrorMessage>
+                                    <S.ErrorMessage>
+                                       {' '}
+                                       {errors.goalsForDelete.type ===
+                                          'custom' &&
+                                          errors.goalsForDelete.message}
+                                    </S.ErrorMessage>
+                                 </>
                               )}
                            </S.LabelAndInputWrapper>
                         </S.WrapperMúltiplosFields>

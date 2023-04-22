@@ -110,8 +110,6 @@ export const useGoalsStorage = create<StoreProps>((set, get) => ({
             type: 'delete',
          });
 
-         console.log(data);
-
          await response.remove<{ data: { months: string[] } }, any>(data);
          await get().actions.list();
 

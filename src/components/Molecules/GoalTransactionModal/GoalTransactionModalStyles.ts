@@ -219,11 +219,14 @@ export const RemoveButton = styled('button')`
    }
 `;
 
-export const ButtonCreateGoals = styled('button')<{
+type ButtonCreateGoalsProps = {
    visible: 'hidden' | 'visible';
    left?: string;
    bottom?: string;
-}>`
+   bg?: string;
+};
+
+export const ButtonCreateGoals = styled('button')<ButtonCreateGoalsProps>`
    position: absolute;
    display: flex;
    justify-content: center;
@@ -231,7 +234,7 @@ export const ButtonCreateGoals = styled('button')<{
    align-items: center;
    cursor: pointer;
    border: none z;
-   background-color: rgba(59, 59, 59, 0.26);
+   background-color: ${(props) => props.bg || `rgba(59, 59, 59, 0.26)`};
    height: 30px;
    z-index: 999;
    width: 30px;

@@ -18,7 +18,7 @@ export const Wrapper = styled(Box)<WrapperProps>`
    top: 2rem;
    width: 300px;
    padding: 1rem;
-   font-size: ${(props) => props.theme.fontSize.small};
+
    border-radius: 0.5rem;
    background-color: ${({ type }) =>
       (type === 'success' && '#5cb85c') ||
@@ -32,6 +32,7 @@ export const Wrapper = styled(Box)<WrapperProps>`
       (type === 'warning' && '#000') ||
       (type === 'default' && '#fff')};
 
+   gap: 10px;
    border: 1px solid #000;
    animation: popover 0.6s ease-in-out;
    animation-fill-mode: forwards;
@@ -52,25 +53,12 @@ export const Wrapper = styled(Box)<WrapperProps>`
 `;
 
 export const ContentMessage = styled('p')<WrapperProps>`
+   font-size: 1rem;
    color: ${({ type }) =>
       (type === 'success' && '#000') ||
       (type === 'error' && '#000') ||
       (type === 'warning' && '#000') ||
       (type === 'default' && '#fff')};
-`;
-
-export const ProgressBar = styled('div')<ProgressBarProps>`
-   height: 4px;
-   background-color: #fff;
-   border-radius: 1rem;
-   position: absolute;
-   bottom: 0;
-   left: 0;
-   right: 0;
-   width: ${(props) => {
-      return props.time;
-   }}%;
-   transition: width linear;
 `;
 
 export const ButtonWrapper = styled('div')`

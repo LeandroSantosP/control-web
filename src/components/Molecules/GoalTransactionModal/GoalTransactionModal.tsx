@@ -1,15 +1,16 @@
 import { z } from 'zod';
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import Chart from 'react-apexcharts';
+import { useState, useEffect, useCallback } from 'react';
 import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
 import { useGoalsStorage } from '../../../shared/store';
-import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
-import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
+import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
+import { useFlashMessageContext } from '../../../shared/contexts';
 
 const createGoalsSchema = z.object({
    dataForUpdate: z
@@ -34,6 +35,7 @@ const createGoalsSchema = z.object({
 });
 
 export type createGoalsData = z.infer<typeof createGoalsSchema>;
+
 const monthNames = [
    'Janeiro',
    'Fevereiro',
@@ -55,9 +57,10 @@ export const GoalsTransactionModal = ({
    TargetButton: ({ children }: { children: React.ReactNode }) => JSX.Element;
 }) => {
    const {
-      state: { goals, isLoading },
+      state: { goals },
       actions: { remove },
    } = useGoalsStorage();
+   const { handleShowingFlashMessage } = useFlashMessageContext();
 
    const goalsData = useCallback(() => {
       return monthNames.map((monthName) => {
@@ -81,8 +84,11 @@ export const GoalsTransactionModal = ({
       ApexCharts.ApexOptions | undefined
    >(undefined);
 
-   useEffect(() => {
-      setCharOptions(() => ({
+   const getCharOptions = (
+      goalsData: any,
+      monthNames: string[]
+   ): ApexCharts.ApexOptions | undefined => {
+      return {
          tooltip: {
             enabled: true,
             fillSeriesColor: true,
@@ -106,7 +112,6 @@ export const GoalsTransactionModal = ({
          chart: {
             type: 'area',
          },
-
          stroke: {
             curve: 'smooth',
             colors: ['#fff'],
@@ -114,33 +119,34 @@ export const GoalsTransactionModal = ({
          xaxis: {
             categories: monthNames.map((month) => month || '0'),
          },
-
          yaxis: {
             labels: {
                formatter: function (value) {
                   const FormattedToMoney = FormatCurense(Number(value));
-
                   return `${FormattedToMoney}`;
                },
                align: 'center',
             },
          },
-
          series: [
             {
                name: 'Meta de Despesas',
-               data: goalsData().map((goal) => {
+               data: goalsData.map((goal: any) => {
                   return Number(goal.expectated_expense);
                }),
             },
             {
                name: 'Meta de Receita',
-               data: goalsData().map((goal) => {
+               data: goalsData.map((goal: any) => {
                   return Number(goal.expectated_revenue);
                }),
             },
          ],
-      }));
+      };
+   };
+
+   useEffect(() => {
+      setCharOptions(getCharOptions(goalsData(), monthNames));
    }, [goalsData]);
 
    const [showCreateGoals, setShowCreateGoals] = useState(false);
@@ -167,6 +173,8 @@ export const GoalsTransactionModal = ({
    const CreateNewGoalsProps = {
       showCreateGoals,
    };
+
+   /* isLoading is cause a error Fixe it. */
 
    return (
       <S.DialogRoot>
@@ -202,8 +210,15 @@ export const GoalsTransactionModal = ({
                   )}
                </S.ButtonCreateGoals>
                <S.ButtonCreateGoals
+                  bg="rgba(255, 0, 0, 0.39)"
                   visible={'visible'}
-                  onClick={() => HandleDeleteAllGoals(remove, goals)}
+                  onClick={() =>
+                     HandleDeleteAllGoals(
+                        remove,
+                        goals,
+                        handleShowingFlashMessage
+                     )
+                  }
                   bottom="10.5rem"
                >
                   <Trash size={25} />
@@ -212,21 +227,21 @@ export const GoalsTransactionModal = ({
                {showCreateGoals && (
                   <CreateNewGoalForm {...CreateNewGoalsProps} />
                )}
-               {isLoading ? (
+               {/* {isLoading ? (
                   <S.GoalsGraphsSkeleton />
-               ) : (
-                  <S.GoalsGraphs height="100%">
-                     {charOptions && charOptions?.series && (
-                        <Chart
-                           options={charOptions}
-                           series={charOptions?.series}
-                           height="480px"
-                           width={1000}
-                           type={'area'}
-                        />
-                     )}
-                  </S.GoalsGraphs>
-               )}
+               ) : ( */}
+               <S.GoalsGraphs height="100%">
+                  {charOptions && charOptions?.series && (
+                     <Chart
+                        options={charOptions}
+                        series={charOptions?.series}
+                        height="480px"
+                        width={1000}
+                        type={'area'}
+                     />
+                  )}
+               </S.GoalsGraphs>
+               {/* )} */}
                <S.DialogClose asChild>
                   <button>
                      <X />
