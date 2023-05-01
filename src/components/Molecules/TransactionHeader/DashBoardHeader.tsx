@@ -1,9 +1,11 @@
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Folder, FolderOpen } from '@phosphor-icons/react';
+
+import * as S from './DashBoardHeaderStyles';
 import { Box } from '../../atoms/Box/Box';
 import { Icon } from '../../atoms/Icons/Icon';
-import * as S from './DashBoardHeaderStyles';
 import { SelectCustom } from '../Select/Select';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
 import { ThreeOptionSwitch } from '../ThreeOptionSwitch/ThreeOptionSwitch';
@@ -26,6 +28,7 @@ export const DashBoardHeader = ({
    const [searchParams, setSearchParams] = useSearchParams({
       month: 'all',
    });
+   const [open, setOpen] = useState<'close' | 'open'>('close');
 
    const [month, setMonth] = useState(searchParams.get('month'));
 
@@ -76,7 +79,16 @@ export const DashBoardHeader = ({
             {title}
          </S.Title>
 
-         <ThreeOptionSwitch initialValue={'all'} month={month} />
+         <ThreeOptionSwitch
+            setOpen={setOpen}
+            initialValue={'all'}
+            month={month}
+         />
+         {/*
+         <div style={{ right: '16.2rem', position: 'absolute' }}>
+            {open === 'open' ? <FolderOpen size={30} /> : <Folder size={30} />}
+         </div> */}
+
          {hasFilter && (
             <div style={{ marginRight: '5rem' }}>
                <SelectCustom

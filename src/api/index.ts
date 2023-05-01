@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { api } from '../shared/axios';
 
 interface LoginProps {
@@ -148,6 +149,25 @@ export const CreateTransaction = async <T>({
    } catch (error) {
       return Promise.reject(error);
    }
+};
+
+export const DeleteTransactionAPI = async <T, R>(
+   transactionId: string
+): Promise<R | undefined> => {
+   try {
+      const { token } = getToken();
+
+      if (token) {
+         const res = await api({
+            token,
+         }).delete<T>(`/transaction/${transactionId}`);
+
+         return Promise.resolve(res) as R;
+      }
+   } catch (err: any) {
+      return Promise.reject(err);
+   }
+   return undefined;
 };
 
 export const GetUserNotification = async (NotificationToken: string) => {

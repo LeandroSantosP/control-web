@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
-import { useGoalsStorage } from '../../../shared/store';
+import { GoalsStorage } from '../../../shared/store';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
@@ -59,7 +59,7 @@ export const GoalsTransactionModal = ({
    const {
       state: { goals },
       actions: { remove },
-   } = useGoalsStorage();
+   } = GoalsStorage();
    const { handleShowingFlashMessage } = useFlashMessageContext();
 
    const goalsData = useCallback(() => {
@@ -103,21 +103,57 @@ export const GoalsTransactionModal = ({
                opacityTo: 0,
             },
          },
+         stroke: {
+            show: true,
+            curve: 'smooth',
+            lineCap: 'butt',
+            width: 2,
+            dashArray: 0,
+         },
+
          plotOptions: {
             area: {
                fillTo: 'end',
             },
          },
+         dataLabels: {
+            formatter: (val, opt) => {
+               const result = FormatCurense(Number(val));
+
+               return `${result}`;
+            },
+         },
          colors: ['#B01E68', '#3D5656'],
          chart: {
             type: 'area',
-         },
-         stroke: {
-            curve: 'smooth',
-            colors: ['#fff'],
+            stacked: true,
          },
          xaxis: {
             categories: monthNames.map((month) => month || '0'),
+         },
+         markers: {
+            size: 20,
+            colors: undefined,
+            strokeColors: '#1be3c5',
+
+            strokeOpacity: 0.9,
+            strokeDashArray: 0,
+            fillOpacity: 1,
+            shape: 'circle',
+            radius: 2,
+            onClick: function (e) {
+               // do something on marker click
+               console.log('ok');
+            },
+            onDblClick: function (e) {
+               // do something on marker click
+               console.log('ok');
+            },
+            showNullDataPoints: true,
+            hover: {
+               size: undefined,
+               sizeOffset: 4,
+            },
          },
          yaxis: {
             labels: {
@@ -227,9 +263,6 @@ export const GoalsTransactionModal = ({
                {showCreateGoals && (
                   <CreateNewGoalForm {...CreateNewGoalsProps} />
                )}
-               {/* {isLoading ? (
-                  <S.GoalsGraphsSkeleton />
-               ) : ( */}
                <S.GoalsGraphs height="100%">
                   {charOptions && charOptions?.series && (
                      <Chart
@@ -241,11 +274,8 @@ export const GoalsTransactionModal = ({
                      />
                   )}
                </S.GoalsGraphs>
-               {/* )} */}
                <S.DialogClose asChild>
-                  <button>
-                     <X />
-                  </button>
+                  <X size={20} />
                </S.DialogClose>
             </S.DialogContent>
          </S.DialogPortal>

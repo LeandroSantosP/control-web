@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { FlashMessage } from '../../components/Molecules/FlashMessage/FlashMessage';
-import GetNotifications from '../../interfaces/firebase/GetRegistrationToken';
 
 export interface handleShowingFlashMessageProps {
    message: string;
@@ -45,10 +44,6 @@ export const FlashMessageProvider = ({
    const [type, setType] = useState<
       'success' | 'warning' | 'error' | 'default' | undefined
    >(undefined);
-
-   useEffect(() => {
-      GetNotifications.getMessages();
-   }, []);
 
    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       if ((e.target as HTMLButtonElement).innerText === 'Confirmar') {

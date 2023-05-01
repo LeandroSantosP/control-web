@@ -57,7 +57,7 @@ const updatedStates =
       }));
    };
 
-export const useGoalsStorage = create<StoreProps>((set, get) => ({
+export const GoalsStorage = create<StoreProps>((set, get) => ({
    state: {
       goals: undefined,
       isLoading: false,

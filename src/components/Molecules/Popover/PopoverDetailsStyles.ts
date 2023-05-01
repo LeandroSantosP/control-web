@@ -19,8 +19,23 @@ export const PopOver = styled('div')<PopOver>`
    overflow: hidden;
    cursor: help;
    z-index: 15;
-   top: ${(props) => props.top - 57}px;
-   left: ${(props) => props.left - 350}px;
+
+   top: ${(props) => {
+      const elementTop = props.top;
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const viewportHeight = window.innerHeight;
+      const elementBottom = elementTop + 290;
+
+      if (elementTop < scrollTop) {
+         return `${elementTop - 200}`;
+      } else if (elementBottom > scrollTop + viewportHeight) {
+         return `${elementTop - 290}`;
+      } else {
+         return `${elementTop}`;
+      }
+   }}px;
+
+   left: ${(props) => props.left - 195}px;
    transform-origin: right;
    animation: popover 0.2s forwards;
 

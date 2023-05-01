@@ -1,3 +1,4 @@
-import { useGoalsStorage } from '../../../src/shared/store/goals/GoalsStorage';
+import { GoalsStorage } from '../../../src/shared/store/goals/GoalsStorage';
+import { authStorage } from '../../../src/shared/store/AuthContext/AuthContext';
 
-export { useGoalsStorage };
+export { GoalsStorage, authStorage };

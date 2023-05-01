@@ -7,7 +7,7 @@ import * as S from './DeleteGoalsFormStyles';
 import { Label } from '../InputAndLabel/Label';
 import { InputMF } from '../../atoms/InputMF/InputMF';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
-import { useGoalsStorage } from '../../../shared/store';
+import { GoalsStorage } from '../../../shared/store';
 
 const DeleteGoalsSchema = z.object({
    goalsForDelete: z.array(
@@ -31,7 +31,7 @@ export type deleteGoalsType = z.infer<typeof DeleteGoalsSchema>;
 export const DeleteNewGoalForm = () => {
    const {
       actions: { remove: removeGoal },
-   } = useGoalsStorage();
+   } = GoalsStorage();
    const useFormProps = useForm<deleteGoalsType>({
       resolver: zodResolver(DeleteGoalsSchema),
       defaultValues: {

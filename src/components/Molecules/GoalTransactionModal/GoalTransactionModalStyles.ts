@@ -29,6 +29,16 @@ export const DialogContent = styled(Dialog.Content)`
    top: 50%;
    transform: translate(-50%, -50%);
    z-index: 50;
+   animation: fadeIn 0.3s ease-in-out forwards;
+
+   @keyframes fadeIn {
+      from {
+         opacity: 0;
+      }
+      to {
+         opacity: 1;
+      }
+   }
 `;
 
 export const DialogTitle = styled(Dialog.Title)`
@@ -50,6 +60,12 @@ export const DialogClose = styled(Dialog.Close)`
    top: 10px;
    right: 10px;
    font-size: 1rem;
+
+   &:hover {
+      cursor: pointer;
+      border-radius: 9999;
+      background-color: rgba(59, 59, 59, 0.26);
+   }
 `;
 
 interface GoalsGraphsProps {

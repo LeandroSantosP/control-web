@@ -2,9 +2,14 @@ import * as S from './TransactionLIstItem';
 import { format } from 'date-fns';
 import { PopoverDetails } from '../Popover/PopoverDetails';
 import { useRef, useState } from 'react';
-import { Transaction } from '../../../shared/contexts';
+import {
+   Transaction,
+   useFlashMessageContext,
+   useTransactionContext,
+} from '../../../shared/contexts';
 import { memo } from 'react';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { Trash, X } from '@phosphor-icons/react';
 
 export interface TransactionListItemProps {
    id: string;
@@ -23,12 +28,6 @@ export interface TransactionListItemProps {
 }
 
 function TransactionListItem({ params }: { params: Transaction }) {
-   const LiRef = useRef<HTMLDivElement>(null);
-   const [showPopOver, setShowPopover] = useState(false);
-   const [popOverPosition, setPopoverPosition] = useState({
-      top: 0,
-      left: 0,
-   });
    const {
       value: amount,
       resolved,
@@ -38,7 +37,19 @@ function TransactionListItem({ params }: { params: Transaction }) {
       isSubscription,
       installments,
       category,
+      id,
    } = params;
+   const LiRef = useRef<HTMLDivElement>(null);
+   const { DeleteTransaction } = useTransactionContext();
+   const [confirmationDelete, setConfirmationDelete] = useState<
+      'delete' | 'confim'
+   >('delete');
+   const { handleShowingFlashMessage } = useFlashMessageContext();
+   const [showPopOver, setShowPopover] = useState(false);
+   const [popOverPosition, setPopoverPosition] = useState({
+      top: 0,
+      left: 0,
+   });
 
    let dateFormatted = '';
 
@@ -100,6 +111,27 @@ function TransactionListItem({ params }: { params: Transaction }) {
    const formattedCategoryName =
       categoryMapping[category.name] || 'Desconhecida';
 
+   async function handleDeleteTransition() {
+      try {
+         if (confirmationDelete == 'confim') {
+            const response = await DeleteTransaction(id);
+            if (response === undefined) {
+               handleShowingFlashMessage({
+                  message: 'Transaction Apagada com sucesso.',
+                  timer: 90000,
+                  type: 'success',
+                  haveButton: false,
+               });
+            }
+         }
+      } catch (error) {
+         //Error on delete transaction.
+         console.error(error);
+      } finally {
+         setConfirmationDelete('delete');
+      }
+   }
+
    return (
       <>
          <S.TransactionItemLi
@@ -109,41 +141,53 @@ function TransactionListItem({ params }: { params: Transaction }) {
             onMouseEnter={handleMouseIn}
             onMouseLeave={handleMouseOut}
          >
-            {showPopOver && (
-               <PopoverDetails
-                  content={{
-                     ...params,
-                     value: FormatCurense(Number(amount)),
-                     category: {
-                        name: formattedCategoryName,
-                        created_at: category.created_at,
-                        id: category.id,
-                        updated_at: category.updated_at,
-                     },
-                  }}
-                  left={popOverPosition.left}
-                  top={popOverPosition.top}
-               />
-            )}
-
             <S.TransactionContent>
-               <S.DueDate>
+               {showPopOver && (
+                  <PopoverDetails
+                     content={{
+                        ...params,
+                        value: FormatCurense(Number(amount)),
+                        category: {
+                           name: formattedCategoryName,
+                           created_at: category.created_at,
+                           id: category.id,
+                           updated_at: category.updated_at,
+                        },
+                     }}
+                     left={popOverPosition.left}
+                     top={popOverPosition.top}
+                  />
+               )}
+
+               <S.DueDate style={{ whiteSpace: 'nowrap' }}>
                   {due_date !== null && 'Data De Vencimento'}
                   {filingDate !== null && 'Data De Recebimento'}
                </S.DueDate>
                <S.DueDate>{dateFormatted}</S.DueDate>
             </S.TransactionContent>
             <S.TransactionContent>
-               <S.Amount negative={Number(amount) <= 0}>
-                  {NumberFormatted}
-               </S.Amount>
-               <span>
-                  {type === 'revenue'
-                     ? 'Receita'
-                     : type === 'expense' && resolved === false
-                     ? 'Nao pago'
-                     : 'Paga'}
-               </span>
+               <S.SubTransactionContent>
+                  <span style={{ whiteSpace: 'nowrap' }}>
+                     {type === 'revenue'
+                        ? 'Receita'
+                        : type === 'expense' && resolved === false
+                        ? 'Nao pago'
+                        : 'Paga'}
+                  </span>
+                  <S.Amount negative={Number(amount) <= 0}>
+                     {NumberFormatted}
+                  </S.Amount>
+                  <S.DeleteTransaction>
+                     {confirmationDelete === 'delete' ? (
+                        <Trash
+                           size={20}
+                           onClick={() => setConfirmationDelete('confim')}
+                        />
+                     ) : (
+                        <X onClick={handleDeleteTransition} size={20} />
+                     )}
+                  </S.DeleteTransaction>
+               </S.SubTransactionContent>
             </S.TransactionContent>
          </S.TransactionItemLi>
       </>

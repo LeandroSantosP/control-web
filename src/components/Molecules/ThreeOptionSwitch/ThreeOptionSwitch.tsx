@@ -7,11 +7,13 @@ import * as S from './ThreeOptionSwitchStyles';
 interface ThreeOptionSwitchProps {
    initialValue: any;
    month: string | null;
+   setOpen: React.Dispatch<React.SetStateAction<'close' | 'open'>>;
 }
 
 export const ThreeOptionSwitch = ({
    initialValue,
    month,
+   setOpen,
 }: ThreeOptionSwitchProps) => {
    const { GetTransactionByParams } = useTransactionContext();
    const [value, setValue] = useState<{ option: string }>({
@@ -48,42 +50,46 @@ export const ThreeOptionSwitch = ({
    }, [handleChange, value]);
 
    return (
-      <S.MainWrapper>
-         <span>||</span>
-         <S.Wrapper>
-            <S.Button
-               selected={value.option === 'isSubscription'}
-               onClick={() => setValue({ option: 'isSubscription' })}
-            >
-               Inscrições
-            </S.Button>
-            <S.Button
-               selected={value.option === 'all'}
-               onClick={() => setValue({ option: 'all' })}
-            >
-               Todas
-            </S.Button>
+      <>
+         <S.MainWrapper
+            onMouseOver={() => setOpen('open')}
+            onMouseLeave={() => setOpen('close')}
+         >
+            <S.Wrapper>
+               <S.Button
+                  selected={value.option === 'isSubscription'}
+                  onClick={() => setValue({ option: 'isSubscription' })}
+               >
+                  Inscrições
+               </S.Button>
+               <S.Button
+                  selected={value.option === 'all'}
+                  onClick={() => setValue({ option: 'all' })}
+               >
+                  Todas
+               </S.Button>
 
-            <S.Button
-               selected={value.option === 'isNotSubscription'}
-               onClick={() => setValue({ option: 'isNotSubscription' })}
-            >
-               Recorrentes
-            </S.Button>
+               <S.Button
+                  selected={value.option === 'isNotSubscription'}
+                  onClick={() => setValue({ option: 'isNotSubscription' })}
+               >
+                  Recorrentes
+               </S.Button>
 
-            <S.Button
-               selected={value.option === 'revenue'}
-               onClick={() => setValue({ option: 'revenue' })}
-            >
-               Receitas
-            </S.Button>
-            <S.Button
-               selected={value.option === 'resolved'}
-               onClick={() => setValue({ option: 'resolved' })}
-            >
-               Finalizadas
-            </S.Button>
-         </S.Wrapper>
-      </S.MainWrapper>
+               <S.Button
+                  selected={value.option === 'revenue'}
+                  onClick={() => setValue({ option: 'revenue' })}
+               >
+                  Receitas
+               </S.Button>
+               <S.Button
+                  selected={value.option === 'resolved'}
+                  onClick={() => setValue({ option: 'resolved' })}
+               >
+                  Finalizadas
+               </S.Button>
+            </S.Wrapper>
+         </S.MainWrapper>
+      </>
    );
 };

@@ -38,7 +38,7 @@ export const Form = styled('form')<FormProps>`
    overflow-y: scroll;
    width: 800px;
    padding: 0.8rem;
-   left: 3.5rem;
+   left: 4rem;
    bottom: 1.9rem;
    border-radius: 0.4rem;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
@@ -52,7 +52,7 @@ export const MoreContentArrow = styled(ArrowDown)`
    background-color: ${(props) => props.theme.colors.TimberWhite};
    border-radius: 50%;
    color: ${(props) => props.theme.colors.Dark};
-   right: 2.5rem;
+   right: 2rem;
    bottom: 1rem;
    position: absolute;
    transform: translateX(-50%);

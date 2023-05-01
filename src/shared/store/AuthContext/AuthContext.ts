@@ -55,13 +55,15 @@ async function storageProvider({
    data?: any;
 }): Promise<any | Error> {
    const localStoreOperator = new LocalStoreOperator();
-   const UseLocalStorage = new useLocalStorage<any>(localStoreOperator);
-
+   const UseLocalStorage = new useLocalStorage<{ data: string }>(
+      localStoreOperator
+   );
    try {
       await UseLocalStorage.StorageProvider({
          operationType: type,
          data,
       });
+
       return UseLocalStorage.data || undefined;
    } catch (error: any) {
       return Promise.reject(error);
@@ -98,6 +100,7 @@ export const authStorage = create<authStorageProps>((set, get) => ({
             }
             return response;
          } catch (error: any) {
+            get().actions.logout();
             updateAuthState(set)({ isLogged: false, errors: '' });
             return;
          } finally {

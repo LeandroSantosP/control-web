@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
 import { lazy, Suspense } from 'react';
 
@@ -25,6 +25,7 @@ import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { Progress } from '../../components/atoms/Progress/Progress';
 import { GraphHeader } from '../../components/Molecules/GraphHeader/GraphHeader';
+import { authStorage } from '../../shared/store';
 
 interface Transaction {
    id: string;
@@ -43,57 +44,60 @@ interface Transaction {
 export const DashBoard = () => {
    const {
       open: WhenTransactionIsCreateWithSuccess,
-      GetTransaction,
       transaction,
       getTotalBalense,
    } = useTransactionContext();
+   const {
+      actions: { logout },
+   } = authStorage();
 
    const [accountInfosList, setAccountInfosList] = useState<any[]>([]);
 
-   const fetchTransactions = useCallback(async () => {
-      await GetTransaction({});
-   }, [GetTransaction]);
+   const LURef = useRef<HTMLUListElement>(null);
 
    useEffect(() => {
-      getTotalBalense().then((response) => {
-         response?.balense?.total || '0',
-            setAccountInfosList([
-               {
-                  description: 'Saldo Atual',
-                  amount: response?.balense?.total || '0',
-                  logo: Wallet,
-                  alt: 'Wallet',
-               },
-               {
-                  description: 'Receita',
-                  amount: transaction?.balense?.revenue || '0',
-                  logo: GraphUp,
-                  alt: 'Wallet',
-               },
-               {
-                  description: 'Despesas',
-                  amount: transaction?.balense?.expense || '0',
-                  logo: GraphDown,
-                  alt: 'Despesas',
-               },
-               {
-                  description: 'Balanco',
-                  amount: transaction?.balense?.total || '0',
-                  logo: Balense,
-                  alt: 'Balense',
-               },
-            ]);
-      });
+      getTotalBalense()
+         .then((response) => {
+            response?.balense?.total || '0',
+               setAccountInfosList([
+                  {
+                     description: 'Saldo Atual',
+                     amount: response?.balense?.total || '0',
+                     logo: Wallet,
+                     alt: 'Wallet',
+                  },
+                  {
+                     description: 'Receita',
+                     amount: transaction?.balense?.revenue || '0',
+                     logo: GraphUp,
+                     alt: 'Wallet',
+                  },
+                  {
+                     description: 'Despesas',
+                     amount: transaction?.balense?.expense || '0',
+                     logo: GraphDown,
+                     alt: 'Despesas',
+                  },
+                  {
+                     description: 'Balanco',
+                     amount: transaction?.balense?.total || '0',
+                     logo: Balense,
+                     alt: 'Balense',
+                  },
+               ]);
+         })
+         .catch((err) => {
+            logout();
+         });
    }, [
       getTotalBalense,
       transaction?.balense?.expense,
       transaction?.balense?.revenue,
       transaction?.balense?.total,
-   ]);
+      WhenTransactionIsCreateWithSuccess,
 
-   useEffect(() => {
-      fetchTransactions();
-   }, [fetchTransactions, WhenTransactionIsCreateWithSuccess]);
+      logout,
+   ]);
 
    return (
       <Layout>
@@ -140,11 +144,15 @@ export const DashBoard = () => {
                <S.TransactionHeader>
                   <Transaction />
                </S.TransactionHeader>
-               <S.UlWrapper>
+               <S.UlWrapper ref={LURef}>
                   {transaction?.transactions?.map((transaction) => {
                      return (
                         <Fragment key={`${transaction.id}`}>
-                           <TransactionListItem params={transaction} />
+                           <TransactionListItem
+                              params={{
+                                 ...transaction,
+                              }}
+                           />
                            <Divider
                               width="90%"
                               bg="rgba(160, 160, 160, 0.46)"

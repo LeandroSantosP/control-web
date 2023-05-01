@@ -10,7 +10,7 @@ import { FormProvider, useFieldArray } from 'react-hook-form';
 import * as S from './CreateNewGoalFormStyles';
 import { Label } from '../InputAndLabel/Label';
 import { InputMF } from '../../atoms/InputMF/InputMF';
-import { useGoalsStorage } from '../../../shared/store';
+import { GoalsStorage } from '../../../shared/store';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
 
 const createGoalsSchema = z.object({
@@ -44,7 +44,7 @@ interface CreateNewGoalFormProps {
 export const CreateNewGoalForm = (props: CreateNewGoalFormProps) => {
    const {
       actions: { createOrUpdated },
-   } = useGoalsStorage();
+   } = GoalsStorage();
    const { showCreateGoals } = props;
 
    const createGoalForm = useForm<createGoalsData>({

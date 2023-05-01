@@ -5,7 +5,7 @@ export const WrapperMain = styled('section')`
    display: flex;
    flex-direction: column;
    position: relative;
-   height: 80%;
+   height: 90%;
    text-align: center;
 `;
 
@@ -62,6 +62,26 @@ export const ChartTittle = styled('h1')<ChartTittle>`
 export const ChartCustoms = styled(Chart)`
    display: flex;
    width: 100%;
-   max-width: 650px;
    margin: 35px auto;
+`;
+
+export const ChartSkeleton = styled('div')`
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   align-items: center;
+   height: 100%;
+   gap: 1rem;
+   border-radius: 0.4rem;
+   position: relative;
+   background-color: ${(props) => props.theme.colors.Dark};
+`;
+
+export const ChartSkeletonH1 = styled('div')`
+   font-weight: 600;
+   font-size: 2rem;
+   z-index: 5;
+   flex-direction: column;
+   color: ${(props) => props.theme.colors.TimberWhite};
 `;

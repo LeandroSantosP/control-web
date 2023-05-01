@@ -1,10 +1,11 @@
-import { memo, useCallback, useEffect, useState } from 'react';
-import * as S from './TransactionGraphsStyles';
-import { Transaction, useTransactionContext } from '../../../shared/contexts';
-import { useGoalsStorage } from '../../../shared/store/goals/GoalsStorage';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
-import { ArrowsCounterClockwise } from '@phosphor-icons/react';
 import { toMoney } from 'vanilla-masker';
+import { memo, useCallback, useEffect, useState } from 'react';
+
+import { Transaction, useTransactionContext } from '../../../shared/contexts';
+import { GoalsStorage } from '../../../shared/store/goals/GoalsStorage';
+import { FormatCurense } from '../../../shared/helpers/FormatCurense';
+import { ArrowsCounterClockwise, X } from '@phosphor-icons/react';
+import * as S from './TransactionGraphsStyles';
 
 type Goals = {
    name: string;
@@ -22,14 +23,36 @@ type DataItem = {
 
 type DataResponse = Array<DataItem>;
 
+function handleData({
+   FormattedGoalsItems,
+   sut,
+   options,
+}: {
+   FormattedGoalsItems(item: DataItem): any;
+   sut: DataResponse;
+   options: 'majorCurrentValue' | 'goals' | 'month' | 'minimalCurrentValue';
+}) {
+   return sut.map((item) => {
+      const goalsConfig = FormattedGoalsItems(item)?.map((i: any) => {
+         return { ...i, strokeColor: 'purple' };
+      });
+
+      return {
+         x: item.month,
+         y: item[options],
+         goals: goalsConfig,
+      };
+   });
+}
+
 function TransactionGraphs() {
    const {
       state: { goals },
       actions: { list: ListGoals },
-   } = useGoalsStorage();
+   } = GoalsStorage();
    const { transaction } = useTransactionContext();
    const [data, setDate] = useState<DataResponse>([]);
-
+   const [showNotFoundPaga, setShowNotFoundPaga] = useState<boolean>(false);
    const [currentTransactionType, setCurrentTransactionType] = useState<
       'revenue' | 'expense'
    >('expense');
@@ -108,7 +131,7 @@ function TransactionGraphs() {
       }[];
 
       for (let i = 0; i < 12; i++) {
-         const ref = i < 10 ? `0${i}` : i.toString();
+         const ref = i === 0 ? '12' : i < 10 ? `0${i}` : i.toString();
          const name = new Date(2000, i - 1, 1).toLocaleString('default', {
             month: 'short',
          });
@@ -143,7 +166,7 @@ function TransactionGraphs() {
          TransactionTypeName = 'Despesa';
       }
 
-      function FormattedGoalsItems(item: DataItem) {
+      function FormattedGoalsItems(item: DataItem): any {
          let goalsConfig: any;
 
          if (item.goals !== undefined) {
@@ -155,7 +178,7 @@ function TransactionGraphs() {
             goalsConfig = [
                {
                   name: 'Objetivo ' + ' ( ' + item.goals?.name + ' ) ',
-                  value: value,
+                  value,
                   strokeWidth: 10,
                   strokeHeight: 0,
                   strokeLineCap: 'round',
@@ -167,45 +190,35 @@ function TransactionGraphs() {
          return goalsConfig;
       }
 
+      if (sut.length === 0) {
+         setShowNotFoundPaga(true);
+      } else {
+         setShowNotFoundPaga(false);
+      }
+
       setMuOptions({
          legend: {
             position: 'top',
          },
+         colors: ['rgba(80, 176, 149, 0.66)', 'rgba(176, 159, 80, 0.66)'],
          tooltip: {
             enabled: true,
             fillSeriesColor: true,
             theme: 'dark',
          },
-         chart: {
-            type: 'line',
-            height: 350,
-            zoom: {
-               enabled: true,
-               zoomedArea: {
-                  fill: {
-                     color: '#90CAF9',
-                     opacity: 0.4,
-                  },
-                  stroke: {
-                     color: '#0D47A1',
-                     opacity: 0.4,
-                     width: 1,
-                  },
-               },
-            },
-         },
          plotOptions: {
             bar: {
                horizontal: true,
-               borderRadiusApplication: 'around',
-               borderRadiusWhenStacked: 'last',
-               borderRadius: 2,
+               borderRadius: 3,
+
                dataLabels: {
                   position: 'top',
                   orientation: 'horizontal',
                },
-               columnWidth: '40px',
             },
+         },
+         chart: {
+            type: 'area',
          },
          xaxis: {
             categories: data.map((item) => {
@@ -246,43 +259,27 @@ function TransactionGraphs() {
             },
          },
          dataLabels: {
-            formatter: (val, opt) => {
-               const goals =
-                  opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-                     .goals;
+            formatter: (val) => {
+               const result = FormatCurense(Number(val));
 
-               if (goals && goals.length) {
-                  return `R$ ${val}`;
-               }
-               return `R$ ${val}`;
+               return `${result}`;
             },
          },
          series: [
             {
-               name: `Maior ${TransactionTypeName} (Do MES)`,
-               color: 'rgba(176, 159, 80, 0.66)',
-
-               data: sut.map((item) => {
-                  const goalsConfig = FormattedGoalsItems(item);
-
-                  return {
-                     x: '2013',
-                     y: item.minimalCurrentValue,
-                     goals: goalsConfig,
-                  };
+               name: `Maior ${TransactionTypeName} ( Do MES )`,
+               data: handleData({
+                  FormattedGoalsItems,
+                  options: 'minimalCurrentValue',
+                  sut,
                }),
             },
             {
-               name: `Menor ${TransactionTypeName} (Do MES)`,
-               color: 'rgba(80, 176, 149, 0.66)',
-               data: sut.map((item) => {
-                  const goalsConfig = FormattedGoalsItems(item);
-
-                  return {
-                     x: '2013',
-                     y: item.majorCurrentValue,
-                     goals: goalsConfig,
-                  };
+               name: `Menor ${TransactionTypeName} ( Do MES )`,
+               data: handleData({
+                  FormattedGoalsItems,
+                  options: 'majorCurrentValue',
+                  sut,
                }),
             },
          ],
@@ -373,12 +370,32 @@ function TransactionGraphs() {
                <S.ChartTittle type={currentTransactionType}>
                   <span>Receita</span>/<span>Despesas</span>
                </S.ChartTittle>
-               <S.ChartCustoms
-                  options={muOptions}
-                  series={muOptions?.series}
-                  type="bar"
-                  height="100%"
-               />
+
+               {showNotFoundPaga ? (
+                  <S.ChartSkeleton>
+                     <S.ChartSkeletonH1>
+                        {currentTransactionType === 'expense'
+                           ? `Nenhuma despesa encontrada`
+                           : `Nenhuma receita encontrada!`}
+                     </S.ChartSkeletonH1>
+                     <div
+                        style={{
+                           color: 'black',
+                           backgroundColor: '#a48027',
+                           borderRadius: '50%',
+                        }}
+                     >
+                        <X size={300} />
+                     </div>
+                  </S.ChartSkeleton>
+               ) : (
+                  <S.ChartCustoms
+                     options={muOptions}
+                     series={muOptions?.series}
+                     type="bar"
+                     height="88%"
+                  />
+               )}
             </>
          )}
       </S.WrapperMain>

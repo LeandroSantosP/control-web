@@ -2,16 +2,6 @@ import styled from 'styled-components';
 
 export const MainWrapper = styled('div')`
    position: relative;
-
-   span {
-      position: absolute;
-      right: 8px;
-      top: 9px;
-      z-index: 15;
-   }
-   &:hover {
-      color: transparent;
-   }
 `;
 
 export const Wrapper = styled('div')`
@@ -21,12 +11,11 @@ export const Wrapper = styled('div')`
    align-items: center;
    padding: 0 10px;
    height: 30px;
-   width: 10px;
+   width: 30px;
    font-size: 0%;
    border-radius: 4px;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    gap: 10px;
-
    cursor: pointer;
 
    &:hover {
@@ -46,11 +35,7 @@ export const Wrapper = styled('div')`
    }
 `;
 
-export const initialIcon = styled('span')`
-   width: 10px;
-   height: 10px;
-   background-color: red;
-`;
+export const initialIcon = styled('span')``;
 
 type ButtonProps = {
    selected: boolean;
@@ -59,7 +44,6 @@ type ButtonProps = {
 export const Button = styled('button')<ButtonProps>`
    border: none;
    background-color: none;
-
    height: 100%;
    cursor: pointer;
    opacity: ${(props) => (props.selected ? '100%' : '15%')};

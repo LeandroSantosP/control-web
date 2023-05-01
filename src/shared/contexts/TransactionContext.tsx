@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+import { useMutation, UseMutationResult } from 'react-query';
 import {
    createContext,
    ReactNode,
@@ -5,14 +7,16 @@ import {
    useContext,
    useState,
 } from 'react';
+
 import {
    CreateTransaction,
+   DeleteTransactionAPI,
    getTransactionByParams,
    getTransactionByParamsProps,
    getTransactions,
    ResolvedTransactionApi,
 } from '../../api';
-import { useMutation, UseMutationResult } from 'react-query';
+
 import { useFlashMessageContext } from './FlashMessageContext';
 import { authStorage } from '../store/AuthContext/AuthContext';
 
@@ -70,6 +74,7 @@ interface TransactionProps {
    transaction: TransactionDTO | undefined;
    getTotalBalense: () => Promise<any>;
    ResolvedTransaction: (props: string) => Promise<void | any>;
+   DeleteTransaction: (transactionId: string) => Promise<void>;
 }
 
 const TransactionContext = createContext({} as TransactionProps);
@@ -141,7 +146,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                actions.logout();
             }
          }
-         console.log('pl');
       },
       [actions, handleShowingFlashMessage]
    );
@@ -216,6 +220,17 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       [actions]
    );
 
+   const DeleteTransaction = useCallback(
+      async (transactionId: string) => {
+         await DeleteTransactionAPI<void, AxiosResponse<void, any> | undefined>(
+            transactionId
+         );
+         await GetTransaction({});
+         return;
+      },
+      [GetTransaction]
+   );
+
    const getTotalBalense = useCallback(async () => {
       const result = await getTransactions<TransactionDTO>({});
 
@@ -233,6 +248,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             GetTransaction,
             transaction,
             GetTransactionByParams,
+            DeleteTransaction,
          }}
       >
          {children}
