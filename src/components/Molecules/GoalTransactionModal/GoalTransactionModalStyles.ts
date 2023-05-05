@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-import * as Dialog from '@radix-ui/react-dialog';
 import Chart from 'react-apexcharts';
+import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowDown } from '@phosphor-icons/react';
 export const DialogRoot = styled(Dialog.Root)``;
 

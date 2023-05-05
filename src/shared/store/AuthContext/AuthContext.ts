@@ -3,49 +3,12 @@ import { create, SetState } from 'zustand';
 import { loginAPI, SingUpAPI } from '../../../api/index';
 import { useLocalStorage } from '../../modules/Storage';
 import { LocalStoreOperator } from '../../modules/Storage/persistence-adepter/adepter';
+import { UserResponse, authStorageProps } from './AuthContextTypes';
 
 const isLoggedInitialValue = () => {
    const token = localStorage.getItem('auth');
    return token ? true : false;
 };
-
-interface singUpProps {
-   email: string;
-   password: string;
-   name: string;
-}
-
-interface authStorageProps {
-   state: {
-      errors: any;
-      isLogged: boolean;
-      loading: boolean;
-   };
-   actions: {
-      login: (email: string, password: string) => Promise<UserResponse | void>;
-      logout: () => void;
-      singUp: (props: singUpProps) => any;
-      getCredentials: () => Promise<any>;
-      setCredentials: (data: any) => Promise<any>;
-   };
-}
-
-export interface CredentialsProps {
-   user: {
-      name: string;
-      email: string;
-   };
-   token: string;
-}
-
-export interface UserResponse {
-   response?: {
-      status: number;
-      data: CredentialsProps;
-   };
-   status: number;
-   data: CredentialsProps;
-}
 
 async function storageProvider({
    type,
@@ -98,10 +61,11 @@ export const authStorage = create<authStorageProps>((set, get) => ({
                get().actions.setCredentials(response.data);
                updateAuthState(set)({ isLogged: true });
             }
+
             return response;
          } catch (error: any) {
-            get().actions.logout();
             updateAuthState(set)({ isLogged: false, errors: '' });
+            get().actions.logout();
             return;
          } finally {
             updateAuthState(set)({ isLogged: false, errors: '' });
@@ -109,7 +73,11 @@ export const authStorage = create<authStorageProps>((set, get) => ({
       },
       logout: () => {
          localStorage.removeItem('auth');
-         updateAuthState(set)({ isLogged: false, errors: '', loading: false });
+         updateAuthState(set)({
+            isLogged: false,
+            errors: '',
+            loading: false,
+         });
          return;
       },
       singUp: async ({

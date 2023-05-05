@@ -36,6 +36,7 @@
     "react-apexcharts": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.5",
+    "react-intersection-observer": "^9.4.3",
     "react-router-dom": "^6.8.2",
     "react-scripts": "^5.0.1",
     "remask": "^0.1.0-alpha.5",

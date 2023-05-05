@@ -1,8 +1,9 @@
 import { CheckCircle, XCircle } from '@phosphor-icons/react';
+import { motion, Variants } from 'framer-motion';
 import { format } from 'date-fns';
-import * as S from './PopoverDetailsStyles';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import { useEffect, useState } from 'react';
+import * as S from './PopoverDetailsStyles';
 
 interface PopOverTest {
    top: number;
@@ -24,6 +25,7 @@ export const PopoverDetails = (props: PopOverTest) => {
       id,
       value,
       category,
+      description,
    } = props.content;
 
    let currentCreatedAtFormatted;
@@ -53,11 +55,33 @@ export const PopoverDetails = (props: PopOverTest) => {
 
       setFormattedForPortuguese(currentRecurrence);
    }, [recurrence]);
+
+   const variants = {
+      hidden: { opacity: 0, y: -50 },
+      visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+      exit: {
+         opacity: 0,
+         scale: 0.5,
+         transition: {
+            duration: 0.6,
+            ease: 'easeInOut',
+         },
+      },
+   } as Variants;
+
    // pending: Cadastra um debito que nao tenha seja uma inscrição e nem tenha recorrência.
    return (
       <>
-         <S.PopOver left={props.left} top={props.top}>
-            <S.SubDetailsWrapper flex={1 / 2}>
+         <S.PopOver
+            as={motion.div}
+            variants={variants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            left={props.left}
+            top={props.top}
+         >
+            <S.SubDetailsWrapper overflow="scroll">
                <S.Info>
                   Inscrição?{' '}
                   {isSubscription === null || isSubscription === false ? (
@@ -75,35 +99,32 @@ export const PopoverDetails = (props: PopOverTest) => {
                   )}
                   {!resolved && (
                      <S.FinishedButton onClick={handleResolvedTransaction}>
-                        Finalizar!
+                        Marcar como Finalizado!
                      </S.FinishedButton>
                   )}
                </S.Info>
                <S.Info>Categoria: {category.name}</S.Info>
 
                <S.Info>
-                  Tipo{' '}
                   {type === 'expense' ? (
-                     <S.Type>Dispensa</S.Type>
+                     <S.Type>Tipo Dispensa</S.Type>
                   ) : (
-                     <S.Type>Receita</S.Type>
+                     <S.Type>Tipo Receita</S.Type>
                   )}
                </S.Info>
-            </S.SubDetailsWrapper>
-
-            <S.SubDetailsWrapper flex={1 / 2}>
                {installments !== null && installments !== 0 && (
                   <S.Info>
-                     Numero de vezes X{installments}
-                     <S.Total>
-                        Total <br /> {value}
-                     </S.Total>
+                     X{installments} Total <br /> {value}
                   </S.Info>
                )}
                {installments !== null && (
                   <S.Info>Recorrência {formattedForPortuguese}</S.Info>
                )}
                <S.Info>Data de criação {currentCreatedAtFormatted}</S.Info>
+            </S.SubDetailsWrapper>
+
+            <S.SubDetailsWrapper padding="0px">
+               <S.DescriptionWrapper>{description}</S.DescriptionWrapper>
             </S.SubDetailsWrapper>
          </S.PopOver>
       </>

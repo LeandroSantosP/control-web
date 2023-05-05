@@ -1,5 +1,4 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { ErrorMessage } from '@hookform/error-message';
 import { useNavigate } from 'react-router-dom';
 
 import * as S from './SingUpStyles';

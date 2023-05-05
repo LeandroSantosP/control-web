@@ -180,7 +180,10 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                actions.logout();
             }
          }
+         console.log('ok');
       },
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [actions.logout, ResolvedTransaction]
    );
 

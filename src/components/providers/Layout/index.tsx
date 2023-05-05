@@ -3,6 +3,7 @@ import logo from '../../../shared/assets/logo.svg';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../atoms/Icons/Icon';
 import { authStorage } from '../../../shared/store/AuthContext/AuthContext';
+import { useEffect } from 'react';
 
 interface LayoutProps {
    children: React.ReactNode;
@@ -14,13 +15,30 @@ export const Layout = ({ children }: LayoutProps) => {
       actions,
       state: { isLogged },
    } = authStorage();
-   if (!isLogged) {
+   useEffect(() => {
+      if (!isLogged) {
+         navigate('/entrar');
+         return;
+      }
+   }, [isLogged, navigate]);
+
+   const handleClick = () => {
+      actions.logout();
       navigate('/entrar');
-   }
+      return;
+   };
+
+   const handleProfile = () => {
+      navigate('/profile');
+   };
+
+   const handleDashBoard = () => {
+      navigate('/');
+   };
 
    const listIcons = [
-      <S.Dash key="1" fontSize="1.5rem" />,
-      <S.Graph key="2" fontSize="1.5rem" />,
+      <S.Dash onClick={handleDashBoard} key="1" fontSize="1.5rem" />,
+      <S.User onClick={handleProfile} key="2" fontSize="1.5rem" />,
    ];
 
    return (
@@ -35,7 +53,7 @@ export const Layout = ({ children }: LayoutProps) => {
                      );
                   })}
                </S.WrapperOptions>
-               <S.Out fontSize="1.5rem" onClick={actions.logout}>
+               <S.Out fontSize="1.5rem" onClick={handleClick}>
                   sair
                </S.Out>
             </S.MenuContent>

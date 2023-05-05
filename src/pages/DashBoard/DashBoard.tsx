@@ -8,7 +8,6 @@ import { Transaction } from '../../components/Molecules/Transaction/Transaction'
 import { Layout } from '../../components/providers/Layout/';
 
 import { useTransactionContext } from '../../shared/contexts';
-import { Box } from '../../components/atoms/Box/Box';
 
 const TransactionGraphs = lazy(
    () =>
@@ -58,6 +57,8 @@ export const DashBoard = () => {
    useEffect(() => {
       getTotalBalense()
          .then((response) => {
+            const showBalense =
+               transaction?.balense?.total === response.balense.total;
             response?.balense?.total || '0',
                setAccountInfosList([
                   {
@@ -83,10 +84,11 @@ export const DashBoard = () => {
                      amount: transaction?.balense?.total || '0',
                      logo: Balense,
                      alt: 'Balense',
+                     showBalense,
                   },
                ]);
          })
-         .catch((err) => {
+         .catch(() => {
             logout();
          });
    }, [
@@ -106,14 +108,7 @@ export const DashBoard = () => {
             hasFilter={true}
             icon={<Command size={35} />}
          />
-         <Box
-            display="flex"
-            width="100%"
-            height="calc(100% - 100px)"
-            flexDirection="row"
-            gap="2rem"
-            margin=" 0 0 0 10rems"
-         >
+         <S.Wrapper>
             <S.DashboardWrapper
                flex={2 / 3}
                overflowY="off"
@@ -122,6 +117,13 @@ export const DashBoard = () => {
             >
                <S.StatusWrapper flex={1 / 4}>
                   {accountInfosList?.map((accountInfos) => {
+                     if (
+                        accountInfos.description === 'Balanco' &&
+                        accountInfos.showBalense
+                     ) {
+                        return;
+                     }
+
                      return (
                         <StatusAccount
                            key={accountInfos.logo}
@@ -163,7 +165,7 @@ export const DashBoard = () => {
                   })}
                </S.UlWrapper>
             </S.DashboardWrapper>
-         </Box>
+         </S.Wrapper>
       </Layout>
    );
 };

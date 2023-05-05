@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { api } from '../shared/axios';
 
 interface LoginProps {
@@ -187,10 +187,10 @@ export const GetUserNotification = async (NotificationToken: string) => {
    }
 };
 
-interface GoalsUserRequestsProps<B, P> {
+interface RequestsProps<B, P> {
    type: 'get' | 'post' | 'delete' | 'patch';
    route: string;
-   body?: B;
+   body?: B | any;
    params?: P;
 }
 
@@ -199,7 +199,61 @@ export const GoalsUserRequests = async <B, P, R>({
    type,
    body,
    params,
-}: GoalsUserRequestsProps<B, P>) => {
+}: RequestsProps<B, P>) => {
+   const { token } = getToken();
+
+   try {
+      if (token) {
+         const res = await api({
+            token,
+            params,
+         })[type]<R>(route, {
+            ...body,
+         });
+
+         return Promise.resolve(res);
+      }
+   } catch (erro: any) {
+      return Promise.reject(erro);
+   }
+};
+
+/* Profile */
+
+export const ProfileRequests = async <B, P>({
+   route,
+   type,
+   body,
+}: RequestsProps<B, P>): Promise<void> => {
+   const { token } = getToken();
+   const formData = new FormData();
+
+   formData.append('props', JSON.stringify(body.props));
+   formData.append('avatar', JSON.stringify(body?.avatar));
+
+   try {
+      if (token) {
+         await axios({
+            url: import.meta.env.VITE_API_HOST_DEVELOPMENT + route,
+            method: type,
+            headers: {
+               Authorization: `Bearer ${token}`,
+               'Content-Type': 'multipart/form-data',
+            },
+            data: formData,
+         });
+      }
+   } catch (erro: any) {
+      return Promise.reject(erro);
+   }
+};
+
+export const GetProfileRequests = async <B, P, R>({
+   route,
+   type,
+   body,
+   params,
+}: RequestsProps<B, P>) => {
    const { token } = getToken();
 
    try {

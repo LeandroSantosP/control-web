@@ -7,13 +7,11 @@ import * as S from './ThreeOptionSwitchStyles';
 interface ThreeOptionSwitchProps {
    initialValue: any;
    month: string | null;
-   setOpen: React.Dispatch<React.SetStateAction<'close' | 'open'>>;
 }
 
 export const ThreeOptionSwitch = ({
    initialValue,
    month,
-   setOpen,
 }: ThreeOptionSwitchProps) => {
    const { GetTransactionByParams } = useTransactionContext();
    const [value, setValue] = useState<{ option: string }>({
@@ -51,10 +49,7 @@ export const ThreeOptionSwitch = ({
 
    return (
       <>
-         <S.MainWrapper
-            onMouseOver={() => setOpen('open')}
-            onMouseLeave={() => setOpen('close')}
-         >
+         <S.MainWrapper>
             <S.Wrapper>
                <S.Button
                   selected={value.option === 'isSubscription'}

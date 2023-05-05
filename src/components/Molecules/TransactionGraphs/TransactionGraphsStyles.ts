@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Chart from 'react-apexcharts';
 
 export const WrapperMain = styled('section')`
    display: flex;
@@ -57,12 +56,6 @@ export const ChartTittle = styled('h1')<ChartTittle>`
             : props.theme.colors.TimberWhite;
       }};
    }
-`;
-
-export const ChartCustoms = styled(Chart)`
-   display: flex;
-   width: 100%;
-   margin: 35px auto;
 `;
 
 export const ChartSkeleton = styled('div')`

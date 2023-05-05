@@ -1,15 +1,13 @@
 import styled from 'styled-components';
-import { Box } from '../../atoms/Box/Box';
 
 interface WrapperProps {
    type?: 'success' | 'warning' | 'error' | 'default';
 }
 
-interface ProgressBarProps {
-   time: number;
-}
-
-export const Wrapper = styled(Box)<WrapperProps>`
+export const Wrapper = styled('div')<WrapperProps>`
+   display: flex;
+   justify-content: center;
+   align-items: center;
    width: 50px;
    z-index: 9999;
    position: absolute;
@@ -34,22 +32,6 @@ export const Wrapper = styled(Box)<WrapperProps>`
 
    gap: 10px;
    border: 1px solid #000;
-   animation: popover 0.6s ease-in-out;
-   animation-fill-mode: forwards;
-
-   @keyframes popover {
-      0% {
-         opacity: 0;
-         transform: scale(0);
-      }
-      50% {
-         opacity: 1;
-         transform: scale(1.05);
-      }
-      100% {
-         transform: scale(1);
-      }
-   }
 `;
 
 export const ContentMessage = styled('p')<WrapperProps>`

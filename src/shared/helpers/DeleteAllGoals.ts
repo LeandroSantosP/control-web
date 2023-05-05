@@ -1,6 +1,6 @@
 import { ValidMonths } from '../../shared/myTypes/ValidMonths';
 import { handleShowingFlashMessageProps } from '../contexts';
-import { GoalsProps, IRemoveRequest } from '../store/goals/GoalsStorage';
+import { GoalsProps, IRemoveRequest } from '../store/goals/GoalsStorageTypes';
 
 export async function HandleDeleteAllGoals(
    remove: (props: IRemoveRequest) => Promise<void>,

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import Chart from 'react-apexcharts';
 import { useState, useEffect, useCallback } from 'react';
+import { ApexConfigGoalsGraph } from '../../../shared/helpers/ApexConfig';
 import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
 
 import * as S from './GoalTransactionModalStyles';
 import { GoalsStorage } from '../../../shared/store';
 import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
 import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
@@ -84,105 +84,12 @@ export const GoalsTransactionModal = ({
       ApexCharts.ApexOptions | undefined
    >(undefined);
 
-   const getCharOptions = (
-      goalsData: any,
-      monthNames: string[]
-   ): ApexCharts.ApexOptions | undefined => {
-      return {
-         tooltip: {
-            enabled: true,
-            fillSeriesColor: true,
-            theme: 'dark',
-         },
-         fill: {
-            type: 'gradient',
-            colors: ['#e61239', '#12e864'],
-            gradient: {
-               shadeIntensity: 1,
-               opacityFrom: 0.7,
-               opacityTo: 0,
-            },
-         },
-         stroke: {
-            show: true,
-            curve: 'smooth',
-            lineCap: 'butt',
-            width: 2,
-            dashArray: 0,
-         },
-
-         plotOptions: {
-            area: {
-               fillTo: 'end',
-            },
-         },
-         dataLabels: {
-            formatter: (val, opt) => {
-               const result = FormatCurense(Number(val));
-
-               return `${result}`;
-            },
-         },
-         colors: ['#B01E68', '#3D5656'],
-         chart: {
-            type: 'area',
-            stacked: true,
-         },
-         xaxis: {
-            categories: monthNames.map((month) => month || '0'),
-         },
-         markers: {
-            size: 20,
-            colors: undefined,
-            strokeColors: '#1be3c5',
-
-            strokeOpacity: 0.9,
-            strokeDashArray: 0,
-            fillOpacity: 1,
-            shape: 'circle',
-            radius: 2,
-            onClick: function (e) {
-               // do something on marker click
-               console.log('ok');
-            },
-            onDblClick: function (e) {
-               // do something on marker click
-               console.log('ok');
-            },
-            showNullDataPoints: true,
-            hover: {
-               size: undefined,
-               sizeOffset: 4,
-            },
-         },
-         yaxis: {
-            labels: {
-               formatter: function (value) {
-                  const FormattedToMoney = FormatCurense(Number(value));
-                  return `${FormattedToMoney}`;
-               },
-               align: 'center',
-            },
-         },
-         series: [
-            {
-               name: 'Meta de Despesas',
-               data: goalsData.map((goal: any) => {
-                  return Number(goal.expectated_expense);
-               }),
-            },
-            {
-               name: 'Meta de Receita',
-               data: goalsData.map((goal: any) => {
-                  return Number(goal.expectated_revenue);
-               }),
-            },
-         ],
-      };
-   };
-
    useEffect(() => {
-      setCharOptions(getCharOptions(goalsData(), monthNames));
+      const apexOptions = ApexConfigGoalsGraph({
+         goalsData: goalsData(),
+         monthNames,
+      }) as ApexCharts.ApexOptions | undefined;
+      setCharOptions(apexOptions);
    }, [goalsData]);
 
    const [showCreateGoals, setShowCreateGoals] = useState(false);
@@ -219,7 +126,7 @@ export const GoalsTransactionModal = ({
             <S.DialogOverlay />
             <S.DialogContent>
                {' '}
-               <S.DialogTitle>Meta (POR MES)</S.DialogTitle>
+               <S.DialogTitle>(POR MES)</S.DialogTitle>
                <S.DialogDescription as="div">
                   Trace metas financeiras e alcance a estabilidade financeira
                   com sucesso!

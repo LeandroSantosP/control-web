@@ -1,11 +1,11 @@
-import { toMoney } from 'vanilla-masker';
 import { memo, useCallback, useEffect, useState } from 'react';
+import { ApexConfigTransactionGraph } from '../../../shared/helpers/ApexConfig';
 
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import { GoalsStorage } from '../../../shared/store/goals/GoalsStorage';
-import { FormatCurense } from '../../../shared/helpers/FormatCurense';
 import { ArrowsCounterClockwise, X } from '@phosphor-icons/react';
 import * as S from './TransactionGraphsStyles';
+import Chart from 'react-apexcharts';
 
 type Goals = {
    name: string;
@@ -14,24 +14,22 @@ type Goals = {
    expectated_revenue: string;
 };
 
-type DataItem = {
+export type DataItem = {
    month: string;
    minimalCurrentValue: any;
    majorCurrentValue: any;
    goals: Goals | undefined;
 };
 
-type DataResponse = Array<DataItem>;
+export type DataResponse = Array<DataItem>;
 
-function handleData({
-   FormattedGoalsItems,
-   sut,
-   options,
-}: {
+export interface HandleDataProps {
    FormattedGoalsItems(item: DataItem): any;
    sut: DataResponse;
    options: 'majorCurrentValue' | 'goals' | 'month' | 'minimalCurrentValue';
-}) {
+}
+
+function handleData({ FormattedGoalsItems, options, sut }: HandleDataProps) {
    return sut.map((item) => {
       const goalsConfig = FormattedGoalsItems(item)?.map((i: any) => {
          return { ...i, strokeColor: 'purple' };
@@ -196,94 +194,16 @@ function TransactionGraphs() {
          setShowNotFoundPaga(false);
       }
 
-      setMuOptions({
-         legend: {
-            position: 'top',
-         },
-         colors: ['rgba(80, 176, 149, 0.66)', 'rgba(176, 159, 80, 0.66)'],
-         tooltip: {
-            enabled: true,
-            fillSeriesColor: true,
-            theme: 'dark',
-         },
-         plotOptions: {
-            bar: {
-               horizontal: true,
-               borderRadius: 3,
+      const apexSettings = ApexConfigTransactionGraph({
+         data,
+         FormattedGoalsItems,
+         handleData,
+         Months,
+         sut,
+         TransactionTypeName,
+      }) as ApexCharts.ApexOptions | undefined;
 
-               dataLabels: {
-                  position: 'top',
-                  orientation: 'horizontal',
-               },
-            },
-         },
-         chart: {
-            type: 'area',
-         },
-         xaxis: {
-            categories: data.map((item) => {
-               const formattedMonth = item.month.slice(-2);
-
-               const response = Months.map((item) => {
-                  if (item.ref.includes(formattedMonth)) {
-                     return item.name;
-                  }
-                  return;
-               }).filter((i) => i !== undefined);
-               return response;
-            }),
-
-            labels: {
-               formatter: function (value) {
-                  return value;
-               },
-            },
-         },
-         yaxis: {
-            labels: {
-               formatter: (val: any) => {
-                  const res = FormatCurense(val as number);
-
-                  if ((typeof val[0] as any) === 'string') {
-                     return val;
-                  }
-
-                  return (
-                     `${res.includes('-') ? '-' : ''} ` +
-                     toMoney(res, {
-                        unit: 'RS',
-                     })
-                  );
-               },
-               align: 'center',
-            },
-         },
-         dataLabels: {
-            formatter: (val) => {
-               const result = FormatCurense(Number(val));
-
-               return `${result}`;
-            },
-         },
-         series: [
-            {
-               name: `Maior ${TransactionTypeName} ( Do MES )`,
-               data: handleData({
-                  FormattedGoalsItems,
-                  options: 'minimalCurrentValue',
-                  sut,
-               }),
-            },
-            {
-               name: `Menor ${TransactionTypeName} ( Do MES )`,
-               data: handleData({
-                  FormattedGoalsItems,
-                  options: 'majorCurrentValue',
-                  sut,
-               }),
-            },
-         ],
-      });
+      setMuOptions(apexSettings);
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [ListGoals, data]);
@@ -385,15 +305,16 @@ function TransactionGraphs() {
                            borderRadius: '50%',
                         }}
                      >
-                        <X size={300} />
+                        <X size={200} />
                      </div>
                   </S.ChartSkeleton>
                ) : (
-                  <S.ChartCustoms
+                  <Chart
                      options={muOptions}
                      series={muOptions?.series}
                      type="bar"
                      height="88%"
+                     width={'100%'}
                   />
                )}
             </>

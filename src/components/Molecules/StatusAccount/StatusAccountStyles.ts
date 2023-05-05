@@ -1,13 +1,26 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const slideIn = keyframes`
+  from {
+    transform: rotate(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotate(0);
+    opacity: 1;
+  }
+`;
 
 export const StatusContainer = styled('div')`
    display: flex;
-   height: 200px;
+   height: 100%;
    width: 100%;
    flex-direction: column;
    justify-content: center;
    align-items: center;
    gap: 0.5rem;
+   animation: ${slideIn} 0.5s ease-in-out;
 
    border-radius: 0.4rem;
    background-color: ${(props) => props.theme.colors.Dark};

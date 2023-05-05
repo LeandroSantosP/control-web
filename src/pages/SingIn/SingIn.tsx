@@ -38,18 +38,20 @@ export const SingIn = () => {
    } = useForm<Inputs>({
       mode: 'all',
    });
+
    const onSubmit: SubmitHandler<Inputs> = async (data) => {
       const res = await actions.login(data.email, data.password);
 
       if (res?.status === 200) {
-         navigation('/');
-
          handleShowingFlashMessage({
             message: 'Login efetuado com sucesso!',
             timer: 2000,
             type: 'success',
             haveButton: false,
          });
+         navigation('/');
+
+         return;
       }
 
       if (res?.response?.status === 400) {

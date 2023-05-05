@@ -10,6 +10,14 @@ interface DashboardWrapperProps {
    width?: string;
 }
 
+export const Wrapper = styled('div')`
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   height: 100%;
+   width: 100%;
+`;
+
 export const DashboardWrapper = styled('section')<DashboardWrapperProps>`
    display: flex;
    flex-direction: ${(props) => props.flexDirection || 'column'};

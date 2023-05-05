@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Command, ChartBar, SignOut } from '@phosphor-icons/react';
+import { Command, SignOut, UserCircle } from '@phosphor-icons/react';
 
 export const Out = styled(SignOut)`
    cursor: pointer;
@@ -12,7 +12,7 @@ export const Out = styled(SignOut)`
    }
 `;
 
-export const Graph = styled(ChartBar)`
+export const User = styled(UserCircle)`
    cursor: pointer;
    transition: 0.3s ease-out;
    color: ${(props) => props.theme.colors.Verdigris};

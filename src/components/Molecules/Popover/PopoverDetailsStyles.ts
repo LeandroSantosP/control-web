@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { flex } from 'styled-system';
 
 interface PopOver {
    top: number;
@@ -38,32 +37,24 @@ export const PopOver = styled('div')<PopOver>`
    left: ${(props) => props.left - 195}px;
    transform-origin: right;
    animation: popover 0.2s forwards;
-
-   @keyframes popover {
-      from {
-         transform: scaleX(0);
-      }
-      to {
-         transform: scaleX(1.05);
-      }
-   }
 `;
 
 interface SubDetailsWrapperProps {
-   flex: number;
+   padding?: string;
+   overflow?: string;
 }
 
 export const SubDetailsWrapper = styled('div')<SubDetailsWrapperProps>`
    display: flex;
    flex-direction: column;
    width: 100%;
+   max-height: 240px;
+   overflow: ${(props) => props.overflow || undefined};
    align-items: center;
-   padding: 1.5rem;
+   padding: ${(props) => props.padding || '1.5rem'};
    background-color: ${(props) => props.theme.colors.Dark};
    justify-content: center;
    font-size: 0.8rem;
-   ${flex}
-
    &:first-child {
       border-right: 1px solid ${(props) => props.theme.colors.TimberWhite};
    }
@@ -79,7 +70,6 @@ export const FinishedButton = styled('button')`
    background-color: #ffaa22;
    margin-left: 8px;
    color: ${(props) => props.theme.colors.RaisinBlack};
-
    &:hover {
       filter: brightness(1.2);
    }
@@ -96,17 +86,7 @@ export const Info = styled('p')`
    text-align: center;
    margin: 3px;
 
-   font-size: 1rem;
-`;
-
-export const Total = styled('span')`
-   display: flex;
-   justify-content: center;
-   align-content: center;
-   flex-direction: column;
-   font-size: 10px;
-   min-width: 50%;
-   font-size: 1rem;
+   font-size: 0.7rem;
 `;
 
 export const Type = styled('span')`
@@ -117,4 +97,18 @@ export const SubContent = styled('div')`
    display: flex;
    flex-direction: column;
    text-align: flex-start;
+`;
+
+export const DescriptionWrapper = styled('div')`
+   display: flex;
+   width: 200px;
+   flex: 1;
+   text-align: start;
+   border-radius: 0.4rem;
+   font-size: 1rem;
+   padding: 10px;
+   margin: 1rem;
+   color: ${(props) => props.theme.colors.TimberWhite};
+   background-color: ${(props) => props.theme.colors.RaisinBlack};
+   white-space: none;
 `;
