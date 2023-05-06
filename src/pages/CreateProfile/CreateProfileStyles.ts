@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Info as InfoIcon } from '@phosphor-icons/react';
 
 export const Wrapper = styled('div')`
    display: flex;
@@ -44,8 +43,24 @@ export const StepsWrapper = styled('section')`
    width: 60%;
    margin-top: 1rem;
    position: relative;
-
    z-index: 10;
+`;
+
+interface IconWrapperProps {
+   IconActive?: boolean;
+}
+export const IconWrapper = styled('div')<IconWrapperProps>`
+   z-index: 10;
+   font-size: 3rem;
+   svg {
+      padding: 5px;
+      border-radius: 50%;
+
+      background-color: ${(props) =>
+         props.IconActive ? props.theme.colors.TimberWhite : '#111'};
+      color: ${(props) =>
+         props.IconActive ? '#111' : props.theme.colors.TimberWhite};
+   }
 `;
 
 export const Line = styled('div')`
@@ -54,14 +69,6 @@ export const Line = styled('div')`
    position: absolute;
    background-color: rgba(61, 148, 145, 0.42);
    border-radius: 50%;
-`;
-
-export const Icon = styled(InfoIcon)`
-   font-size: 3rem;
-   background-color: #111;
-   color: ${(props) => props.theme.colors.TimberWhite};
-   border-radius: 50%;
-   z-index: 10;
 `;
 
 export const FormWrapper = styled('form')`

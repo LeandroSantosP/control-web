@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { Layout } from '../../components/providers/Layout';
 import { useForm } from '../../shared/hooks/useForm';
 import { RegisterForm } from '../../components/Molecules/RegisterForm/RegisterForm';
-import { UploadAvatar } from '../../components/Molecules/UploadAvatar/UploadAvatar';
+import { UploadAvatarForm } from '../../components/Molecules/UploadAvatar/UploadAvatar';
+import { ConfirmForm } from '../../components/Molecules/ConfirmeForm/ConfirmForm';
+import { Checks, Image, Info } from '@phosphor-icons/react';
 
 export type DataStorageProps = {
    profession: string;
@@ -33,8 +35,8 @@ export const CreateProfile = () => {
 
    const steps = [
       <RegisterForm data={data} updatedDate={updatedData} key={1} />,
-      <UploadAvatar data={data} updatedDate={updatedData} key={2} />,
-      <h1 key={2}>confirmar</h1>,
+      <UploadAvatarForm data={data} updatedDate={updatedData} key={2} />,
+      <ConfirmForm key={2} />,
    ];
 
    const { changeStep, currentStep, currentComponent, isLastStep } =
@@ -49,9 +51,16 @@ export const CreateProfile = () => {
          <S.Wrapper>
             <S.StepsWrapper>
                <S.Line />
-               <S.Icon />
-               <S.Icon />
-               <S.Icon />
+               <S.IconWrapper IconActive={currentStep === 0}>
+                  <Info />
+               </S.IconWrapper>
+
+               <S.IconWrapper IconActive={currentStep === 1}>
+                  <Image />
+               </S.IconWrapper>
+               <S.IconWrapper IconActive={currentStep === 2}>
+                  <Checks />
+               </S.IconWrapper>
             </S.StepsWrapper>
             <S.FormWrapper>
                {currentComponent}

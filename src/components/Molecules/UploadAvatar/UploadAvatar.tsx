@@ -6,7 +6,7 @@ import * as S from './UploadAvatarStyled';
 import ImageDefault from '../../../img/Default.png';
 import { useCallback, useRef, useState } from 'react';
 
-export const UploadAvatar = ({
+export const UploadAvatarForm = ({
    updatedDate,
 }: {
    data: DataStorageProps;
