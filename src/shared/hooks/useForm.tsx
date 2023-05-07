@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export const useForm = (steps: JSX.Element[]) => {
+export const useFormHook = (steps: JSX.Element[]) => {
    const [currentStep, setCurrentStep] = useState(0);
 
    const changeStep = (step: number) => {

@@ -44,4 +44,5 @@ export const Img = styled('img')`
    height: 300px;
    border-radius: 50%;
    align-self: center;
+   object-fit: cover;
 `;

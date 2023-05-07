@@ -18,6 +18,7 @@ export const InputWrapper = styled('div')`
    width: 100%;
    flex-direction: column;
    gap: 10px;
+   height: 100%;
 `;
 
 export const InputLabel = styled('label')`

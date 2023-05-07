@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { setColorDetails } from '../../../pages/CreateProfile/CreateProfileStyles';
 
 export const WrapperAvatar = styled('div')`
    display: flex;
@@ -16,7 +17,13 @@ export const AvatarUploadFile = styled('input')`
    position: absolute;
 `;
 
-export const AvatarUploadButton = styled('button')`
+/* haveErro; */
+
+interface AvatarUploadButtonProps {
+   haveErro: boolean;
+}
+
+export const AvatarUploadButton = styled('button')<AvatarUploadButtonProps>`
    display: flex;
    justify-content: center;
    align-items: center;
@@ -39,9 +46,8 @@ export const AvatarUploadButton = styled('button')`
    touch-action: manipulation;
 
    &:hover {
-      box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+      box-shadow: ${() => setColorDetails('rgba(80, 63, 205, 0.5) 0 1px 30px')};
       transition-duration: 0.1s;
-      opacity: 1;
    }
 
    @media (min-width: 768px) {
@@ -52,8 +58,9 @@ export const AvatarUploadButton = styled('button')`
 export const Avatar = styled('img')`
    display: flex;
    flex: 1;
-   max-width: 400px;
-   max-height: 400px;
+   max-width: 350px;
+   max-height: 350px;
+   object-fit: cover;
    border-radius: 50%;
    height: 100%;
    background-color: rgba(142, 142, 142, 0.17);

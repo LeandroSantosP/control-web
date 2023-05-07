@@ -118,14 +118,12 @@ export const DeleteNewGoalForm = () => {
                               {errors?.goalsForDelete && (
                                  <>
                                     <S.ErrorMessage>
-                                       {' '}
                                        {
                                           errors.goalsForDelete[index]?.months
                                              ?.message
                                        }
                                     </S.ErrorMessage>
                                     <S.ErrorMessage>
-                                       {' '}
                                        {errors.goalsForDelete.type ===
                                           'custom' &&
                                           errors.goalsForDelete.message}

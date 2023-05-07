@@ -1,5 +1,19 @@
 import styled from 'styled-components';
 
+const RedColorError = 'rgba(204, 63, 63, 0.5) 0 1px 30px';
+
+export const setColorDetails = (response: string, isOpacity = false) => {
+   return (props: any) => {
+      if (props.haveErro) {
+         if (isOpacity) {
+            return 0.5;
+         }
+         return RedColorError;
+      }
+      return response;
+   };
+};
+
 export const Wrapper = styled('div')`
    display: flex;
    flex-direction: column;
@@ -91,25 +105,36 @@ export const WrapperButton = styled('div')`
    align-content: center;
 `;
 
-export const Button = styled('button')`
+interface ButtonProps {
+   haveErro: boolean;
+}
+
+export const Button = styled('button')<ButtonProps>`
    border-radius: 8px;
    border-style: none;
    box-sizing: border-box;
+   opacity: ${() => setColorDetails('1', true)};
    color: ${(props) => props.theme.colors.TimberWhite};
-   cursor: pointer;
+   cursor: ${(props) => {
+      if (props.haveErro) {
+         return 'block';
+      }
+      return 'pointer';
+   }};
    flex-shrink: 0;
    font-size: 16px;
    font-weight: 500;
    border: 1px solid ${(props) => props.theme.colors.TimberWhite};
    height: 4rem;
    text-align: center;
-   text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+
    transition: all 0.5s;
    user-select: none;
    touch-action: manipulation;
+   box-shadow: ${() => setColorDetails('none')};
 
    &:hover {
-      box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+      box-shadow: ${() => setColorDetails('rgba(80, 63, 205, 0.5) 0 1px 30px')};
       transition-duration: 0.1s;
    }
 

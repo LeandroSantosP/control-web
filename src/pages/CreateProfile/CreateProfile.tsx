@@ -1,46 +1,117 @@
 import * as S from './CreateProfileStyles';
-import { useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import { Layout } from '../../components/providers/Layout';
-import { useForm } from '../../shared/hooks/useForm';
-import { RegisterForm } from '../../components/Molecules/RegisterForm/RegisterForm';
-import { UploadAvatarForm } from '../../components/Molecules/UploadAvatar/UploadAvatar';
-import { ConfirmForm } from '../../components/Molecules/ConfirmeForm/ConfirmForm';
+import { useFormHook } from '../../shared/hooks/useForm';
 import { Checks, Image, Info } from '@phosphor-icons/react';
+import RegisterForm from '../../components/Molecules/RegisterForm/RegisterForm';
+import { ConfirmForm } from '../../components/Molecules/ConfirmeForm/ConfirmForm';
+import { UploadAvatarForm } from '../../components/Molecules/UploadAvatar/UploadAvatar';
 
 export type DataStorageProps = {
    profession: string;
    phonenumber: string;
-   birthday: string;
+   birthday: Date | undefined;
    salary: string;
    avatar: any;
+   AllErrors:
+      | {
+           currentStep: number | undefined;
+           haveError: boolean;
+           message: string;
+        }[]
+      | undefined;
 };
-export type UpdatedData = (key: string, value: string | File) => void;
+
+type DataStorageKeys = keyof DataStorageProps;
+
+type ErrorType =
+   | {
+        currentStep: number | undefined;
+        haveError: boolean;
+        message: string;
+     }[]
+   | undefined;
+
+export type UpdatedData = (
+   key: DataStorageKeys,
+   value: string | File | ErrorType
+) => void;
 
 const DataStorage = {
    profession: '',
    phonenumber: '',
-   birthday: '',
+   birthday: undefined,
    salary: '',
    avatar: '',
-} satisfies DataStorageProps;
+   AllErrors: undefined,
+} as DataStorageProps;
 
 export const CreateProfile = () => {
-   const [data, setDate] = useState(DataStorage);
+   const [data, setDate] = useState<DataStorageProps>(DataStorage);
 
-   const updatedData: UpdatedData = (key: string, value: string | File) => {
+   const [haveErros, setHaveErros] = useState<boolean>(false);
+
+   const updatedData: UpdatedData = (
+      key: string,
+      value: string | File | ErrorType
+   ) => {
       setDate((prev) => ({ ...prev, [key]: value }));
-
+      // setDate((prev) => ({ ...prev, AllErrors: [...prev.AllErrors[0]] }));
       return;
    };
 
+   const onValidate = async (callback: () => Promise<any> | undefined) => {
+      await callback();
+      return undefined;
+   };
+
+   const handleNext = () => {
+      changeStep(currentStep + 1);
+   };
+
    const steps = [
-      <RegisterForm data={data} updatedDate={updatedData} key={1} />,
-      <UploadAvatarForm data={data} updatedDate={updatedData} key={2} />,
-      <ConfirmForm key={2} />,
+      <RegisterForm
+         data={data}
+         updateData={updatedData}
+         onValidate={onValidate}
+         key={1}
+      />,
+      <UploadAvatarForm
+         haveErro={haveErros}
+         data={data}
+         updateData={updatedData}
+         onValidate={onValidate}
+         key={2}
+      />,
+      <ConfirmForm data={data} key={3} />,
    ];
 
    const { changeStep, currentStep, currentComponent, isLastStep } =
-      useForm(steps);
+      useFormHook(steps);
+
+   useEffect(() => {
+      if (data.AllErrors !== undefined) {
+         const stepOne = data.AllErrors.find((err) => err.currentStep === 0);
+
+         if (stepOne?.haveError) {
+            setHaveErros(true);
+            return;
+         }
+      }
+      if (data.AllErrors !== undefined) {
+         const stepTwo = data.AllErrors.find((err) => err.currentStep === 1);
+
+         if (
+            (currentStep === 1 && stepTwo?.currentStep === 1,
+            stepTwo?.haveError === true)
+         ) {
+            setHaveErros(true);
+            return;
+         }
+      }
+      setHaveErros(false);
+   }, [currentStep, data.AllErrors]);
 
    return (
       <Layout>
@@ -54,7 +125,6 @@ export const CreateProfile = () => {
                <S.IconWrapper IconActive={currentStep === 0}>
                   <Info />
                </S.IconWrapper>
-
                <S.IconWrapper IconActive={currentStep === 1}>
                   <Image />
                </S.IconWrapper>
@@ -68,14 +138,18 @@ export const CreateProfile = () => {
                   {!isLastStep && (
                      <>
                         <S.Button
+                           haveErro={haveErros}
                            onClick={() => changeStep(currentStep - 1)}
                            type="button"
+                           disabled={haveErros}
                         >
                            Voltar
                         </S.Button>
                         <S.Button
-                           onClick={() => changeStep(currentStep + 1)}
+                           haveErro={haveErros}
+                           onClick={handleNext}
                            type={'button'}
+                           disabled={haveErros}
                         >
                            Proximo
                         </S.Button>
@@ -84,12 +158,14 @@ export const CreateProfile = () => {
                   {isLastStep && (
                      <>
                         <S.Button
+                           haveErro={haveErros}
                            onClick={() => changeStep(currentStep - 1)}
                            type="button"
                         >
                            Voltar
                         </S.Button>
                         <S.Button
+                           haveErro={haveErros}
                            onClick={() => changeStep(currentStep + 1)}
                            type="submit"
                         >
