@@ -146,24 +146,27 @@ export const DashBoard = () => {
                <S.TransactionHeader>
                   <Transaction />
                </S.TransactionHeader>
-               <S.UlWrapper ref={LURef}>
-                  {transaction?.transactions?.map((transaction) => {
-                     return (
-                        <Fragment key={`${transaction.id}`}>
-                           <TransactionListItem
-                              params={{
-                                 ...transaction,
-                              }}
-                           />
-                           <Divider
-                              width="90%"
-                              bg="rgba(160, 160, 160, 0.46)"
-                              height="1px"
-                           />
-                        </Fragment>
-                     );
-                  })}
-               </S.UlWrapper>
+               {/* Gambiara da forte */}
+               <div style={{ height: '1px' }}>
+                  <S.UlWrapper ref={LURef}>
+                     {transaction?.transactions?.map((transaction) => {
+                        return (
+                           <Fragment key={`${transaction.id}`}>
+                              <TransactionListItem
+                                 params={{
+                                    ...transaction,
+                                 }}
+                              />
+                              <Divider
+                                 width="90%"
+                                 bg="rgba(160, 160, 160, 0.46)"
+                                 height="1px"
+                              />
+                           </Fragment>
+                        );
+                     })}
+                  </S.UlWrapper>
+               </div>
             </S.DashboardWrapper>
          </S.Wrapper>
       </Layout>

@@ -67,19 +67,19 @@ const ProfileStorage = create<ProfileStorageProps>((set, get) => ({
             type: 'post',
          });
 
+         updatedStates(set)({ loading: true });
+
          try {
-            const response = await result.create<CreateProfileProps, any>({
+            await result.create<CreateProfileProps, any>({
                ...params,
             });
-
-            if (response !== undefined) {
-               updatedStates(set)({ userProfile: response });
-            }
-
-            return response;
+            await get().actions.GetProfile();
+            return;
          } catch (error: any) {
             updatedStates(set)({ error });
             return;
+         } finally {
+            updatedStates(set)({ loading: false });
          }
       },
    },

@@ -15,13 +15,13 @@ export const UploadAvatarForm = ({
    data: DataStorageProps;
    updateData: UpdatedData;
    haveErro: boolean;
-   onValidate: (cb: any) => Promise<any>;
+   onValidate: (callback: () => Promise<any> | undefined) => Promise<any>;
 }) => {
    const [fileUrl, setFileUrl] = useState('');
    const hiddenFileInput = useRef<HTMLInputElement>(null);
 
    const SelectImage = useCallback(() => {
-      onValidate(() => {
+      onValidate(async () => {
          if (
             hiddenFileInput.current?.files &&
             hiddenFileInput.current?.files[0] !== undefined
@@ -54,7 +54,10 @@ export const UploadAvatarForm = ({
          }
       });
 
-      if (hiddenFileInput.current?.files) {
+      if (
+         hiddenFileInput.current?.files &&
+         hiddenFileInput.current?.files[0] !== undefined
+      ) {
          const fileImage = URL.createObjectURL(
             hiddenFileInput.current?.files[0]
          );

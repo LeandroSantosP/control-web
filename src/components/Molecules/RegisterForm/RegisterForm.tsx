@@ -28,21 +28,18 @@ const dataSchema = z.object({
          return true;
       }, "Telefone Precisa seguir o seguinte formato '(00) 00000-0000'")
       .optional(),
-   birthday: z
-      .string()
-      .refine((value) => {
-         if (value === '') {
-            return true;
-         }
-         const dateOfBirth = new Date(value);
-         const age = Math.floor(
-            (Number(new Date()) - Number(dateOfBirth)) /
-               (365.25 * 24 * 60 * 60 * 1000)
-         );
+   birthday: z.string().refine((value) => {
+      if (value === '') {
+         return true;
+      }
+      const dateOfBirth = new Date(value);
+      const age = Math.floor(
+         (Number(new Date()) - Number(dateOfBirth)) /
+            (365.25 * 24 * 60 * 60 * 1000)
+      );
 
-         return age >= 16;
-      }, 'Deve ser maior de 16 anos')
-      .optional(),
+      return age >= 16;
+   }, 'Deve ser maior de 16 anos'),
 });
 
 interface Input {
@@ -63,6 +60,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
       try {
          const { avatar, ...props } = data;
          const validData = dataSchema.parse(props);
+
          return Promise.resolve(validData);
       } catch (error) {
          if (error instanceof z.ZodError) {
@@ -106,7 +104,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
             <Input
                name="profession"
                onChange={({ target }) => updateData('profession', target.value)}
-               value={data.profession}
+               value={data.profession ?? ''}
                placeholder="Desenvolvedor Back-end"
                bg="rgba(243, 243, 243, 0.21)"
                cl="#c4c4c4f8"
@@ -127,7 +125,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
 
                   updateData('salary', money);
                }}
-               value={data.salary}
+               value={data.salary ?? ''}
                placeholder="R$ 2000"
                bg="rgba(243, 243, 243, 0.21)"
                cl="#c4c4c4f8"
@@ -143,7 +141,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
                onChange={({ target }) =>
                   updateData('phonenumber', target.value)
                }
-               value={data.phonenumber}
+               value={data.phonenumber ?? ''}
                placeholder="(11) 99999-9999"
                type="string"
                bg="rgba(243, 243, 243, 0.21)"
@@ -160,7 +158,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
             <S.InputLabel>Data de aniversario</S.InputLabel>
             <Input
                onChange={({ target }) => updateData('birthday', target.value)}
-               value={data.birthday?.toString()}
+               value={data.birthday?.toString() ?? ''}
                name="birthday"
                placeholder="21/05/2003"
                type="date"

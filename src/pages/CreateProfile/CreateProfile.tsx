@@ -7,13 +7,17 @@ import { Checks, Image, Info } from '@phosphor-icons/react';
 import RegisterForm from '../../components/Molecules/RegisterForm/RegisterForm';
 import { ConfirmForm } from '../../components/Molecules/ConfirmeForm/ConfirmForm';
 import { UploadAvatarForm } from '../../components/Molecules/UploadAvatar/UploadAvatar';
+import { ProfileStorage } from '../../shared/store/index';
+import { useFlashMessageContext } from '../../shared/contexts';
+import { useNavigate } from 'react-router-dom';
+import spinner from '../../shared/assets/spinner.svg';
 
 export type DataStorageProps = {
-   profession: string;
-   phonenumber: string;
+   profession: string | undefined;
+   phonenumber: string | undefined;
    birthday: Date | undefined;
-   salary: string;
-   avatar: any;
+   salary: string | undefined;
+   avatar: File | undefined;
    AllErrors:
       | {
            currentStep: number | undefined;
@@ -39,25 +43,39 @@ export type UpdatedData = (
 ) => void;
 
 const DataStorage = {
-   profession: '',
-   phonenumber: '',
+   profession: undefined,
+   phonenumber: undefined,
    birthday: undefined,
-   salary: '',
-   avatar: '',
+   salary: undefined,
+   avatar: undefined,
    AllErrors: undefined,
 } as DataStorageProps;
 
 export const CreateProfile = () => {
-   const [data, setDate] = useState<DataStorageProps>(DataStorage);
-
+   const [data, setData] = useState<DataStorageProps>(DataStorage);
+   const {
+      actions,
+      state: { loading },
+   } = ProfileStorage();
+   const { handleShowingFlashMessage } = useFlashMessageContext();
+   const navigation = useNavigate();
    const [haveErros, setHaveErros] = useState<boolean>(false);
 
    const updatedData: UpdatedData = (
       key: string,
       value: string | File | ErrorType
    ) => {
-      setDate((prev) => ({ ...prev, [key]: value }));
-      // setDate((prev) => ({ ...prev, AllErrors: [...prev.AllErrors[0]] }));
+      setData((prev) => {
+         const dataUpdated = Object.assign<DataStorageProps, DataStorageProps>(
+            {
+               ...prev,
+            },
+            { ...prev, [key]: value }
+         );
+
+         return { ...dataUpdated };
+      });
+
       return;
    };
 
@@ -87,6 +105,48 @@ export const CreateProfile = () => {
       <ConfirmForm data={data} key={3} />,
    ];
 
+   const handleSubmit = (e: any) => {
+      e.preventDefault();
+      const { avatar, birthday, phonenumber, profession, salary } = data;
+      const [year, month, day] = birthday?.toString().split('-') as string[];
+      const formattingData = `${day}/${month}/${year}`;
+      const formattingSalary = salary?.replace('R$', '').trim();
+      let formattingSalaryToDecimal;
+
+      if (formattingSalary) {
+         formattingSalaryToDecimal = parseFloat(
+            formattingSalary.replace(/\./g, '').replace(',', '.')
+         ).toFixed(2);
+      }
+
+      actions
+         .CreateUserProfile({
+            props: {
+               Birthday: formattingData,
+               phonenumber,
+               profession,
+               salary: formattingSalaryToDecimal,
+            },
+            avatar,
+         })
+         .then((response) => {
+            if (response === undefined) {
+               handleShowingFlashMessage({
+                  message: 'Perfil Criado com sucesso',
+                  timer: 2000,
+                  haveButton: false,
+                  type: 'success',
+               });
+
+               navigation('/profile');
+               return;
+            }
+         })
+         .catch((err) => {
+            console.log({ err });
+         });
+   };
+
    const { changeStep, currentStep, currentComponent, isLastStep } =
       useFormHook(steps);
 
@@ -114,68 +174,78 @@ export const CreateProfile = () => {
    }, [currentStep, data.AllErrors]);
 
    return (
-      <Layout>
-         <S.Header>
-            <S.Title>Criação de perfil.</S.Title>
-            <S.Info>Voce ainda nao tem um perfil Crie um.</S.Info>
-         </S.Header>
-         <S.Wrapper>
-            <S.StepsWrapper>
-               <S.Line />
-               <S.IconWrapper IconActive={currentStep === 0}>
-                  <Info />
-               </S.IconWrapper>
-               <S.IconWrapper IconActive={currentStep === 1}>
-                  <Image />
-               </S.IconWrapper>
-               <S.IconWrapper IconActive={currentStep === 2}>
-                  <Checks />
-               </S.IconWrapper>
-            </S.StepsWrapper>
-            <S.FormWrapper>
-               {currentComponent}
-               <S.WrapperButton>
-                  {!isLastStep && (
-                     <>
-                        <S.Button
-                           haveErro={haveErros}
-                           onClick={() => changeStep(currentStep - 1)}
-                           type="button"
-                           disabled={haveErros}
-                        >
-                           Voltar
-                        </S.Button>
-                        <S.Button
-                           haveErro={haveErros}
-                           onClick={handleNext}
-                           type={'button'}
-                           disabled={haveErros}
-                        >
-                           Proximo
-                        </S.Button>
-                     </>
-                  )}
-                  {isLastStep && (
-                     <>
-                        <S.Button
-                           haveErro={haveErros}
-                           onClick={() => changeStep(currentStep - 1)}
-                           type="button"
-                        >
-                           Voltar
-                        </S.Button>
-                        <S.Button
-                           haveErro={haveErros}
-                           onClick={() => changeStep(currentStep + 1)}
-                           type="submit"
-                        >
-                           Enviar
-                        </S.Button>
-                     </>
-                  )}
-               </S.WrapperButton>
-            </S.FormWrapper>
-         </S.Wrapper>
-      </Layout>
+      <>
+         {loading && (
+            <S.Loading>
+               <img
+                  src={spinner}
+                  alt="Tres bolinhas no centro da tela indicando a carregamento da criação de perfil"
+               />
+            </S.Loading>
+         )}
+         <Layout>
+            <S.Header>
+               <S.Title>Criação de perfil.</S.Title>
+               <S.Info>Voce ainda nao tem um perfil Crie um.</S.Info>
+            </S.Header>
+            <S.Wrapper>
+               <S.StepsWrapper>
+                  <S.Line />
+                  <S.IconWrapper IconActive={currentStep === 0}>
+                     <Info />
+                  </S.IconWrapper>
+                  <S.IconWrapper IconActive={currentStep === 1}>
+                     <Image />
+                  </S.IconWrapper>
+                  <S.IconWrapper IconActive={currentStep === 2}>
+                     <Checks />
+                  </S.IconWrapper>
+               </S.StepsWrapper>
+               <S.FormWrapper onSubmit={handleSubmit}>
+                  {currentComponent}
+                  <S.WrapperButton>
+                     {!isLastStep && (
+                        <>
+                           <S.Button
+                              haveErro={haveErros}
+                              onClick={() => changeStep(currentStep - 1)}
+                              type="button"
+                              disabled={haveErros}
+                           >
+                              Voltar
+                           </S.Button>
+                           <S.Button
+                              haveErro={haveErros}
+                              onClick={handleNext}
+                              type={'button'}
+                              disabled={haveErros}
+                           >
+                              Proximo
+                           </S.Button>
+                        </>
+                     )}
+                     {isLastStep && (
+                        <>
+                           <S.Button
+                              haveErro={haveErros}
+                              onClick={() => changeStep(currentStep - 1)}
+                              type="button"
+                           >
+                              Voltar
+                           </S.Button>
+                           <S.Button
+                              haveErro={haveErros}
+                              onClick={() => changeStep(currentStep + 1)}
+                              type="submit"
+                           >
+                              Enviar
+                           </S.Button>
+                        </>
+                     )}
+                  </S.WrapperButton>
+               </S.FormWrapper>
+            </S.Wrapper>
+         </Layout>
+      </>
    );
 };

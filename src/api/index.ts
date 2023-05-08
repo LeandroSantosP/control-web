@@ -229,7 +229,7 @@ export const ProfileRequests = async <B, P>({
    const formData = new FormData();
 
    formData.append('props', JSON.stringify(body.props));
-   formData.append('avatar', JSON.stringify(body?.avatar));
+   formData.append('avatar', body?.avatar);
 
    try {
       if (token) {

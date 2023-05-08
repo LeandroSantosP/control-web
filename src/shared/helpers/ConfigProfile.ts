@@ -16,7 +16,7 @@ export class ProfileManagement<T> {
    async useRouter<B, O>(
       body?: B,
       getRequest?: boolean
-   ): Promise<AxiosResponse<O, any> | undefined> {
+   ): Promise<AxiosResponse<O, any> | void> {
       try {
          if (getRequest) {
             const res = await GetProfileRequests<B, undefined, O>({
@@ -26,8 +26,10 @@ export class ProfileManagement<T> {
             if (res) {
                return Promise.resolve(res);
             }
+            return;
          }
-         const res = ProfileRequests<B, undefined, O>({
+
+         const res = ProfileRequests<B, undefined>({
             type: this._params.type,
             route: this._params.route,
             body,
@@ -41,15 +43,15 @@ export class ProfileManagement<T> {
       }
    }
 
-   async create<I, O>(body: I): Promise<AxiosResponse<O, any> | undefined> {
+   async create<I, O>(body: I): Promise<AxiosResponse<O, any> | void> {
       return await this.useRouter<I, O>(body);
    }
 
-   async update<I, O>(body: I): Promise<AxiosResponse<O, any> | undefined> {
+   async update<I, O>(body: I): Promise<AxiosResponse<O, any> | void> {
       return await this.useRouter<I, O>(body);
    }
 
-   async getProfile<I, O>(): Promise<AxiosResponse<O, any> | undefined> {
+   async getProfile<I, O>(): Promise<AxiosResponse<O, any> | void> {
       this.profile = (await this.useRouter<I, O>(undefined, true)) as any;
       return await this.useRouter<I, O>(undefined, true);
    }

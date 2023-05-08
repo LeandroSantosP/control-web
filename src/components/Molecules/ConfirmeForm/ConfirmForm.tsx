@@ -7,7 +7,7 @@ import ImageDefault from '../../../img/Default.png';
 const ConfirmForm = ({ data }: { data: DataStorageProps }) => {
    const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
    useEffect(() => {
-      if (data.avatar !== '') {
+      if (data.avatar) {
          const file = URL.createObjectURL(data.avatar);
          setAvatarUrl(file);
       }
@@ -48,7 +48,7 @@ const ConfirmForm = ({ data }: { data: DataStorageProps }) => {
                   {data.birthday?.toString() || (
                      <p style={{ color: 'yellow' }}>Não especificado</p>
                   )}
-                  {data['birthday']?.toString() !== '' ? (
+                  {data['birthday']?.toString() !== undefined ? (
                      <Check color="green" size={20} />
                   ) : (
                      <X color="red" size={20} />

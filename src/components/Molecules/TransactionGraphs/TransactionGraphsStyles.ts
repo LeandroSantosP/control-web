@@ -4,7 +4,7 @@ export const WrapperMain = styled('section')`
    display: flex;
    flex-direction: column;
    position: relative;
-   height: 90%;
+   height: 100%;
    text-align: center;
 `;
 

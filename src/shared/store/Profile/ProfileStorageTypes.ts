@@ -2,12 +2,12 @@ import { AxiosError } from 'axios';
 
 export interface CreateProfileProps {
    props: {
-      Birthday: string;
-      phonenumber: string;
-      profession: string;
-      salary: string;
+      Birthday?: string;
+      phonenumber?: string;
+      profession?: string;
+      salary?: string;
    };
-   avatar: any;
+   avatar: File | undefined;
 }
 
 export interface ProfileProps {
@@ -23,15 +23,16 @@ export interface ProfileProps {
       id: string;
    };
 }
+type userProfileType = ProfileProps;
 
 export interface ProfileStorageProps {
    state: {
-      userProfile: any | null;
+      userProfile: userProfileType | null;
       loading: boolean;
       error: AxiosError | null;
    };
    actions: {
-      CreateUserProfile: (param: CreateProfileProps) => void;
+      CreateUserProfile: (param: CreateProfileProps) => Promise<void>;
       GetProfile(): Promise<ProfileProps | any>;
       logout: () => void;
    };

@@ -7,19 +7,20 @@ interface TransactionItemLiProps {
 export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    display: flex;
    width: 100%;
+
    align-items: center;
+   justify-content: center;
    background-color: ${(props) =>
       props.currentState == 'revenue'
          ? 'rgba(0, 107, 3, 0.54)'
          : 'rgba(107, 0, 0, 0.54)'};
-   padding: 0.5rem 0;
+   padding: 0.1rem 0;
+   min-height: 50px;
    border-radius: 10px;
    justify-content: space-between;
-   max-height: 4rem;
-   text-align: center;
    overflow: hidden;
    margin: 1rem 0;
-
+   height: 10px;
    &:hover {
       background-color: ${(props) =>
          props.currentState == 'revenue'
@@ -28,19 +29,15 @@ export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    }
 `;
 
-export const TransactionContent = styled('div')`
+export const HelperContainer = styled('div')`
+   width: 90%;
    display: flex;
-   flex-direction: column;
-   font-size: small;
-   margin: 0 1rem;
-   margin-right: 2rem;
-   gap: 9px;
-   span {
-      font-weight: 50;
-   }
+   align-items: center;
+   padding-left: 20px;
+   justify-content: space-between;
 `;
 
-export const SubTransactionContent = styled('div')`
+export const AmountWrapper = styled('div')`
    display: flex;
    gap: 10px;
 `;
@@ -49,7 +46,8 @@ interface AmountProps {
    negative?: boolean;
 }
 
-export const Amount = styled('div')<AmountProps>`
+export const Amount = styled('p')<AmountProps>`
+   font-size: 0.8rem;
    color: ${(props) =>
       props.negative
          ? props.theme.colors.PersianRed
@@ -65,13 +63,9 @@ export const DueDate = styled('span')<any>`
 `;
 
 export const DeleteTransaction = styled('button')`
-   right: 20px;
-
-   right: 5px;
-   top: 5px;
+   margin: 0 1rem;
    cursor: pointer;
    color: ${(props) => props.theme.colors.TimberWhite};
-
    &:hover {
       color: ${(props) => props.theme.colors.PersianRed};
    }

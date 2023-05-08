@@ -141,7 +141,7 @@ function TransactionListItem({ params }: { params: Transaction }) {
             onMouseEnter={handleMouseIn}
             onMouseLeave={handleMouseOut}
          >
-            <S.TransactionContent>
+            <S.HelperContainer>
                {showPopOver && (
                   <PopoverDetails
                      content={{
@@ -158,37 +158,52 @@ function TransactionListItem({ params }: { params: Transaction }) {
                      top={popOverPosition.top}
                   />
                )}
+               <div
+                  style={{
+                     display: 'flex',
+                     gap: '2rem',
+                     alignItems: 'center',
+                  }}
+               >
+                  <div
+                     style={{
+                        whiteSpace: 'nowrap',
+                        width: '2rem',
+                     }}
+                  >
+                     <span>
+                        {type === 'revenue'
+                           ? 'Receita'
+                           : type === 'expense' && resolved === false
+                           ? 'Não pago'
+                           : 'Paga'}
+                     </span>
+                  </div>
+                  <div>
+                     <S.DueDate style={{ whiteSpace: 'nowrap' }}>
+                        {due_date !== null && 'Data De Vencimento'}
+                        {filingDate !== null && 'Data De Recebimento'}
+                     </S.DueDate>
+                     <S.DueDate>{dateFormatted}</S.DueDate>
+                  </div>
+               </div>
 
-               <S.DueDate style={{ whiteSpace: 'nowrap' }}>
-                  {due_date !== null && 'Data De Vencimento'}
-                  {filingDate !== null && 'Data De Recebimento'}
-               </S.DueDate>
-               <S.DueDate>{dateFormatted}</S.DueDate>
-            </S.TransactionContent>
-            <S.TransactionContent>
-               <S.SubTransactionContent>
-                  <span style={{ whiteSpace: 'nowrap' }}>
-                     {type === 'revenue'
-                        ? 'Receita'
-                        : type === 'expense' && resolved === false
-                        ? 'Nao pago'
-                        : 'Paga'}
-                  </span>
+               <S.AmountWrapper>
                   <S.Amount negative={Number(amount) <= 0}>
                      {NumberFormatted}
                   </S.Amount>
-                  <S.DeleteTransaction>
-                     {confirmationDelete === 'delete' ? (
-                        <Trash
-                           size={20}
-                           onClick={() => setConfirmationDelete('confim')}
-                        />
-                     ) : (
-                        <X onClick={handleDeleteTransition} size={20} />
-                     )}
-                  </S.DeleteTransaction>
-               </S.SubTransactionContent>
-            </S.TransactionContent>
+               </S.AmountWrapper>
+            </S.HelperContainer>
+            <S.DeleteTransaction>
+               {confirmationDelete === 'delete' ? (
+                  <Trash
+                     size={20}
+                     onClick={() => setConfirmationDelete('confim')}
+                  />
+               ) : (
+                  <X onClick={handleDeleteTransition} size={20} />
+               )}
+            </S.DeleteTransaction>
          </S.TransactionItemLi>
       </>
    );

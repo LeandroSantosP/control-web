@@ -33,7 +33,7 @@ input[type=number]::-webkit-outer-spin-button {
   body {
     margin: 0;
     padding: 0;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     font-size: 62.5%; // 62.5% = 10px

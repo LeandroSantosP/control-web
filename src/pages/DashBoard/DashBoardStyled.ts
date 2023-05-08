@@ -23,7 +23,6 @@ export const DashboardWrapper = styled('section')<DashboardWrapperProps>`
    flex-direction: ${(props) => props.flexDirection || 'column'};
    overflow-y: ${(props) => props.overflowY || 'scroll'};
    gap: ${(props) => props.gap};
-
    ${flex}
 
    ::-webkit-scrollbar {
@@ -31,7 +30,6 @@ export const DashboardWrapper = styled('section')<DashboardWrapperProps>`
       border-radius: 0 1rem 1rem 0;
    }
 
-   height: 100%;
    padding: 1rem;
    border-radius: 0.8rem;
    background-color: ${(props) => props.theme.colors.RaisinBlack};

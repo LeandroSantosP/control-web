@@ -69,8 +69,8 @@ export const WrapperOptions = styled('div')`
 export const Main = styled('main')`
    display: flex;
    flex-direction: column;
-   height: 100%;
    flex: 1;
+   height: 100%;
    max-width: 1200px;
    margin: 0 auto;
    padding: 1rem;
