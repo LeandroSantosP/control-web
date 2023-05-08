@@ -8,6 +8,9 @@ export const WrapperAvatar = styled('div')`
    position: relative;
    height: 100%;
    width: 100%;
+   background-color: ${(props) => props.theme.colors.Dark};
+
+   border-radius: 1rem;
 `;
 
 export const AvatarUploadFile = styled('input')`
@@ -29,8 +32,8 @@ export const AvatarUploadButton = styled('button')<AvatarUploadButtonProps>`
    align-items: center;
    border-radius: 8px;
    position: absolute;
-   right: 0;
-   top: 0;
+   right: 10px;
+   top: 10px;
    border-style: none;
    box-sizing: border-box;
    color: ${(props) => props.theme.colors.TimberWhite};
@@ -65,4 +68,21 @@ export const Avatar = styled('img')`
    height: 100%;
    background-color: rgba(142, 142, 142, 0.17);
    border: 1px solid ${(props) => props.theme.colors.TimberWhite};
+`;
+
+type WrapperError = AvatarUploadButtonProps;
+
+export const WrapperError = styled('div')<WrapperError>`
+   max-width: 150px;
+   padding: 5px 10px;
+   border-radius: 8px;
+   box-shadow: ${(props) =>
+      props.haveErro
+         ? 'rgba(202, 19, 19, 0.802) 0 1px 10px'
+         : 'rgba(53, 202, 19, 0.802) 0 1px 10px'};
+   background-color: ${(props) => props.theme.colors.White};
+   p {
+      font-weight: 700;
+      color: ${(props) => props.theme.colors.RaisinBlack};
+   }
 `;

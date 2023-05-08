@@ -77,12 +77,19 @@ export const UploadAvatarForm = ({
    const handleClick = () => {
       hiddenFileInput.current?.click();
    };
-
    return (
       <>
-         {data.AllErrors?.map((err) => {
-            return <p key={err.message}>{err.message}</p>;
-         }) || <p>Tudo Certo!</p>}
+         {data.AllErrors?.map((err, index) => {
+            return (
+               <S.WrapperError key={err.message} haveErro={true}>
+                  <p>{err.message}</p>
+               </S.WrapperError>
+            );
+         }) || (
+            <S.WrapperError key={1} haveErro={false}>
+               <p>Tudo Ok</p>
+            </S.WrapperError>
+         )}
          <S.WrapperAvatar>
             <S.AvatarUploadButton
                haveErro={haveErro}
