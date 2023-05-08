@@ -1,4 +1,3 @@
-import { useCallback, useEffect } from 'react';
 import {
    BrowserRouter as Router,
    Routes,
@@ -6,6 +5,7 @@ import {
    Navigate,
    useNavigate,
 } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
 import { CreateProfile } from '../pages/CreateProfile/CreateProfile';
 
 import { DashBoard } from '../pages/DashBoard/DashBoard';

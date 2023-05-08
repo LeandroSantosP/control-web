@@ -75,6 +75,10 @@ interface TransactionProps {
    getTotalBalense: () => Promise<any>;
    ResolvedTransaction: (props: string) => Promise<void | any>;
    DeleteTransaction: (transactionId: string) => Promise<void>;
+   currentTransactionType: 'revenue' | 'expense';
+   setCurrentTransactionType: React.Dispatch<
+      React.SetStateAction<'revenue' | 'expense'>
+   >;
 }
 
 const TransactionContext = createContext({} as TransactionProps);
@@ -82,6 +86,9 @@ const TransactionContext = createContext({} as TransactionProps);
 export const useTransactionContext = () => useContext(TransactionContext);
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
+   const [currentTransactionType, setCurrentTransactionType] = useState<
+      'revenue' | 'expense'
+   >('expense');
    const { actions } = authStorage();
    const [transaction, setTransition] = useState<TransactionDTO>({
       balense: {
@@ -252,6 +259,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             transaction,
             GetTransactionByParams,
             DeleteTransaction,
+            currentTransactionType,
+            setCurrentTransactionType,
          }}
       >
          {children}

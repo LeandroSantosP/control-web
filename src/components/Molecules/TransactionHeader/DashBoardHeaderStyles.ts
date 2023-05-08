@@ -19,10 +19,22 @@ export const UserImage = styled('div')`
    width: 55px;
    height: 55px;
    border-radius: 1rem;
-   border: 1px solid red;
+   border: 1px solid ${(props) => props.theme.colors.Vanila};
    justify-content: center;
    align-items: center;
    right: 1.1rem;
+   overflow: hidden;
+   cursor: pointer;
+   transition: all 0.2s;
+
+   img {
+      object-fit: cover;
+      width: 100%;
+   }
+
+   &:hover {
+      transform: scale(1.3);
+   }
 `;
 
 export const SelectPortal = styled(Select.Portal)`

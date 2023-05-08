@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import * as S from './DashBoardHeaderStyles';
@@ -8,6 +8,7 @@ import { SelectCustom } from '../Select/Select';
 import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
 import { ThreeOptionSwitch } from '../ThreeOptionSwitch/ThreeOptionSwitch';
+import { ProfileStorage } from '../../../shared/store';
 
 export interface handleChangeProps {
    option: string;
@@ -22,8 +23,11 @@ export const DashBoardHeader = ({
    icon?: any;
    hasFilter?: boolean;
 }) => {
+   const {
+      state: { userProfile },
+   } = ProfileStorage();
    const { GetTransaction, GetTransactionByParams } = useTransactionContext();
-
+   const navigation = useNavigate();
    const [searchParams, setSearchParams] = useSearchParams({
       month: 'all',
    });
@@ -76,10 +80,6 @@ export const DashBoardHeader = ({
          </S.Title>
 
          <ThreeOptionSwitch initialValue={'all'} month={month} />
-         {/*
-         <div style={{ right: '16.2rem', position: 'absolute' }}>
-            {open === 'open' ? <FolderOpen size={30} /> : <Folder size={30} />}
-         </div> */}
 
          {hasFilter && (
             <div style={{ marginRight: '5rem' }}>
@@ -92,8 +92,8 @@ export const DashBoardHeader = ({
             </div>
          )}
 
-         <S.UserImage>
-            <img src={BalenseLogo} style={{ width: '20px' }} />
+         <S.UserImage onClick={() => navigation('/profile')}>
+            <img src={userProfile?.avatar} />
          </S.UserImage>
       </Box>
    );

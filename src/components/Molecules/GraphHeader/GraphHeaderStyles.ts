@@ -9,6 +9,7 @@ export const Wrapper = styled('header')`
    border-radius: 0.4rem;
    position: relative;
    min-height: 50px;
+   gap: 1rem;
    background-color: ${(props) => props.theme.colors.Dark};
    padding: 0.5rem;
 `;
@@ -26,6 +27,26 @@ export const InfosButton = styled(Info)`
 
 export const DialogTrigger = styled(Dialog.Trigger)`
    width: 100px;
+   height: 20px;
+   border-radius: 5px;
+   padding: 5px;
+   border: 1px solid #fff;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   gap: 10px;
+   transition: all 0.3s;
+   font-size: 20px;
+
+   &:hover {
+      background-color: ${(props) => props.theme.colors.White};
+      color: ${(props) => props.theme.colors.Dark};
+   }
+`;
+
+export const ToggleButton = styled('button')`
+   max-width: 120px;
    height: 20px;
    border-radius: 5px;
    padding: 5px;

@@ -8,30 +8,6 @@ export const WrapperMain = styled('section')`
    text-align: center;
 `;
 
-interface ToggleButtonProps {
-   top?: number;
-   right?: number;
-   left?: number;
-}
-
-export const ToggleButton = styled('button')<ToggleButtonProps>`
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   position: absolute;
-   background-color: ${(props) => props.theme.colors.Dark};
-   border: 1px solid ${(props) => props.theme.colors.TimberWhite};
-   padding: 0.2rem;
-   top: ${(props) => props.top ?? undefined};
-   right: ${(props) => props.right ?? undefined};
-   left: ${(props) => props.left ?? undefined};
-   border-radius: 0.3rem;
-   cursor: pointer;
-   &:hover {
-      filter: brightness(1.9);
-   }
-`;
-
 interface ChartTittle {
    type: string;
 }

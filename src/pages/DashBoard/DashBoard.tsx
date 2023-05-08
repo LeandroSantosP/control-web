@@ -97,9 +97,15 @@ export const DashBoard = () => {
       transaction?.balense?.revenue,
       transaction?.balense?.total,
       WhenTransactionIsCreateWithSuccess,
-
       logout,
    ]);
+
+   const getToggleEventGraphs = (
+      callback: React.Dispatch<React.SetStateAction<'revenue' | 'expense'>>
+   ) => {
+      callback('expense');
+      return;
+   };
 
    return (
       <Layout>

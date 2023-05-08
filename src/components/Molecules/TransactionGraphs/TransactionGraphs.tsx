@@ -3,7 +3,7 @@ import { ApexConfigTransactionGraph } from '../../../shared/helpers/ApexConfig';
 
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import { GoalsStorage } from '../../../shared/store/goals/GoalsStorage';
-import { ArrowsCounterClockwise, X } from '@phosphor-icons/react';
+import { X } from '@phosphor-icons/react';
 import * as S from './TransactionGraphsStyles';
 import Chart from 'react-apexcharts';
 
@@ -44,19 +44,19 @@ function handleData({ FormattedGoalsItems, options, sut }: HandleDataProps) {
 }
 
 function TransactionGraphs() {
+   const { transaction } = useTransactionContext();
+   const [data, setDate] = useState<DataResponse>([]);
+   const [showNotFoundPaga, setShowNotFoundPaga] = useState<boolean>(false);
+
+   const { currentTransactionType } = useTransactionContext();
+
+   const [muOptions, setMuOptions] = useState<
+      ApexCharts.ApexOptions | undefined
+   >(undefined);
    const {
       state: { goals },
       actions: { list: ListGoals },
    } = GoalsStorage();
-   const { transaction } = useTransactionContext();
-   const [data, setDate] = useState<DataResponse>([]);
-   const [showNotFoundPaga, setShowNotFoundPaga] = useState<boolean>(false);
-   const [currentTransactionType, setCurrentTransactionType] = useState<
-      'revenue' | 'expense'
-   >('expense');
-   const [muOptions, setMuOptions] = useState<
-      ApexCharts.ApexOptions | undefined
-   >(undefined);
 
    const GetTransactionType = useCallback(
       (type: 'expense' | 'revenue') => {
@@ -259,32 +259,6 @@ function TransactionGraphs() {
 
    return (
       <S.WrapperMain>
-         <S.ToggleButton
-            onClick={() =>
-               setCurrentTransactionType((prev) => {
-                  if (prev === 'expense') {
-                     return 'revenue';
-                  }
-                  return 'expense';
-               })
-            }
-         >
-            <ArrowsCounterClockwise size={20} />
-            {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
-         </S.ToggleButton>
-         <S.ToggleButton
-            onClick={() =>
-               setCurrentTransactionType((prev) => {
-                  if (prev === 'expense') {
-                     return 'revenue';
-                  }
-                  return 'expense';
-               })
-            }
-         >
-            <ArrowsCounterClockwise size={20} />
-            {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
-         </S.ToggleButton>
          {muOptions && (
             <>
                <S.ChartTittle type={currentTransactionType}>

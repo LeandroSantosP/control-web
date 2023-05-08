@@ -79,7 +79,7 @@ export const UploadAvatarForm = ({
    };
    return (
       <>
-         {data.AllErrors?.map((err, index) => {
+         {data.AllErrors?.map((err) => {
             return (
                <S.WrapperError key={err.message} haveErro={true}>
                   <p>{err.message}</p>
