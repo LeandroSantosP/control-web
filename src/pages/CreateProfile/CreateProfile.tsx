@@ -10,7 +10,7 @@ import { UploadAvatarForm } from '../../components/Molecules/UploadAvatar/Upload
 import { ProfileStorage } from '../../shared/store/index';
 import { useFlashMessageContext } from '../../shared/contexts';
 import { useNavigate } from 'react-router-dom';
-import spinner from '../../shared/assets/spinner.svg';
+import { Loading } from '../../components/atoms/Loading/Loading';
 
 export type DataStorageProps = {
    profession: string | undefined;
@@ -176,14 +176,7 @@ export const CreateProfile = () => {
 
    return (
       <>
-         {loading && (
-            <S.Loading>
-               <img
-                  src={spinner}
-                  alt="Tres bolinhas no centro da tela indicando a carregamento da criação de perfil"
-               />
-            </S.Loading>
-         )}
+         <Loading loading={loading} />
          <Layout>
             <S.Header>
                <S.Title>Criação de perfil.</S.Title>

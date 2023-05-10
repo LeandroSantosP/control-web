@@ -226,6 +226,7 @@ export const ProfileRequests = async <B, P>({
    body,
 }: RequestsProps<B, P>): Promise<void> => {
    const { token } = getToken();
+
    const formData = new FormData();
 
    formData.append('props', JSON.stringify(body.props));
