@@ -8,6 +8,7 @@ export interface CreateProfileProps {
       salary?: string;
    };
    avatar: File | undefined;
+   isUpdate: boolean;
 }
 
 export interface ProfileProps {
@@ -32,7 +33,7 @@ export interface ProfileStorageProps {
       error: AxiosError | null;
    };
    actions: {
-      CreateUserProfile: (param: CreateProfileProps) => Promise<void>;
+      CreateUpdateUserProfile: (params: CreateProfileProps) => Promise<void>;
       GetProfile(): Promise<ProfileProps | any>;
       logout: () => void;
    };

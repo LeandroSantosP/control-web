@@ -100,13 +100,6 @@ export const DashBoard = () => {
       logout,
    ]);
 
-   const getToggleEventGraphs = (
-      callback: React.Dispatch<React.SetStateAction<'revenue' | 'expense'>>
-   ) => {
-      callback('expense');
-      return;
-   };
-
    return (
       <Layout>
          <DashBoardHeader

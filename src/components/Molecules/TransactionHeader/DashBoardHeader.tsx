@@ -5,7 +5,6 @@ import * as S from './DashBoardHeaderStyles';
 import { Box } from '../../atoms/Box/Box';
 import { Icon } from '../../atoms/Icons/Icon';
 import { SelectCustom } from '../Select/Select';
-import BalenseLogo from '../../../shared/assets/balense.png';
 import { useTransactionContext } from '../../../shared/contexts';
 import { ThreeOptionSwitch } from '../ThreeOptionSwitch/ThreeOptionSwitch';
 import { ProfileStorage } from '../../../shared/store';

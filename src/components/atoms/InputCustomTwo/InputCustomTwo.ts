@@ -10,8 +10,7 @@ interface InputProps {
 
 export const Input = styled('input')<InputProps>`
    height: 40px;
-   background-color: ${(props) =>
-      props.bg ? props.bg : props.theme.colors.Verdigris};
+   background-color: #ccc;
    opacity: ${(props) => (props.active ? 0.5 : 1)};
    font-size: 1rem;
    font-weight: 600;
@@ -20,7 +19,7 @@ export const Input = styled('input')<InputProps>`
    border: none;
    outline: none;
    padding: 10px;
-   color: ${(props) => (props.cl ? props.cl : props.theme.colors.TimberWhite)};
+   color: ${(props) => (props.cl ? props.cl : props.theme.colors.Dark)};
 
    &::placeholder {
       color: ${(props) =>

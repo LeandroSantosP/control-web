@@ -120,7 +120,7 @@ export const CreateProfile = () => {
       }
 
       actions
-         .CreateUserProfile({
+         .CreateUpdateUserProfile({
             props: {
                Birthday: formattingData,
                phonenumber,
@@ -128,6 +128,7 @@ export const CreateProfile = () => {
                salary: formattingSalaryToDecimal,
             },
             avatar,
+            isUpdate: false,
          })
          .then((response) => {
             if (response === undefined) {

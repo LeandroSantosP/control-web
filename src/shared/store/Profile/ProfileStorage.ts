@@ -35,6 +35,7 @@ const ProfileStorage = create<ProfileStorageProps>((set, get) => ({
             route: '/user/profile',
             type: 'get',
          });
+         updatedStates(set)({ loading: true });
 
          try {
             const response = await result.getProfile<any, ProfileProps>();
@@ -59,18 +60,20 @@ const ProfileStorage = create<ProfileStorageProps>((set, get) => ({
             }
 
             return Promise.reject(error);
+         } finally {
+            updatedStates(set)({ loading: false });
          }
       },
-      CreateUserProfile: async (params) => {
+      CreateUpdateUserProfile: async ({ isUpdate, ...params }) => {
          const result = new ProfileManagement({
             route: '/user/profile',
-            type: 'post',
+            type: !isUpdate ? 'post' : 'patch',
          });
 
          updatedStates(set)({ loading: true });
 
          try {
-            await result.create<CreateProfileProps, any>({
+            await result.create<Omit<CreateProfileProps, 'isUpdate'>, any>({
                ...params,
             });
             await get().actions.GetProfile();
