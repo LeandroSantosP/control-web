@@ -29,6 +29,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
    const handleValidate = useCallback(async () => {
       setErrosMessage([]);
       try {
+         // eslint-disable-next-line @typescript-eslint/no-unused-vars
          const { avatar, ...props } = data;
          const validData = dataSchema.parse(props);
 
@@ -78,7 +79,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
                value={data.profession ?? ''}
                placeholder="Desenvolvedor Back-end"
                bg="rgba(243, 243, 243, 0.21)"
-               cl="#c4c4c4f8"
+               cl="#111"
                pc="#111"
                bx="2px -1px 9px 0px rgba(0, 0, 0, 0.149)"
             />
@@ -99,7 +100,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
                value={data.salary ?? ''}
                placeholder="R$ 2000"
                bg="rgba(243, 243, 243, 0.21)"
-               cl="#c4c4c4f8"
+               cl="#111"
                pc="#111"
                bx="2px -1px 9px 0px rgba(0, 0, 0, 0.149)"
             />
@@ -116,7 +117,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
                placeholder="(11) 99999-9999"
                type="string"
                bg="rgba(243, 243, 243, 0.21)"
-               cl="#c4c4c4f8"
+               cl="#111"
                pc="#111"
                bx="2px -1px 9px 0px rgba(0, 0, 0, 0.149)"
             />
@@ -134,7 +135,7 @@ const RegisterForm = ({ data, updateData, onValidate }: Input) => {
                placeholder="21/05/2003"
                type="date"
                bg="rgba(243, 243, 243, 0.21)"
-               cl="#c4c4c4f8"
+               cl="#111"
                pc="#111"
                bx="2px -1px 9px 0px rgba(0, 0, 0, 0.149)"
             />
