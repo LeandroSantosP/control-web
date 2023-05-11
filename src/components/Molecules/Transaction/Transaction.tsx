@@ -67,7 +67,7 @@ export const Transaction = () => {
    const [isSubscription, setIsSubscription] = useState<boolean>(false);
    const [transactionType, setTransactionType] = useState<string>('Receita');
    const [category, setCategory] = useState<string>('unknown');
-   const [recurrency, setRecurrency] = useState<string>('monthly');
+   const [recurrency, setRecurrency] = useState<string>('null');
 
    const monthlyList = [
       { value: 'Despesa', Name: 'Despesa' },
@@ -75,6 +75,7 @@ export const Transaction = () => {
    ];
 
    const recurrencyList = [
+      { value: 'null', Name: 'Sem recorrência' },
       { value: 'monthly', Name: 'Mensal' },
       { value: 'yearly', Name: 'Anual' },
       { value: 'daily', Name: 'Diária' },
@@ -121,7 +122,7 @@ export const Transaction = () => {
             value: convertedForDecimal,
             isSubscription,
             category,
-            recurrency,
+            recurrency: recurrency === 'null' ? null : recurrency,
             transactionType,
          } as any;
 

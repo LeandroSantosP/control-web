@@ -29,16 +29,11 @@ export interface HandleDataProps {
    options: 'majorCurrentValue' | 'goals' | 'month' | 'minimalCurrentValue';
 }
 
-function handleData({ FormattedGoalsItems, options, sut }: HandleDataProps) {
+function handleData({ options, sut }: HandleDataProps) {
    return sut.map((item) => {
-      const goalsConfig = FormattedGoalsItems(item)?.map((i: any) => {
-         return { ...i, strokeColor: 'purple' };
-      });
-
       return {
          x: item.month,
          y: item[options],
-         goals: goalsConfig,
       };
    });
 }
@@ -177,10 +172,10 @@ function TransactionGraphs() {
                {
                   name: 'Objetivo ' + ' ( ' + item.goals?.name + ' ) ',
                   value,
-                  strokeWidth: 10,
+                  strokeWidth: 100,
                   strokeHeight: 0,
                   strokeLineCap: 'round',
-                  strokeColor: '#775DD0',
+                  strokeColor: '#111',
                },
             ];
          }
@@ -201,7 +196,7 @@ function TransactionGraphs() {
          Months,
          sut,
          TransactionTypeName,
-      }) as ApexCharts.ApexOptions | undefined;
+      });
 
       setMuOptions(apexSettings);
 

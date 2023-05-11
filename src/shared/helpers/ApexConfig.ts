@@ -25,7 +25,7 @@ export function ApexConfigTransactionGraph({
    TransactionTypeName,
    handleData,
    sut,
-}: ApexConfigTransactionGraphInput) {
+}: ApexConfigTransactionGraphInput): ApexCharts.ApexOptions {
    return {
       legend: {
          position: 'top',
@@ -38,11 +38,14 @@ export function ApexConfigTransactionGraph({
       },
       plotOptions: {
          bar: {
-            horizontal: true,
-            borderRadius: 3,
-
+            horizontal: false,
+            barHeight: '10%',
+            columnWidth: '90%',
             dataLabels: {
                position: 'top',
+               total: {
+                  enabled: true,
+               },
                orientation: 'horizontal',
             },
          },
@@ -85,7 +88,7 @@ export function ApexConfigTransactionGraph({
                   })
                );
             },
-            align: 'center',
+            padding: 10,
          },
       },
       dataLabels: {
@@ -93,6 +96,9 @@ export function ApexConfigTransactionGraph({
             const result = FormatCurense(Number(val));
 
             return `${result}`;
+         },
+         style: {
+            fontSize: '10px',
          },
       },
       series: [
@@ -133,10 +139,10 @@ export function ApexConfigGoalsGraph({
       },
       fill: {
          type: 'gradient',
-         colors: ['#e61239', '#12e864'],
+         colors: ['#e61239', '#12e864', '#33cc38', '#CC3333'],
          gradient: {
             shadeIntensity: 1,
-            opacityFrom: 0.7,
+            opacityFrom: 0.4,
             opacityTo: 0,
          },
       },
@@ -160,7 +166,7 @@ export function ApexConfigGoalsGraph({
             return `${result}`;
          },
       },
-      colors: ['#B01E68', '#3D5656'],
+      colors: ['#B01E68', '#3D5656', '#33cc38', '#CC3333'],
       chart: {
          type: 'area',
          stacked: true,
@@ -169,23 +175,13 @@ export function ApexConfigGoalsGraph({
          categories: monthNames.map((month) => month || '0'),
       },
       markers: {
-         size: 20,
+         size: 17,
          colors: undefined,
          strokeColors: '#1be3c5',
-
          strokeOpacity: 0.9,
          strokeDashArray: 0,
          fillOpacity: 1,
          shape: 'circle',
-         radius: 2,
-         onClick: function () {
-            // do something on marker click
-            console.log('ok');
-         },
-         onDblClick: function () {
-            // do something on marker click
-            console.log('ok');
-         },
          showNullDataPoints: true,
          hover: {
             size: undefined,
@@ -203,15 +199,27 @@ export function ApexConfigGoalsGraph({
       },
       series: [
          {
+            name: 'Meta de Receita',
+            data: goalsData.map((goal: any) => {
+               return Number(goal.expectated_revenue);
+            }),
+         },
+         {
             name: 'Meta de Despesas',
             data: goalsData.map((goal: any) => {
                return Number(goal.expectated_expense);
             }),
          },
          {
-            name: 'Meta de Receita',
+            name: 'Receita Atua',
             data: goalsData.map((goal: any) => {
-               return Number(goal.expectated_revenue);
+               return Number(goal.userCurrentValue?.revenueTotal);
+            }),
+         },
+         {
+            name: 'Despesa Atua',
+            data: goalsData.map((goal: any) => {
+               return Number(goal.userCurrentValue?.expenseTotal);
             }),
          },
       ],

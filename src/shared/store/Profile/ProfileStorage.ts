@@ -76,12 +76,13 @@ const ProfileStorage = create<ProfileStorageProps>((set, get) => ({
             await result.create<Omit<CreateProfileProps, 'isUpdate'>, any>({
                ...params,
             });
-            await get().actions.GetProfile();
+
             return;
          } catch (error: any) {
             updatedStates(set)({ error });
             return;
          } finally {
+            await get().actions.GetProfile();
             updatedStates(set)({ loading: false });
          }
       },

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import Chart from 'react-apexcharts';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ApexConfigGoalsGraph } from '../../../shared/helpers/ApexConfig';
 import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
 
@@ -10,7 +10,10 @@ import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
 import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
 import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
 import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
-import { useFlashMessageContext } from '../../../shared/contexts';
+import {
+   useFlashMessageContext,
+   useTransactionContext,
+} from '../../../shared/contexts';
 
 const createGoalsSchema = z.object({
    dataForUpdate: z
@@ -60,11 +63,56 @@ export const GoalsTransactionModal = ({
       state: { goals },
       actions: { remove },
    } = GoalsStorage();
+   const { transaction } = useTransactionContext();
+
    const { handleShowingFlashMessage } = useFlashMessageContext();
 
-   const goalsData = useCallback(() => {
+   const goalsData = useMemo(() => {
+      const GoalsFormateWithTotalCurrency = goals?.MonthFormatted.map(
+         (item) => {
+            const goalMOnth = item.name;
+
+            const userCurrentValue = transaction?.transactions?.reduce(
+               (storage, current) => {
+                  const currentMonth =
+                     current.type === 'revenue'
+                        ? current.filingDate?.split('-')[1]
+                        : current.due_date?.split('-')[1];
+
+                  if (!currentMonth) {
+                     return storage;
+                  }
+
+                  if (goalMOnth === ValidMonths[currentMonth]) {
+                     const expenseTotal =
+                        current.type === 'expense'
+                           ? storage.expenseTotal + Number(current.value)
+                           : storage.expenseTotal;
+
+                     const revenueTotal =
+                        current.type === 'revenue'
+                           ? storage.revenueTotal + Number(current.value)
+                           : storage.revenueTotal;
+
+                     return {
+                        ...storage,
+                        expenseTotal,
+                        revenueTotal,
+                        currentMonth: ValidMonths[currentMonth],
+                     };
+                  }
+
+                  return storage;
+               },
+               { currentMonth: '', expenseTotal: 0, revenueTotal: 0 }
+            );
+
+            return { ...item, userCurrentValue };
+         }
+      );
+
       return monthNames.map((monthName) => {
-         const dataForMonth = goals?.MonthFormatted?.find(
+         const dataForMonth = GoalsFormateWithTotalCurrency?.find(
             (d) => d.name === monthName
          );
 
@@ -75,10 +123,15 @@ export const GoalsTransactionModal = ({
                name: monthName,
                expectated_expense: '0',
                expectated_revenue: '0',
+               userCurrentValue: {
+                  currentMonth: '',
+                  expenseTotal: 0,
+                  revenueTotal: 0,
+               },
             };
          }
       });
-   }, [goals]);
+   }, [goals?.MonthFormatted, transaction?.transactions]);
 
    const [charOptions, setCharOptions] = useState<
       ApexCharts.ApexOptions | undefined
@@ -86,7 +139,7 @@ export const GoalsTransactionModal = ({
 
    useEffect(() => {
       const apexOptions = ApexConfigGoalsGraph({
-         goalsData: goalsData(),
+         goalsData,
          monthNames,
       }) as ApexCharts.ApexOptions | undefined;
       setCharOptions(apexOptions);
@@ -116,8 +169,6 @@ export const GoalsTransactionModal = ({
    const CreateNewGoalsProps = {
       showCreateGoals,
    };
-
-   /* isLoading is cause a error Fixe it. */
 
    return (
       <S.DialogRoot>

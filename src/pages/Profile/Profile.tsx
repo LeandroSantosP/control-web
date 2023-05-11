@@ -15,6 +15,7 @@ import ComputerIllustration from '../../shared/assets/ComputerIllustration.png';
 
 import * as S from './ProfileStyles';
 import { useFlashMessageContext } from '../../shared/contexts';
+import { UpdatedProfilePic } from './UpdatedProfilePic';
 
 export const dataSchemaWithOptionalBirthday = dataSchema
    .omit({ birthday: true })
@@ -62,6 +63,7 @@ const Profile = () => {
 
    const onSubmit = (data: ProfileFormSchema) => {
       const { birthday, phonenumber, profession, salary } = data;
+
       const [yearDataBase, monthDataBase, dayDataBase] =
          userProfile?.dateOfBirth?.toString().split('/') as string[];
 
@@ -124,16 +126,30 @@ const Profile = () => {
       setFormData({ ...formData, [name]: value });
    };
 
+   const updatedImage = async (callback: () => File | undefined) => {
+      const avatar = callback();
+      if (avatar) {
+         await CreateUpdateUserProfile({
+            avatar,
+            isUpdate: true,
+            props: {},
+         });
+      }
+      location.reload();
+      return 'success';
+   };
+
    return (
       <>
          <Loading loading={loading} />
          <Layout>
             <S.Header>
                <S.WrapperSection>
-                  <S.ProfilePic
-                     src={userProfile?.avatar}
-                     alt="Image do perfil do usuário."
+                  <UpdatedProfilePic
+                     userAvatar={userProfile?.avatar}
+                     handleSubmitPic={updatedImage}
                   />
+
                   <S.ProfileName>
                      Bem vindo! {userProfile?.user.name.toUpperCase()}
                   </S.ProfileName>
