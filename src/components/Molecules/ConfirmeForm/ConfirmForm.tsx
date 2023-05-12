@@ -2,7 +2,7 @@ import { Check, X } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 import { DataStorageProps } from '../../../pages/CreateProfile/CreateProfile';
 import * as S from './ConfirmFormStyled';
-import ImageDefault from '../../../img/Default.png';
+import ImageDefault from '../../../img/Default.jpg';
 
 const ConfirmForm = ({ data }: { data: DataStorageProps }) => {
    const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);

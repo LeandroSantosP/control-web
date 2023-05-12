@@ -64,11 +64,12 @@ export const authStorage = create<authStorageProps>((set, get) => ({
 
             return response;
          } catch (error: any) {
-            updateAuthState(set)({ isLogged: false, errors: '' });
-            get().actions.logout();
-            return;
-         } finally {
-            updateAuthState(set)({ isLogged: false, errors: '' });
+            updateAuthState(set)({
+               isLogged: false,
+               errors: error.response?.data?.message,
+            });
+
+            return error;
          }
       },
       logout: () => {
@@ -96,6 +97,7 @@ export const authStorage = create<authStorageProps>((set, get) => ({
             updateAuthState(set)({
                errors: error.response?.data,
             });
+
             return;
          }
       },

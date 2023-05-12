@@ -51,7 +51,12 @@ export function ApexConfigTransactionGraph({
          },
       },
       chart: {
-         type: 'area',
+         width: 100,
+         foreColor: '#ffcc55',
+         animations: {
+            easing: 'linear',
+            speed: 1,
+         },
       },
       xaxis: {
          categories: data.map((item) => {

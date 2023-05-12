@@ -37,3 +37,9 @@ export const Form = styled.form`
    background-color: ${(props) => props.theme.colors.Dark};
    flex-direction: column;
 `;
+
+export const ErrorMessage = styled('p')`
+   color: ${(props) => props.theme.colors.PersianRed};
+   margin-top: 10px;
+   font-weight: bold;
+`;

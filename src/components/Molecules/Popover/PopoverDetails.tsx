@@ -57,19 +57,10 @@ export const PopoverDetails = (props: PopOverTest) => {
    }, [recurrence]);
 
    const variants = {
-      hidden: { opacity: 0, y: -50 },
-      visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-      exit: {
-         opacity: 0,
-         scale: 0.5,
-         transition: {
-            duration: 0.6,
-            ease: 'easeInOut',
-         },
-      },
+      hidden: { opacity: 0 },
+      visible: { opacity: 1, transition: { duration: 0.3 } },
    } as Variants;
 
-   // pending: Cadastra um debito que nao tenha seja uma inscrição e nem tenha recorrência.
    return (
       <>
          <S.PopOver
@@ -77,11 +68,10 @@ export const PopoverDetails = (props: PopOverTest) => {
             variants={variants}
             initial="hidden"
             animate="visible"
-            exit="exit"
             left={props.left}
             top={props.top}
          >
-            <S.SubDetailsWrapper overflow="scroll">
+            <S.SubDetailsWrapper>
                <S.Info>
                   Inscrição?{' '}
                   {isSubscription === null || isSubscription === false ? (

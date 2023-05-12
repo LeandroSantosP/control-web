@@ -141,7 +141,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
             handleShowingFlashMessage({
                message: 'Finalização Cancela!',
                timer: 3000,
-               type: 'error',
+               type: 'default',
                haveButton: false,
             });
             return;
@@ -187,7 +187,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
                actions.logout();
             }
          }
-         console.log('ok');
       },
 
       // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -75,7 +75,9 @@ export const SingUp = () => {
                   }}
                />
 
-               <p>{errors.name?.message && errors.name.message}</p>
+               <S.ErrorMessage>
+                  {errors.name?.message && errors.name.message}
+               </S.ErrorMessage>
                <Label margin="1rem 0">Email</Label>
                <Input
                   fontSize="medium"
@@ -90,11 +92,13 @@ export const SingUp = () => {
                      }),
                   }}
                />
-               <p>{errors.email?.message && errors.email.message}</p>
-               <p>
+               <S.ErrorMessage>
+                  {errors.email?.message && errors.email.message}
+               </S.ErrorMessage>
+               <S.ErrorMessage>
                   {errorsApi?.message === 'Email already Exists!' &&
                      errorsApi?.message}
-               </p>
+               </S.ErrorMessage>
 
                <Label margin="1rem 0">Senha</Label>
                <Input
@@ -117,7 +121,9 @@ export const SingUp = () => {
                      }),
                   }}
                />
-               <p>{errors.password?.message && errors.password.message}</p>
+               <S.ErrorMessage>
+                  {errors.password?.message && errors.password.message}
+               </S.ErrorMessage>
                <S.Box JustifyContent="space-between">
                   <Button ISdisabled={loading} fontSize="small" type="submit">
                      {loading ? 'Carregando...' : ' Cadastra-se!'}

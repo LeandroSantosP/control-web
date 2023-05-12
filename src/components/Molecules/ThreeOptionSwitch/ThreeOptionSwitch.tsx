@@ -1,3 +1,10 @@
+import {
+   Folder,
+   FolderDashed,
+   FolderNotchOpen,
+   FolderPlus,
+   X,
+} from '@phosphor-icons/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTransactionContext } from '../../../shared/contexts';
 import { handleChangeProps } from '../TransactionHeader/DashBoardHeader';
@@ -13,6 +20,7 @@ export const ThreeOptionSwitch = ({
    initialValue,
    month,
 }: ThreeOptionSwitchProps) => {
+   const [folderIcon, setFolderIcon] = useState(false);
    const { GetTransactionByParams } = useTransactionContext();
    const [value, setValue] = useState<{ option: string }>({
       option: initialValue,
@@ -50,7 +58,29 @@ export const ThreeOptionSwitch = ({
    return (
       <>
          <S.MainWrapper>
-            <S.Wrapper>
+            {!folderIcon ? (
+               <Folder
+                  style={{
+                     position: 'absolute',
+                     right: '16.5rem',
+                     top: '35%',
+                  }}
+                  size={20}
+               />
+            ) : (
+               <FolderNotchOpen
+                  style={{
+                     position: 'absolute',
+                     right: '16.5rem',
+                     top: '35%',
+                  }}
+                  size={20}
+               />
+            )}
+            <S.Wrapper
+               onMouseOver={() => setFolderIcon(true)}
+               onMouseOut={() => setFolderIcon(false)}
+            >
                <S.Button
                   selected={value.option === 'isSubscription'}
                   onClick={() => setValue({ option: 'isSubscription' })}

@@ -3,18 +3,19 @@ import styled from 'styled-components';
 export const Whapper = styled('div')`
    display: flex;
    flex-direction: column;
-   width: 150px;
+   width: 190px;
    height: 200px;
    position: absolute;
    right: 0;
-   top: 1.9rem;
+   top: 2.5rem;
    background-color: ${(props) => props.theme.colors.Dark};
    color: black;
    border-radius: 1rem;
+   text-align: center;
+   border: 1px solid ${(props) => props.theme.colors.PersianRed};
    z-index: 100;
-   padding: 10px;
-   align-items: center;
    justify-content: center;
+   padding: 10px;
 
    h1 {
       margin-bottom: 0.5rem;
@@ -23,7 +24,7 @@ export const Whapper = styled('div')`
 
    p {
       font-weight: 300;
-      font-size: 14px;
+      font-size: 12px;
       line-height: 17px;
       color: #fff;
    }

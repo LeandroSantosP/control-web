@@ -7,7 +7,6 @@ interface TransactionItemLiProps {
 export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    display: flex;
    width: 100%;
-
    align-items: center;
    justify-content: center;
    background-color: ${(props) =>
@@ -20,7 +19,6 @@ export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    justify-content: space-between;
    overflow: hidden;
    margin: 1rem 0;
-   height: 10px;
    &:hover {
       background-color: ${(props) =>
          props.currentState == 'revenue'

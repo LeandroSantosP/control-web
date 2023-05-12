@@ -41,6 +41,9 @@ interface Transaction {
 }
 
 export const DashBoard = () => {
+   const [skeletonTransactionItem, setSkeletonTransactionItem] = useState<
+      JSX.Element[]
+   >([]);
    const {
       open: WhenTransactionIsCreateWithSuccess,
       transaction,
@@ -51,10 +54,36 @@ export const DashBoard = () => {
    } = authStorage();
 
    const [accountInfosList, setAccountInfosList] = useState<any[]>([]);
-
    const LURef = useRef<HTMLUListElement>(null);
 
    useEffect(() => {
+      setSkeletonTransactionItem(() => {
+         const amountTransaction = transaction?.transactions.length;
+         if (
+            transaction &&
+            amountTransaction &&
+            transaction.transactions.length < 7
+         ) {
+            const skeletonAmount = 6 - amountTransaction;
+            const skeletonForRender = [];
+
+            for (let skeleton = 0; skeleton < skeletonAmount; skeleton++) {
+               skeletonForRender.push(<S.ListSkeleton key={skeleton} />);
+            }
+            return [...skeletonForRender];
+         }
+
+         if (transaction && transaction.transactions.length === 0) {
+            const skeletonForRender = [];
+            for (let skeleton = 0; skeleton < 6; skeleton++) {
+               skeletonForRender.push(<S.ListSkeleton key={skeleton} />);
+            }
+
+            return [...skeletonForRender];
+         }
+
+         return [];
+      });
       getTotalBalense()
          .then((response) => {
             const showBalense =
@@ -98,6 +127,7 @@ export const DashBoard = () => {
       transaction?.balense?.total,
       WhenTransactionIsCreateWithSuccess,
       logout,
+      transaction,
    ]);
 
    return (
@@ -161,6 +191,18 @@ export const DashBoard = () => {
                                  bg="rgba(160, 160, 160, 0.46)"
                                  height="1px"
                               />
+                           </Fragment>
+                        );
+                     })}
+                     {skeletonTransactionItem.map((skeleton) => {
+                        return (
+                           <Fragment key={`${skeleton.key}`}>
+                              <Divider
+                                 width="90%"
+                                 bg="rgba(160, 160, 160, 0.46)"
+                                 height="1px"
+                              />
+                              {skeleton}
                            </Fragment>
                         );
                      })}

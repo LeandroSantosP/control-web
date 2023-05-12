@@ -54,9 +54,6 @@ export const SingIn = () => {
          return;
       }
 
-      if (res?.response?.status === 400) {
-         console.log(error);
-      }
       return res;
    };
 
@@ -89,15 +86,22 @@ export const SingIn = () => {
                      }),
                   }}
                />
+
+               {error === 'Email or password Is Incorrect!' && (
+                  <S.ErrorMessage>Email ou senha inválidos!</S.ErrorMessage>
+               )}
                <ErrorMessage
                   name="email"
                   errors={errors}
-                  render={({ message }) => <p>{message}</p>}
+                  render={({ message }) => (
+                     <S.ErrorMessage>{message}</S.ErrorMessage>
+                  )}
                />
 
                <Label margin="1rem 0">Senha</Label>
                <Input
                   fontSize="medium"
+                  type="password"
                   placeholder="Digite sua senha"
                   register={{
                      required: 'Campo Obrigatório',
@@ -106,13 +110,17 @@ export const SingIn = () => {
                      }),
                   }}
                />
+
+               {error === 'Email or password Is Incorrect!' && (
+                  <S.ErrorMessage>Email ou senha inválidos!</S.ErrorMessage>
+               )}
                <ErrorMessage
                   errors={errors}
                   name="password"
-                  render={({ message }) => <p>{message}</p>}
+                  render={({ message }) => (
+                     <S.ErrorMessage>{message}</S.ErrorMessage>
+                  )}
                />
-
-               <p>{error?.message}</p>
 
                <S.Box JustifyContent="space-between">
                   <Button fontSize="small" type="submit" ISdisabled={loading}>

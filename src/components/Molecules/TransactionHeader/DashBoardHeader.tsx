@@ -8,6 +8,7 @@ import { SelectCustom } from '../Select/Select';
 import { useTransactionContext } from '../../../shared/contexts';
 import { ThreeOptionSwitch } from '../ThreeOptionSwitch/ThreeOptionSwitch';
 import { ProfileStorage } from '../../../shared/store';
+import DefaultImg from '../../../img/Default.jpg';
 
 export interface handleChangeProps {
    option: string;
@@ -69,6 +70,7 @@ export const DashBoardHeader = ({
          border="2px solid #000"
          borderRadius="1rem"
          width="100%"
+         bg="#061726"
          alignItems="center"
          gap="2rem"
          position="relative"
@@ -92,7 +94,7 @@ export const DashBoardHeader = ({
          )}
 
          <S.UserImage onClick={() => navigation('/profile')}>
-            <img src={userProfile?.avatar} />
+            <img src={userProfile?.avatar || DefaultImg} />
          </S.UserImage>
       </Box>
    );

@@ -14,7 +14,6 @@ function get(obj: Record<any, any>, path: string) {
          }, obj);
 
    const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
-   console.log(result);
 
    return result;
 }

@@ -5,10 +5,9 @@ export const GraphsInfos = () => {
       <S.Whapper>
          <h1>Como o Gráfico funciona?</h1>
          <p>
-            {' '}
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
-            quos eaque nostrum aut ipsum earum aliquid nesciunt, officiis,
-            repellat deserunt ?
+            Nesse gráfico você encontrara o gráfico com a maior e menor
+            despesa/receita cadastrada em cada mês, cade mes tera duas barras
+            mostrando a maior e melhor despesa/receita do mês em questão
          </p>
       </S.Whapper>
    );

@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
-export const MainWrapper = styled('div')`
-   position: relative;
-`;
+export const MainWrapper = styled('div')``;
 
 export const Wrapper = styled('div')`
    position: relative;

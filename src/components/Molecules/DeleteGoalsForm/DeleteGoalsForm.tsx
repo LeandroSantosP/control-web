@@ -58,10 +58,9 @@ export const DeleteNewGoalForm = () => {
             months.push(goalsForDelete[i].months);
          }
 
-         const response = await removeGoal({
+         await removeGoal({
             data: { data: { months } },
          });
-         console.log(response);
       } catch (error: any) {
          const messageError = error.response.data.message as string;
 
@@ -78,8 +77,6 @@ export const DeleteNewGoalForm = () => {
                message: `Meses nao cadastrado. [${months}]`,
             });
          }
-      } finally {
-         console.log('ok');
       }
    }
 

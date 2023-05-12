@@ -9,13 +9,12 @@ export const PopOver = styled('div')<PopOver>`
    display: flex;
    background-color: '#111';
    flex-direction: row;
-
    padding: 0.2rem;
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    border-radius: 0.8rem;
    border: 1px solid rgba(160, 160, 160, 0.46);
    position: absolute;
-   overflow: hidden;
+
    cursor: help;
    z-index: 15;
 
@@ -41,19 +40,18 @@ export const PopOver = styled('div')<PopOver>`
 
 interface SubDetailsWrapperProps {
    padding?: string;
-   overflow?: string;
 }
 
 export const SubDetailsWrapper = styled('div')<SubDetailsWrapperProps>`
    display: flex;
    flex-direction: column;
-   width: 100%;
    max-height: 240px;
-   overflow: ${(props) => props.overflow || undefined};
    align-items: center;
    padding: ${(props) => props.padding || '1.5rem'};
    background-color: ${(props) => props.theme.colors.Dark};
    justify-content: center;
+   overflow: scroll;
+   overflow-x: hidden;
    font-size: 0.8rem;
    &:first-child {
       border-right: 1px solid ${(props) => props.theme.colors.TimberWhite};

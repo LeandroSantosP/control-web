@@ -3,7 +3,7 @@ import {
    UpdatedData,
 } from '../../../pages/CreateProfile/CreateProfile';
 import * as S from './UploadAvatarStyled';
-import ImageDefault from '../../../img/Default.png';
+import ImageDefault from '../../../img/Default.jpg';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const UploadAvatarForm = ({

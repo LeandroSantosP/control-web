@@ -16,7 +16,7 @@ export const Wrapper = styled('header')`
 
 export const InfosButton = styled(Info)`
    position: absolute;
-   top: 5px;
+   top: 0.6rem;
    right: 5px;
    cursor: pointer;
 

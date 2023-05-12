@@ -22,7 +22,7 @@ export const GraphHeader = () => {
    return (
       <S.Wrapper>
          <S.InfosButton
-            size={15}
+            size={30}
             onClick={() => setShowInfo((prev) => !prev)}
          />
          <S.ToggleButton

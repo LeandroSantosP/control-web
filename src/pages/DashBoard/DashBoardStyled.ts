@@ -75,3 +75,16 @@ export const UlWrapper = styled('ul')`
    flex-direction: column;
    flex: 1;
 `;
+
+export const ListSkeleton = styled('li')`
+   display: flex;
+   flex-direction: column;
+   padding: 0.1rem 0;
+   min-height: 50px;
+   border-radius: 10px;
+   margin: 1rem 0;
+   height: 10px;
+   width: 100%;
+   background-color: rgba(255, 251, 206, 0.07);
+   pointer-events: none;
+`;

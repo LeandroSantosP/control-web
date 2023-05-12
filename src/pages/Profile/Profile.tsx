@@ -64,11 +64,6 @@ const Profile = () => {
    const onSubmit = (data: ProfileFormSchema) => {
       const { birthday, phonenumber, profession, salary } = data;
 
-      const [yearDataBase, monthDataBase, dayDataBase] =
-         userProfile?.dateOfBirth?.toString().split('/') as string[];
-
-      const formatDataOnDatabase = `${yearDataBase}/${monthDataBase}/${dayDataBase}`;
-
       const [year, month, day] = birthday?.toString().split('-') as string[];
       const formattingData = `${day}/${month}/${year}`;
       const formattingSalary = salary?.replace('R$', '').trim();
@@ -83,7 +78,7 @@ const Profile = () => {
 
       CreateUpdateUserProfile({
          props: {
-            Birthday: birthday === '' ? formatDataOnDatabase : formattingData,
+            Birthday: birthday === '' ? undefined : formattingData,
             phonenumber: phonenumber === '' ? undefined : phonenumber,
             profession,
             salary: formattingSalaryToDecimal,
