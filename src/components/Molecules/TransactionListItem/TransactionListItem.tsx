@@ -126,7 +126,6 @@ function TransactionListItem({ params }: { params: Transaction }) {
          }
       } catch (error) {
          //Error on delete transaction.
-         console.error(error);
       } finally {
          setConfirmationDelete('delete');
       }
@@ -135,7 +134,10 @@ function TransactionListItem({ params }: { params: Transaction }) {
    return (
       <>
          <S.TransactionItemLi
-            currentState={params.type}
+            currentInfos={{
+               state: params.type,
+               isSubscription: params.isSubscription,
+            }}
             ref={LiRef}
             as="div"
             onMouseEnter={handleMouseIn}

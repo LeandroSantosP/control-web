@@ -1,9 +1,10 @@
-import { CheckCircle, XCircle } from '@phosphor-icons/react';
+import { CheckCircle, Pencil, X, XCircle } from '@phosphor-icons/react';
 import { motion, Variants } from 'framer-motion';
 import { format } from 'date-fns';
 import { Transaction, useTransactionContext } from '../../../shared/contexts';
 import { useEffect, useState } from 'react';
 import * as S from './PopoverDetailsStyles';
+import { EditButton } from '../../atoms/EditButton/EditButton';
 
 interface PopOverTest {
    top: number;
@@ -12,6 +13,7 @@ interface PopOverTest {
 }
 
 export const PopoverDetails = (props: PopOverTest) => {
+   const [showEditDesc, setShowEditDesc] = useState(false);
    const [formattedForPortuguese, setFormattedForPortuguese] = useState<
       'Mensal' | 'Anual' | 'Diária' | ''
    >('');
@@ -114,6 +116,9 @@ export const PopoverDetails = (props: PopOverTest) => {
             </S.SubDetailsWrapper>
 
             <S.SubDetailsWrapper padding="0px">
+               <EditButton onClick={() => setShowEditDesc(!showEditDesc)}>
+                  <Pencil />
+               </EditButton>
                <S.DescriptionWrapper>{description}</S.DescriptionWrapper>
             </S.SubDetailsWrapper>
          </S.PopOver>

@@ -35,12 +35,15 @@ const TransactionFormSchema = z.object({
 
       return res;
    }, 'Data invalida!'),
-   installments: z.coerce.number().refine((current) => {
-      if (current < 2 || current > 12) {
-         return false;
-      }
-      return true;
-   }, 'Deve conter entre 2 e 12 parcelas!'),
+   installments: z.coerce
+      .number()
+      .optional()
+      .refine((current) => {
+         if ((current && current < 2) || (current && current > 12)) {
+            return false;
+         }
+         return true;
+      }, 'Deve conter entre 2 e 12 parcelas!'),
 });
 
 type TransactionFormSchema = z.infer<typeof TransactionFormSchema>;
@@ -51,6 +54,8 @@ export const Transaction = () => {
       CreateMutation: { mutate, isLoading },
       open,
       setOpen,
+
+      GetTransaction,
    } = useTransactionContext();
 
    const {
@@ -85,8 +90,16 @@ export const Transaction = () => {
       SetValueInstallments('installments', 2);
       if (transactionType === 'Receita') {
          setIsSubscription(false);
+         SetValueInstallments('installments', undefined);
       }
-   }, [SetValueInstallments, isSubscription, transactionType]);
+      if (recurrency == 'null') {
+         setIsSubscription(false);
+         SetValueInstallments('installments', undefined);
+      }
+      if (isSubscription) {
+         SetValueInstallments('installments', undefined);
+      }
+   }, [SetValueInstallments, isSubscription, recurrency, transactionType]);
 
    const categoryList = [
       { value: 'food', Name: 'Comida' },
@@ -139,6 +152,8 @@ export const Transaction = () => {
          return;
       } catch (err) {
          return Promise.reject(err);
+      } finally {
+         GetTransaction({});
       }
    };
 
@@ -215,7 +230,9 @@ export const Transaction = () => {
 
                         <S.WrapperSwitchButton
                            disable={
-                              transactionType === 'Receita' ? true : false
+                              transactionType === 'Receita'
+                                 ? true
+                                 : false || (recurrency === 'null' && true)
                            }
                         >
                            <S.WrapperChildrenSwitchButton>

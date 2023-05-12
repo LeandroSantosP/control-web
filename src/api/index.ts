@@ -134,6 +134,27 @@ export const CreateTransaction = async <T>({
       }
    }
 
+   if (transactionType === 'Despesa' && recurrency === null) {
+      try {
+         const res = await api({ token }).post<T>('/transaction', {
+            value,
+            description,
+            isSubscription,
+            installments,
+            categoryType: category,
+            recurrence: recurrency,
+            dueDate: Number(value) < 0 && date,
+         });
+
+         return Promise.resolve(res.data);
+      } catch (error: any) {
+         console.log(error.response.data);
+
+         return Promise.reject(error);
+      }
+      return;
+   }
+
    try {
       const res = await api({ token }).post<T>('/transaction/recurrent', {
          value,

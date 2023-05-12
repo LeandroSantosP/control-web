@@ -1,4 +1,7 @@
+import { X } from '@phosphor-icons/react';
 import styled from 'styled-components';
+import { style } from 'styled-system';
+import { EditProfileButton } from '../../../pages/Profile/ProfileStyles';
 
 interface PopOver {
    top: number;

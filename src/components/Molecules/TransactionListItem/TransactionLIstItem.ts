@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
 interface TransactionItemLiProps {
-   currentState: string;
+   currentInfos: {
+      state: string;
+      isSubscription: boolean | null;
+   };
 }
 
 export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
@@ -9,10 +12,17 @@ export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    width: 100%;
    align-items: center;
    justify-content: center;
-   background-color: ${(props) =>
-      props.currentState == 'revenue'
+   background: ${(props) => {
+      if (props.currentInfos.isSubscription === null) {
+         return props.currentInfos.state === 'revenue'
+            ? `linear-gradient(15deg, rgba(0, 107, 3, 0.54) 50%, #06172685 50%)`
+            : `linear-gradient(15deg, rgba(107, 0, 0, 0.54) 50%, #06172685 50%)`;
+      }
+      return props.currentInfos.state == 'revenue'
          ? 'rgba(0, 107, 3, 0.54)'
-         : 'rgba(107, 0, 0, 0.54)'};
+         : 'rgba(107, 0, 0, 0.54)';
+   }};
+
    padding: 0.1rem 0;
    min-height: 50px;
    border-radius: 10px;
@@ -21,7 +31,7 @@ export const TransactionItemLi = styled('li')<TransactionItemLiProps>`
    margin: 1rem 0;
    &:hover {
       background-color: ${(props) =>
-         props.currentState == 'revenue'
+         props.currentInfos.state == 'revenue'
             ? 'rgba(0, 107, 3, 0.84)'
             : 'rgba(107, 0, 0, 0.84)'};
    }

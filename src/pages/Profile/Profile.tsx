@@ -16,6 +16,7 @@ import ComputerIllustration from '../../shared/assets/ComputerIllustration.png';
 import * as S from './ProfileStyles';
 import { useFlashMessageContext } from '../../shared/contexts';
 import { UpdatedProfilePic } from './UpdatedProfilePic';
+import { EditButton } from '../../components/atoms/EditButton/EditButton';
 
 export const dataSchemaWithOptionalBirthday = dataSchema
    .omit({ birthday: true })
@@ -152,13 +153,13 @@ const Profile = () => {
             </S.Header>
             <S.FormWrapper>
                <S.Form onSubmit={handleSubmit(onSubmit)}>
-                  <S.EditProfileButton
+                  <EditButton
                      active={ableToEdit}
-                     onClick={() => setAbleToEdit((prev) => !prev)}
                      type="button"
+                     onClick={() => setAbleToEdit((prev) => !prev)}
                   >
                      <Pencil />
-                  </S.EditProfileButton>
+                  </EditButton>
                   <S.InputWrapper>
                      <S.Label>Profissão</S.Label>
                      {!ableToEdit ? (
@@ -263,6 +264,7 @@ const Profile = () => {
 
                      {errors.salary && <p>{errors.salary.message}</p>}
                   </S.InputWrapper>
+
                   <S.SaveButton disabled={ableToEdit} active={ableToEdit}>
                      Salvar
                   </S.SaveButton>

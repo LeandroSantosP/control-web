@@ -104,6 +104,8 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
    const CreateMutation = useMutation({
       mutationFn: async (data: any) => {
+         console.log(data);
+
          return await CreateTransaction(data);
       },
 

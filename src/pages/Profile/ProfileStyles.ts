@@ -119,28 +119,6 @@ export const Label = styled('label')`
    line-height: 120%;
 `;
 
-interface InputProps {
-   active?: boolean;
-}
-
-export const EditProfileButton = styled('button')<InputProps>`
-   display: flex;
-   position: absolute;
-   right: 15px;
-   top: 15px;
-
-   padding: 3px;
-   filter: ${(props) => (props.disabled ? 'brightness(0.5)' : 'brightness(2)')};
-   border: 1px solid
-      ${(props) => (props.active ? props.theme.colors.TimberWhite : '#111')};
-
-   color: ${(props) => props.theme.colors.TimberWhite};
-   background-color: ${(props) =>
-      props.active ? 'rgba(255, 255, 255, 0.09)' : 'transparent'};
-   border-radius: 5px;
-   cursor: pointer;
-`;
-
 type ExtractSaveButtonProps<T extends { active: unknown }> = T['active'];
 
 type SaveButtonProps = ExtractSaveButtonProps<{ active: { active: boolean } }>;
