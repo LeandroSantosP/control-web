@@ -11,6 +11,11 @@ export interface authStorageProps {
       loading: boolean;
    };
    actions: {
+      sendMail: (token: string) => Promise<void | Error | true>;
+      resetPass: (params: {
+         newPass: string;
+         token: string;
+      }) => Promise<void | Error>;
       login: (email: string, password: string) => Promise<UserResponse | void>;
       logout: () => void;
       singUp: (props: singUpProps) => any;

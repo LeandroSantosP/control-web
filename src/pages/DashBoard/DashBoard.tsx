@@ -24,7 +24,7 @@ import { Divider } from '../../components/atoms/Divider/Divider';
 import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { Progress } from '../../components/atoms/Progress/Progress';
 import { GraphHeader } from '../../components/Molecules/GraphHeader/GraphHeader';
-import { authStorage } from '../../shared/store';
+import { authStorage, ProfileStorage } from '../../shared/store';
 
 interface Transaction {
    id: string;
@@ -50,6 +50,9 @@ export const DashBoard = () => {
       getTotalBalense,
    } = useTransactionContext();
    const {
+      actions: { GetProfile },
+   } = ProfileStorage();
+   const {
       actions: { logout },
    } = authStorage();
 
@@ -57,6 +60,7 @@ export const DashBoard = () => {
    const LURef = useRef<HTMLUListElement>(null);
 
    useEffect(() => {
+      GetProfile();
       setSkeletonTransactionItem(() => {
          const amountTransaction = transaction?.transactions.length;
          if (
@@ -128,6 +132,7 @@ export const DashBoard = () => {
       WhenTransactionIsCreateWithSuccess,
       logout,
       transaction,
+      GetProfile,
    ]);
 
    return (

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../atoms/Icons/Icon';
 import { authStorage } from '../../../shared/store/AuthContext/AuthContext';
 import { useEffect } from 'react';
+import { ProfileStorage } from '../../../shared/store';
 
 interface LayoutProps {
    children: React.ReactNode;
@@ -15,6 +16,9 @@ export const Layout = ({ children }: LayoutProps) => {
       actions,
       state: { isLogged },
    } = authStorage();
+   const {
+      actions: { reset },
+   } = ProfileStorage();
    useEffect(() => {
       if (!isLogged) {
          navigate('/entrar');
@@ -24,6 +28,7 @@ export const Layout = ({ children }: LayoutProps) => {
 
    const handleClick = () => {
       actions.logout();
+      reset();
       navigate('/entrar');
       return;
    };

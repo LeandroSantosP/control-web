@@ -11,6 +11,24 @@ function getToken() {
    return res && JSON.parse(res);
 }
 
+export const sendMailReset = async (email: string): Promise<void | Error> => {
+   await api({}).post('/user/invite', {
+      email,
+   });
+};
+
+export const ResetPassword = async ({
+   newPass,
+   token,
+}: {
+   newPass: string;
+   token: string;
+}): Promise<void | Error> => {
+   await api({}).patch(`/user/resetpass/${token}`, {
+      newPassword: newPass,
+   });
+};
+
 export const loginAPI = async ({ email, password }: LoginProps) =>
    await api({}).get('/auth', {
       headers: {

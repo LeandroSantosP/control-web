@@ -26,8 +26,13 @@ const ProfileStorage = create<ProfileStorageProps>((set, get) => ({
       userProfile: null,
    },
    actions: {
+      reset: () => {
+         updatedStates(set)({ error: null, loading: false, userProfile: null });
+         return;
+      },
       logout: () => {
          localStorage.removeItem('auth');
+         updatedStates(set)({ loading: true });
          return;
       },
       GetProfile: async () => {

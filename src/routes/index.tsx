@@ -1,15 +1,17 @@
+import { useCallback, useEffect } from 'react';
 import {
    BrowserRouter as Router,
-   Routes,
-   Route,
    Navigate,
+   Route,
+   Routes,
    useNavigate,
 } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
 import { CreateProfile } from '../pages/CreateProfile/CreateProfile';
 
 import { DashBoard } from '../pages/DashBoard/DashBoard';
 import Profile from '../pages/Profile/Profile';
+import { ResetPass } from '../pages/ResetPass/ResetPass';
+import { ResetPassSendEmail } from '../pages/ResetPassSendEmail/ResetPassSendEmail';
 import { SingIn } from '../pages/SingIn/SingIn';
 import { SingUp } from '../pages/SingUp/SingUp';
 import { useFlashMessageContext } from '../shared/contexts/FlashMessageContext';
@@ -78,6 +80,8 @@ export function RoutesApp() {
                <Route element={GetProfileInfos(Profile)} path="/profile" />
                <Route element={<SingIn />} path="/entrar" />
                <Route element={<SingUp />} path="/cadastre" />
+               <Route element={<ResetPassSendEmail />} path="/resetpass" />
+               <Route element={<ResetPass />} path="/resetpass/:token" />
                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
          </Router>

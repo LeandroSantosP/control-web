@@ -36,5 +36,6 @@ export interface ProfileStorageProps {
       CreateUpdateUserProfile: (params: CreateProfileProps) => Promise<void>;
       GetProfile(): Promise<ProfileProps | any>;
       logout: () => void;
+      reset: () => void;
    };
 }

@@ -1,9 +1,14 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { create, SetState } from 'zustand';
-import { loginAPI, SingUpAPI } from '../../../api/index';
+import {
+   loginAPI,
+   ResetPassword,
+   sendMailReset,
+   SingUpAPI,
+} from '../../../api/index';
 import { useLocalStorage } from '../../modules/Storage';
 import { LocalStoreOperator } from '../../modules/Storage/persistence-adepter/adepter';
-import { UserResponse, authStorageProps } from './AuthContextTypes';
+import { authStorageProps, UserResponse } from './AuthContextTypes';
 
 const isLoggedInitialValue = () => {
    const token = localStorage.getItem('auth');
@@ -53,6 +58,29 @@ export const authStorage = create<authStorageProps>((set, get) => ({
       credentials: '',
    },
    actions: {
+      resetPass: async (params: { newPass: string; token: string }) => {
+         updateAuthState(set)({ isLogged: true });
+         try {
+            await ResetPassword({ ...params });
+
+            return;
+         } catch (error: any) {
+            return error;
+         } finally {
+            updateAuthState(set)({ isLogged: false });
+         }
+      },
+      sendMail: async (email: string): Promise<void | AxiosError | true> => {
+         updateAuthState(set)({ isLogged: true });
+         try {
+            await sendMailReset(email);
+            return true;
+         } catch (error: any) {
+            return error;
+         } finally {
+            updateAuthState(set)({ isLogged: false });
+         }
+      },
       login: async (email, password): Promise<UserResponse | void> => {
          try {
             const response: UserResponse = await loginAPI({ email, password });

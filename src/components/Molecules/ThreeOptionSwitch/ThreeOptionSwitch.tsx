@@ -1,10 +1,4 @@
-import {
-   Folder,
-   FolderDashed,
-   FolderNotchOpen,
-   FolderPlus,
-   X,
-} from '@phosphor-icons/react';
+import { Folder, FolderNotchOpen } from '@phosphor-icons/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTransactionContext } from '../../../shared/contexts';
 import { handleChangeProps } from '../TransactionHeader/DashBoardHeader';
