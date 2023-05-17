@@ -1,10 +1,10 @@
-import * as S from './DashBoard.Styled';
-import logo from '../../../shared/assets/logo.svg';
-import { useNavigate } from 'react-router-dom';
-import { Icon } from '../../atoms/Icons/Icon';
-import { authStorage } from '../../../shared/store/AuthContext/AuthContext';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import logo from '../../../shared/assets/logo.svg';
 import { ProfileStorage } from '../../../shared/store';
+import { authStorage } from '../../../shared/store/AuthContext/AuthContext';
+import { Icon } from '../../atoms/Icons/Icon';
+import * as S from './DashBoard.Styled';
 
 interface LayoutProps {
    children: React.ReactNode;

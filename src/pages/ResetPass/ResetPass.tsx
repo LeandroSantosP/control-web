@@ -11,11 +11,10 @@ export const ResetPass = () => {
    const changeEmail = () => {
       handleShowingFlashMessage({
          haveButton: false,
-         message: 'E-email enviado com sucesso!',
+         message: 'Senha Atavizada com secesso!',
          timer: 3000,
          type: 'success',
       });
-      console.log('ok');
 
       navigate(`/login`);
    };

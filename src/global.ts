@@ -40,6 +40,7 @@ input[type=number]::-webkit-outer-spin-button {
     box-sizing: border-box;
     color: ${(props) => props.theme.colors.TimberWhite};
     background-color: ${({ theme }) => theme.colors.Dark};
+    background-image: url("../src/shared/assets/sparks.svg");
     font-family:"Roboto", Helvetica, Sans-Serif;
   }
   html, body > div {

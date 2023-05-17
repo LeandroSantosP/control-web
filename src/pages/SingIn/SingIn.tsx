@@ -1,14 +1,14 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import * as S from './SingInStyles';
 
-import dollarBg from '../../shared/assets/5133.jpg';
-import { Input } from '../../components/atoms/Input/InputBase';
-import { Button } from '../../components/atoms/button/BaseButton';
-import { Label } from '../../components/Molecules/InputAndLabel/Label';
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../../components/atoms/button/BaseButton';
+import { Input } from '../../components/atoms/Input/InputBase';
+import { Label } from '../../components/Molecules/InputAndLabel/Label';
+import dollarBg from '../../shared/assets/5133.jpg';
 import { useFlashMessageContext } from '../../shared/contexts';
 import { authStorage } from '../../shared/store/AuthContext/AuthContext';
 
@@ -126,9 +126,20 @@ export const SingIn = () => {
                   <Button fontSize="small" type="submit" ISdisabled={loading}>
                      {loading ? 'Carregando...' : 'Logar!'}
                   </Button>
-                  <S.NotHaveAccount onClick={() => navigation('/cadastre')}>
-                     Ainda não tem conta?
-                  </S.NotHaveAccount>
+                  <div
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '10px',
+                     }}
+                  >
+                     <S.NotHaveAccount onClick={() => navigation('/cadastre')}>
+                        Ainda não tem conta?
+                     </S.NotHaveAccount>
+                     <S.NotHaveAccount onClick={() => navigation('/resetpass')}>
+                        Esqueceu a senha?
+                     </S.NotHaveAccount>
+                  </div>
                </S.Box>
             </S.Form>
          </S.Box>

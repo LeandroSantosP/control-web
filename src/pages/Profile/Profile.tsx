@@ -1,22 +1,22 @@
-import { z } from 'zod';
-import { useState } from 'react';
-import { toMoney } from 'vanilla-masker';
-import { useForm } from 'react-hook-form';
-import { Pencil } from '@phosphor-icons/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Pencil } from '@phosphor-icons/react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toMoney } from 'vanilla-masker';
+import { z } from 'zod';
 
-import { ProfileStorage } from '../../shared/store/index';
-import { Layout } from '../../components/providers/Layout';
-import { Loading } from '../../components/atoms/Loading/Loading';
-import { FormatCurense } from '../../shared/helpers/FormatCurense';
 import { Input } from '../../components/atoms/InputCustomTwo/InputCustomTwo';
-import { dataSchema } from '../../shared/helpers/UpdateCreateProfileZodSchema';
+import { Loading } from '../../components/atoms/Loading/Loading';
+import { Layout } from '../../components/providers/Layout';
 import ComputerIllustration from '../../shared/assets/ComputerIllustration.png';
+import { FormatCurense } from '../../shared/helpers/FormatCurense';
+import { dataSchema } from '../../shared/helpers/UpdateCreateProfileZodSchema';
+import { ProfileStorage } from '../../shared/store/index';
 
-import * as S from './ProfileStyles';
-import { useFlashMessageContext } from '../../shared/contexts';
-import { UpdatedProfilePic } from './UpdatedProfilePic';
 import { EditButton } from '../../components/atoms/EditButton/EditButton';
+import { useFlashMessageContext } from '../../shared/contexts';
+import * as S from './ProfileStyles';
+import { UpdatedProfilePic } from './UpdatedProfilePic';
 
 export const dataSchemaWithOptionalBirthday = dataSchema
    .omit({ birthday: true })
