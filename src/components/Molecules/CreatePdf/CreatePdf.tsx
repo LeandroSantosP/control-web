@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePdf } from '@phosphor-icons/react';
 import * as PopOver from '@radix-ui/react-popover';
+
 import { Download, X } from 'lucide-react';
 import { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { CreatePdfApiProps } from '../../../api';
+import { useTransactionContext } from '../../../shared/contexts';
 import { CheckboxCustom } from '../CheckBox/CheckBox';
 import { Button } from '../ResetPass/ResetPassStyles';
 import * as S from './CreatePdfStyles';
@@ -30,6 +33,7 @@ export const CreatePdf = ({
       Icon: ReactNode;
    }) => JSX.Element;
 }) => {
+   const { CreatePdf } = useTransactionContext();
    const createPdfForm = useForm<PdfType>({
       resolver: zodResolver(schemaPdf),
    });
@@ -40,9 +44,46 @@ export const CreatePdf = ({
       formState: { errors },
    } = createPdfForm;
 
-   const onSubmit = (data: PdfType) => {
-      console.log(data);
-      //request for back end
+   const handleDownload = (pdfBuffer: Buffer) => {
+      const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      link.setAttribute('download', 'arquivo.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+   };
+
+   const onSubmit = async (data: PdfType) => {
+      let config = {
+         subject: 'meu titulo',
+         title: 'meu assunto',
+         ...(data.start_date !== '' ? { start_date: data.start_date } : {}),
+         ...(data.end_date !== '' ? { end_date: data.end_date } : {}),
+         options: {
+            ...(data.ByExpense ? { ByExpense: data.ByExpense } : {}),
+            ...(data.ByRevenue ? { ByRevenue: data.ByRevenue } : {}),
+            ...(data.BySubscription
+               ? { BySubscription: data.BySubscription }
+               : {}),
+         },
+      } as CreatePdfApiProps;
+
+      const isOptionsEmpty = Object.keys(config.options as any).length === 0;
+
+      if (isOptionsEmpty) {
+         const { options, ...rest } = config;
+
+         config = rest;
+      }
+
+      const pdfBuffer = await CreatePdf({
+         ...config,
+      });
+
+      handleDownload(pdfBuffer);
    };
 
    return (

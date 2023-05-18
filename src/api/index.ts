@@ -6,6 +6,18 @@ interface LoginProps {
    password: string;
 }
 
+export interface CreatePdfApiProps {
+   subject: string;
+   title: string;
+   start_date?: string;
+   end_date?: string;
+   options?: {
+      BySubscription?: boolean;
+      ByRevenue?: boolean;
+      ByExpense?: boolean;
+   };
+}
+
 export interface editTransactionProps {
    transaction_id: string;
    category: string;
@@ -229,6 +241,27 @@ export const DeleteTransactionAPI = async <T, R>(
       return Promise.reject(err);
    }
    return undefined;
+};
+
+export const CreatePdfApi = async (
+   params: CreatePdfApiProps
+): Promise<Buffer> => {
+   try {
+      const { token } = getToken();
+
+      if (token) {
+         const res = await api({
+            token,
+         }).post<Buffer>('/transaction/pdf', {
+            ...params,
+         });
+
+         return Promise.resolve(res.data);
+      }
+      return Promise.reject();
+   } catch (error: any) {
+      return Promise.reject(error);
+   }
 };
 
 export const GetUserNotification = async (NotificationToken: string) => {

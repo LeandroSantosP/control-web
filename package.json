@@ -29,6 +29,8 @@
     "eslint-config-prettier": "^8.7.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^4.2.1",
+    "file-server": "^2.2.1",
+    "pdfjs-dist": "^3.6.172",
     "phosphor-icons": "^1.4.2",
     "process": "^0.11.10",
     "react": "^18.2.0",
@@ -48,6 +50,7 @@
   },
   "devDependencies": {
     "@types/date-fns": "^2.6.0",
+    "@types/file-saver": "^2.0.5",
     "@types/node": "^18.15.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",

@@ -9,6 +9,8 @@ import {
 import { useMutation, UseMutationResult } from 'react-query';
 
 import {
+   CreatePdfApi,
+   CreatePdfApiProps,
    CreateTransaction,
    DeleteTransactionAPI,
    EditTransaction,
@@ -78,6 +80,7 @@ interface TransactionProps {
    ResolvedTransaction: (props: string) => Promise<void | any>;
    DeleteTransaction: (transactionId: string) => Promise<void>;
    EditTransactionRequest: (params: editTransactionProps) => Promise<boolean>;
+   CreatePdf: (params: CreatePdfApiProps) => Promise<Buffer>;
    currentTransactionType: 'revenue' | 'expense';
    setCurrentTransactionType: React.Dispatch<
       React.SetStateAction<'revenue' | 'expense'>
@@ -196,6 +199,15 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       [actions.logout, ResolvedTransaction]
    );
 
+   const CreatePdf = async (params: CreatePdfApiProps): Promise<Buffer> => {
+      try {
+         const response = await CreatePdfApi(params);
+         return response;
+      } catch (error: any) {
+         return error;
+      }
+   };
+
    const EditTransactionRequest = async (params: editTransactionProps) => {
       try {
          const response = await EditTransaction({ ...params });
@@ -267,6 +279,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
    return (
       <TransactionContext.Provider
          value={{
+            CreatePdf,
             EditTransactionRequest,
             CreateMutation,
             ResolvedTransaction,

@@ -83,7 +83,19 @@ button {
    align-items: center;
    justify-content: center;
    height: 25px;
-   background-color: white;
-   color: #f11;
+   background-color: black;
+   color: #fff;
+   cursor: default;
+}
+
+
+
+.SelectScrollButton:hover {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: 25px;
+   background-color: #fff;
+   color: black;
    cursor: default;
 }
