@@ -1,5 +1,4 @@
 import { AxiosResponse } from 'axios';
-import { useMutation, UseMutationResult } from 'react-query';
 import {
    createContext,
    ReactNode,
@@ -7,18 +6,21 @@ import {
    useContext,
    useState,
 } from 'react';
+import { useMutation, UseMutationResult } from 'react-query';
 
 import {
    CreateTransaction,
    DeleteTransactionAPI,
+   EditTransaction,
+   editTransactionProps,
    getTransactionByParams,
    getTransactionByParamsProps,
    getTransactions,
    ResolvedTransactionApi,
 } from '../../api';
 
-import { useFlashMessageContext } from './FlashMessageContext';
 import { authStorage } from '../store/AuthContext/AuthContext';
+import { useFlashMessageContext } from './FlashMessageContext';
 
 interface FilterTransactionByMonthProps {
    month?: string;
@@ -75,6 +77,7 @@ interface TransactionProps {
    getTotalBalense: () => Promise<any>;
    ResolvedTransaction: (props: string) => Promise<void | any>;
    DeleteTransaction: (transactionId: string) => Promise<void>;
+   EditTransactionRequest: (params: editTransactionProps) => Promise<boolean>;
    currentTransactionType: 'revenue' | 'expense';
    setCurrentTransactionType: React.Dispatch<
       React.SetStateAction<'revenue' | 'expense'>
@@ -104,8 +107,6 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
 
    const CreateMutation = useMutation({
       mutationFn: async (data: any) => {
-         console.log(data);
-
          return await CreateTransaction(data);
       },
 
@@ -195,6 +196,21 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
       [actions.logout, ResolvedTransaction]
    );
 
+   const EditTransactionRequest = async (params: editTransactionProps) => {
+      try {
+         const response = await EditTransaction({ ...params });
+
+         if (response.status === 204) {
+            await GetTransaction({});
+            return true;
+         }
+
+         return false;
+      } catch (error) {
+         return false;
+      }
+   };
+
    const GetTransactionByParams = useCallback(
       async ({
          isSubscription,
@@ -251,6 +267,7 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
    return (
       <TransactionContext.Provider
          value={{
+            EditTransactionRequest,
             CreateMutation,
             ResolvedTransaction,
             getTotalBalense,

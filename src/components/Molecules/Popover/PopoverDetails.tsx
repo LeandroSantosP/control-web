@@ -1,10 +1,13 @@
-import { CheckCircle, Pencil, X, XCircle } from '@phosphor-icons/react';
-import { motion, Variants } from 'framer-motion';
+import { CheckCircle, Pencil, Spinner, XCircle } from '@phosphor-icons/react';
 import { format } from 'date-fns';
-import { Transaction, useTransactionContext } from '../../../shared/contexts';
+import { motion, Variants } from 'framer-motion';
+import { Save } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import * as S from './PopoverDetailsStyles';
+import { Transaction, useTransactionContext } from '../../../shared/contexts';
+import { categoryList } from '../../../shared/helpers/CategoryMonthlyMocks';
 import { EditButton } from '../../atoms/EditButton/EditButton';
+import { SelectCustom } from '../Select/Select';
+import * as S from './PopoverDetailsStyles';
 
 interface PopOverTest {
    top: number;
@@ -13,11 +16,6 @@ interface PopOverTest {
 }
 
 export const PopoverDetails = (props: PopOverTest) => {
-   const [showEditDesc, setShowEditDesc] = useState(false);
-   const [formattedForPortuguese, setFormattedForPortuguese] = useState<
-      'Mensal' | 'Anual' | 'Diária' | ''
-   >('');
-   const { ResolvedTransaction } = useTransactionContext();
    const {
       isSubscription,
       resolved,
@@ -29,6 +27,18 @@ export const PopoverDetails = (props: PopOverTest) => {
       category,
       description,
    } = props.content;
+   const [editLoading, setEditLoading] = useState(false);
+   const { EditTransactionRequest } = useTransactionContext();
+   const [newDesc, setNewDesc] = useState(props.content.description);
+   const [showEditDesc, setShowEditDesc] = useState(false);
+   const [formattedForPortuguese, setFormattedForPortuguese] = useState<
+      'Mensal' | 'Anual' | 'Diária' | ''
+   >('');
+   const { ResolvedTransaction } = useTransactionContext();
+
+   const [categoryEditValue, setCategoryEditValue] = useState<string>(
+      category.name
+   );
 
    let currentCreatedAtFormatted;
    if (props.content.created_at !== null) {
@@ -40,6 +50,15 @@ export const PopoverDetails = (props: PopOverTest) => {
 
    const handleResolvedTransaction = async () => {
       await ResolvedTransaction(id);
+   };
+
+   const handleMouseEdit = async () => {
+      setEditLoading(true);
+      await EditTransactionRequest({
+         category: categoryEditValue,
+         transaction_id: props.content.id,
+         description: newDesc,
+      }).finally(() => setEditLoading(false));
    };
 
    useEffect(() => {
@@ -73,6 +92,12 @@ export const PopoverDetails = (props: PopOverTest) => {
             left={props.left}
             top={props.top}
          >
+            {editLoading && (
+               <S.LoadingShadow>
+                  <Spinner size={40} />
+               </S.LoadingShadow>
+            )}
+
             <S.SubDetailsWrapper>
                <S.Info>
                   Inscrição?{' '}
@@ -82,8 +107,9 @@ export const PopoverDetails = (props: PopOverTest) => {
                      <CheckCircle color="green" />
                   )}
                </S.Info>
+
                <S.Info>
-                  Finalizada?{' '}
+                  Finalizada ?{' '}
                   {resolved ? (
                      <CheckCircle color="green" />
                   ) : (
@@ -95,8 +121,12 @@ export const PopoverDetails = (props: PopOverTest) => {
                      </S.FinishedButton>
                   )}
                </S.Info>
-               <S.Info>Categoria: {category.name}</S.Info>
-
+               <SelectCustom
+                  disable={!showEditDesc}
+                  setCurrentValue={setCategoryEditValue}
+                  currentValue={categoryEditValue}
+                  fieldList={categoryList}
+               />
                <S.Info>
                   {type === 'expense' ? (
                      <S.Type>Tipo Dispensa</S.Type>
@@ -114,12 +144,29 @@ export const PopoverDetails = (props: PopOverTest) => {
                )}
                <S.Info>Data de criação {currentCreatedAtFormatted}</S.Info>
             </S.SubDetailsWrapper>
-
             <S.SubDetailsWrapper padding="0px">
                <EditButton onClick={() => setShowEditDesc(!showEditDesc)}>
                   <Pencil />
                </EditButton>
-               <S.DescriptionWrapper>{description}</S.DescriptionWrapper>
+
+               {showEditDesc && (
+                  <EditButton
+                     right="15px"
+                     top="2.5rem"
+                     onClick={handleMouseEdit}
+                  >
+                     <Save size={15} />
+                  </EditButton>
+               )}
+
+               {!showEditDesc ? (
+                  <S.DescriptionWrapper value={description} disabled={true} />
+               ) : (
+                  <S.EditDescriptionWrapper
+                     value={newDesc}
+                     onChange={({ target: { value } }) => setNewDesc(value)}
+                  />
+               )}
             </S.SubDetailsWrapper>
          </S.PopOver>
       </>

@@ -1,7 +1,4 @@
-import { X } from '@phosphor-icons/react';
 import styled from 'styled-components';
-import { style } from 'styled-system';
-import { EditProfileButton } from '../../../pages/Profile/ProfileStyles';
 
 interface PopOver {
    top: number;
@@ -100,7 +97,7 @@ export const SubContent = styled('div')`
    text-align: flex-start;
 `;
 
-export const DescriptionWrapper = styled('div')`
+export const DescriptionWrapper = styled('textarea')`
    display: flex;
    width: 200px;
    flex: 1;
@@ -112,4 +109,28 @@ export const DescriptionWrapper = styled('div')`
    color: ${(props) => props.theme.colors.TimberWhite};
    background-color: ${(props) => props.theme.colors.RaisinBlack};
    white-space: none;
+`;
+
+export const EditDescriptionWrapper = styled('textarea')`
+   display: flex;
+   width: 200px;
+   flex: 1;
+   text-align: start;
+   border-radius: 0.4rem;
+   font-size: 1rem;
+   padding: 10px;
+   margin: 1rem;
+   color: ${(props) => props.theme.colors.TimberWhite};
+   background-color: ${(props) => props.theme.colors.RaisinBlack};
+   white-space: none;
+`;
+
+export const LoadingShadow = styled('div')`
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   justify-content: center;
+   align-content: center;
+   background-color: #1e1d1dbf;
 `;

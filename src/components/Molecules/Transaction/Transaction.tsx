@@ -1,16 +1,21 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { PlusCircle, X } from '@phosphor-icons/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { PlusCircle, X } from '@phosphor-icons/react';
+import * as Dialog from '@radix-ui/react-dialog';
 
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { toMoney } from 'vanilla-masker';
-import { Label } from '../InputAndLabel/Label';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toMoney } from 'vanilla-masker';
+import { z } from 'zod';
 import { useTransactionContext } from '../../../shared/contexts';
+import {
+   categoryList,
+   monthlyList,
+   recurrencyList,
+} from '../../../shared/helpers/CategoryMonthlyMocks';
+import { Label } from '../InputAndLabel/Label';
 
-import * as S from './TransactionFormStyled';
 import { SelectCustom } from '../Select/Select';
+import * as S from './TransactionFormStyled';
 
 function isFutureDate(date: string) {
    const currentDate = new Date();
@@ -74,18 +79,6 @@ export const Transaction = () => {
    const [category, setCategory] = useState<string>('unknown');
    const [recurrency, setRecurrency] = useState<string>('null');
 
-   const monthlyList = [
-      { value: 'Despesa', Name: 'Despesa' },
-      { value: 'Receita', Name: 'Receita' },
-   ];
-
-   const recurrencyList = [
-      { value: 'null', Name: 'Sem recorrência' },
-      { value: 'monthly', Name: 'Mensal' },
-      { value: 'yearly', Name: 'Anual' },
-      { value: 'daily', Name: 'Diária' },
-   ];
-
    useEffect(() => {
       SetValueInstallments('installments', 2);
       if (transactionType === 'Receita') {
@@ -100,20 +93,6 @@ export const Transaction = () => {
          SetValueInstallments('installments', undefined);
       }
    }, [SetValueInstallments, isSubscription, recurrency, transactionType]);
-
-   const categoryList = [
-      { value: 'food', Name: 'Comida' },
-      { value: 'transport', Name: 'Transporte' },
-      { value: 'education', Name: 'Educação' },
-      { value: 'habitation', Name: 'Habitação' },
-      { value: 'health', Name: 'Saudê' },
-      { value: 'leisure', Name: 'Lazer' },
-      { value: 'products', Name: 'Produtos' },
-      { value: 'Taxes', Name: 'Taxas' },
-      { value: 'Investments', Name: 'Investimento' },
-      { value: 'debts', Name: 'Débitos' },
-      { value: 'unknown', Name: 'Desconhecida' },
-   ];
 
    const onSubmit = async (data: TransactionFormSchema) => {
       try {

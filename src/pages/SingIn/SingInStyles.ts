@@ -43,3 +43,25 @@ export const ErrorMessage = styled('p')`
    margin-top: 10px;
    font-weight: bold;
 `;
+
+export const AccountTestWrapper = styled('div')`
+   position: absolute;
+   top: 20px;
+   right: 26%;
+   max-width: 500px;
+   padding: 20px;
+   background-color: ${(props) => props.theme.colors.Linen};
+   border: 1px solid #111;
+   color: ${(props) => props.theme.colors.Dark};
+   border-radius: 1rem;
+
+   div {
+      display: flex;
+      flex-direction: column;
+      margin-top: 0.3rem;
+
+      label {
+         font-size: 1rem;
+      }
+   }
+`;

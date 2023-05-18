@@ -6,6 +6,12 @@ interface LoginProps {
    password: string;
 }
 
+export interface editTransactionProps {
+   transaction_id: string;
+   category: string;
+   description: string;
+}
+
 function getToken() {
    const res = localStorage.getItem('auth');
    return res && JSON.parse(res);
@@ -166,11 +172,8 @@ export const CreateTransaction = async <T>({
 
          return Promise.resolve(res.data);
       } catch (error: any) {
-         console.log(error.response.data);
-
          return Promise.reject(error);
       }
-      return;
    }
 
    try {
@@ -185,6 +188,25 @@ export const CreateTransaction = async <T>({
       });
 
       return Promise.resolve(res.data);
+   } catch (error) {
+      return Promise.reject(error);
+   }
+};
+
+export const EditTransaction = async ({
+   transaction_id,
+   ...params
+}: editTransactionProps) => {
+   const { token } = getToken();
+   try {
+      const response = await api({ token }).patch(
+         `/transaction/edit/${transaction_id}`,
+         {
+            ...params,
+         }
+      );
+
+      return response;
    } catch (error) {
       return Promise.reject(error);
    }

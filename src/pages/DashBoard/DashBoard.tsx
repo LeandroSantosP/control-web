@@ -1,10 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
 import { Command } from '@phosphor-icons/react';
-import { lazy, Suspense } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 
-import TransactionListItem from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { StatusAccount } from '../../components/Molecules/StatusAccount/StatusAccount';
 import { Transaction } from '../../components/Molecules/Transaction/Transaction';
+import TransactionListItem from '../../components/Molecules/TransactionListItem/TransactionListItem';
 import { Layout } from '../../components/providers/Layout/';
 
 import { useTransactionContext } from '../../shared/contexts';
@@ -14,17 +13,17 @@ const TransactionGraphs = lazy(
       import('../../components/Molecules/TransactionGraphs/TransactionGraphs')
 );
 
-import Wallet from '../../shared/assets/wallet.svg';
-import GraphUp from '../../shared/assets/graphUp.svg';
-import GraphDown from '../../shared/assets/graphDown.svg';
 import Balense from '../../shared/assets/balense.png';
+import GraphDown from '../../shared/assets/graphDown.svg';
+import GraphUp from '../../shared/assets/graphUp.svg';
+import Wallet from '../../shared/assets/wallet.svg';
 
-import * as S from './DashBoardStyled';
 import { Divider } from '../../components/atoms/Divider/Divider';
-import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { Progress } from '../../components/atoms/Progress/Progress';
 import { GraphHeader } from '../../components/Molecules/GraphHeader/GraphHeader';
+import { DashBoardHeader } from '../../components/Molecules/TransactionHeader/DashBoardHeader';
 import { authStorage, ProfileStorage } from '../../shared/store';
+import * as S from './DashBoardStyled';
 
 interface Transaction {
    id: string;

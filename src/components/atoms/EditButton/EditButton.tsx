@@ -2,13 +2,15 @@ import styled from 'styled-components';
 
 interface InputProps {
    active?: boolean;
+   top?: string;
+   right?: string;
 }
 
 export const EditProfileButton = styled('button')<InputProps>`
    display: flex;
    position: absolute;
-   right: 15px;
-   top: 15px;
+   right: ${(props) => props.right ?? '15px'};
+   top: ${(props) => props.top ?? '15px'};
 
    padding: 3px;
    filter: ${(props) => (props.disabled ? 'brightness(0.5)' : 'brightness(2)')};
@@ -25,15 +27,19 @@ export const EditProfileButton = styled('button')<InputProps>`
 type EditButtonProps = {
    children?: any;
    active?: boolean;
+   right?: string;
+   top?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const EditButton = ({
    active = false,
    children,
+   top,
+   right,
    ...props
 }: EditButtonProps) => {
    return (
-      <EditProfileButton active={active} {...props}>
+      <EditProfileButton top={top} right={right} active={active} {...props}>
          {children}
       </EditProfileButton>
    );

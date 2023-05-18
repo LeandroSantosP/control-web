@@ -1,16 +1,38 @@
-import * as S from './GraphHeaderStyles';
-import { GraphsInfos } from '../../atoms/GraphsInfos/GraphsInfos';
-import { useState } from 'react';
-import { GoalsTransactionModal } from '../GoalTransactionModal/GoalTransactionModal';
-import { Target, ArrowsCounterClockwise } from '@phosphor-icons/react';
+import { ArrowsCounterClockwise } from '@phosphor-icons/react';
+import { ReactNode, useState } from 'react';
 import { useTransactionContext } from '../../../shared/contexts';
+import { GraphsInfos } from '../../atoms/GraphsInfos/GraphsInfos';
+import { CreatePdf } from '../CreatePdf/CreatePdf';
+import { GoalsTransactionModal } from '../GoalTransactionModal/GoalTransactionModal';
+import * as S from './GraphHeaderStyles';
 
-const TargetButton = ({ children }: { children: React.ReactNode }) => {
+const TargetButton = ({
+   children,
+   Icon,
+}: {
+   children: React.ReactNode;
+   Icon: ReactNode;
+}) => {
    return (
       <S.DialogTrigger>
-         <Target />
+         {Icon}
          {children}
       </S.DialogTrigger>
+   );
+};
+
+const TargetButtonPopOver = ({
+   children,
+   Icon,
+}: {
+   children: React.ReactNode;
+   Icon: ReactNode;
+}) => {
+   return (
+      <S.PopOverTrigger>
+         {Icon}
+         {children}
+      </S.PopOverTrigger>
    );
 };
 
@@ -38,8 +60,9 @@ export const GraphHeader = () => {
             <ArrowsCounterClockwise size={20} />
             {currentTransactionType === 'expense' ? 'Receitas' : 'Dispensas'}
          </S.ToggleButton>
-
          <GoalsTransactionModal TargetButton={TargetButton} />
+         <CreatePdf TargetButtonPopOver={TargetButtonPopOver} />
+
          {showInfo && <GraphsInfos />}
       </S.Wrapper>
    );

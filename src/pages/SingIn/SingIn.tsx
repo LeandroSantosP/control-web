@@ -68,6 +68,16 @@ export const SingIn = () => {
             }}
          />
 
+         <S.AccountTestWrapper>
+            <h1>Conta de test..</h1>
+            <div>
+               <label>E-mail:</label>
+               <span>admin@admin.com</span>
+               <label>Password:</label>
+               <span>senha123</span>
+            </div>
+         </S.AccountTestWrapper>
+
          <S.Box>
             <S.Form onSubmit={handleSubmit(onSubmit)}>
                <h1>Bem-Vindo!</h1>

@@ -1,5 +1,6 @@
 import { Info } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as PopOver from '@radix-ui/react-popover';
 import styled from 'styled-components';
 
 export const Wrapper = styled('header')`
@@ -14,6 +15,25 @@ export const Wrapper = styled('header')`
    padding: 0.5rem;
 `;
 
+export const TargetWrapper = styled('button')`
+   width: 100px;
+   height: 40px;
+   border-radius: 5px;
+   border: 1px solid #fff;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   gap: 10px;
+   transition: all 0.3s;
+   font-size: 20px;
+
+   &:hover {
+      background-color: ${(props) => props.theme.colors.White};
+      color: ${(props) => props.theme.colors.Dark};
+   }
+`;
+
 export const InfosButton = styled(Info)`
    position: absolute;
    top: 0.6rem;
@@ -25,11 +45,29 @@ export const InfosButton = styled(Info)`
    }
 `;
 
+export const PopOverTrigger = styled(PopOver.Trigger)`
+   width: 100px;
+   height: 40px;
+   border-radius: 5px;
+   border: 1px solid #fff;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+   gap: 10px;
+   transition: all 0.3s;
+   font-size: 20px;
+
+   &:hover {
+      background-color: ${(props) => props.theme.colors.White};
+      color: ${(props) => props.theme.colors.Dark};
+   }
+`;
+
 export const DialogTrigger = styled(Dialog.Trigger)`
    width: 100px;
-   height: 20px;
+   height: 40px;
    border-radius: 5px;
-   padding: 5px;
    border: 1px solid #fff;
    display: flex;
    align-items: center;
@@ -47,9 +85,8 @@ export const DialogTrigger = styled(Dialog.Trigger)`
 
 export const ToggleButton = styled('button')`
    max-width: 120px;
-   height: 20px;
+   height: 40px;
    border-radius: 5px;
-   padding: 5px;
    border: 1px solid #fff;
    display: flex;
    align-items: center;

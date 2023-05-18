@@ -1,6 +1,6 @@
-import React from 'react';
 import { Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
+import React from 'react';
 import * as S from './SelectStyles';
 
 import './styles.css';

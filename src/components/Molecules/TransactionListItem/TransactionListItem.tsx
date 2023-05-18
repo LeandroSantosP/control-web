@@ -1,15 +1,14 @@
-import * as S from './TransactionLIstItem';
+import { Trash, X } from '@phosphor-icons/react';
 import { format } from 'date-fns';
-import { PopoverDetails } from '../Popover/PopoverDetails';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import {
    Transaction,
    useFlashMessageContext,
    useTransactionContext,
 } from '../../../shared/contexts';
-import { memo } from 'react';
 import { FormatCurense } from '../../../shared/helpers/FormatCurense';
-import { Trash, X } from '@phosphor-icons/react';
+import { PopoverDetails } from '../Popover/PopoverDetails';
+import * as S from './TransactionLIstItem';
 
 export interface TransactionListItemProps {
    id: string;
@@ -91,26 +90,6 @@ function TransactionListItem({ params }: { params: Transaction }) {
       NumberFormatted = FormatCurense(Number(amount));
    }
 
-   type categoryMappingType = {
-      [key: string]: string;
-   };
-
-   const categoryMapping: categoryMappingType = {
-      transport: 'Transporte',
-      food: 'Comida',
-      habitation: 'Habitação',
-      health: 'Saúde',
-      education: 'Educação',
-      leisure: 'Lazer',
-      products: 'Produtos',
-      debts: 'Débitos',
-      Taxes: 'Taxas',
-      Investments: 'Investimentos',
-   };
-
-   const formattedCategoryName =
-      categoryMapping[category.name] || 'Desconhecida';
-
    async function handleDeleteTransition() {
       try {
          if (confirmationDelete == 'confim') {
@@ -150,7 +129,7 @@ function TransactionListItem({ params }: { params: Transaction }) {
                         ...params,
                         value: FormatCurense(Number(amount)),
                         category: {
-                           name: formattedCategoryName,
+                           name: category.name,
                            created_at: category.created_at,
                            id: category.id,
                            updated_at: category.updated_at,

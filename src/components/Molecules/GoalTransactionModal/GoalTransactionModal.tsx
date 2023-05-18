@@ -1,19 +1,20 @@
-import { z } from 'zod';
-import Chart from 'react-apexcharts';
-import { useState, useEffect, useMemo } from 'react';
-import { ApexConfigGoalsGraph } from '../../../shared/helpers/ApexConfig';
 import { CaretDown, CaretRight, Trash, X } from '@phosphor-icons/react';
+import React, { useEffect, useMemo, useState } from 'react';
+import Chart from 'react-apexcharts';
+import { z } from 'zod';
+import { ApexConfigGoalsGraph } from '../../../shared/helpers/ApexConfig';
 
-import * as S from './GoalTransactionModalStyles';
-import { GoalsStorage } from '../../../shared/store';
-import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
-import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
-import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
-import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
+import { Target } from 'lucide-react';
 import {
    useFlashMessageContext,
    useTransactionContext,
 } from '../../../shared/contexts';
+import { HandleDeleteAllGoals } from '../../../shared/helpers/DeleteAllGoals';
+import { ValidMonths } from '../../../shared/myTypes/ValidMonths';
+import { GoalsStorage } from '../../../shared/store';
+import { CreateNewGoalForm } from '../CreateNewGoalForm/CreateNewGoalForm';
+import { DeleteNewGoalForm } from '../DeleteGoalsForm/DeleteGoalsForm';
+import * as S from './GoalTransactionModalStyles';
 
 const createGoalsSchema = z.object({
    dataForUpdate: z
@@ -57,7 +58,13 @@ const monthNames = [
 export const GoalsTransactionModal = ({
    TargetButton,
 }: {
-   TargetButton: ({ children }: { children: React.ReactNode }) => JSX.Element;
+   TargetButton: ({
+      children,
+      Icon,
+   }: {
+      children: React.ReactNode;
+      Icon: React.ReactNode;
+   }) => JSX.Element;
 }) => {
    const {
       state: { goals },
@@ -172,7 +179,7 @@ export const GoalsTransactionModal = ({
 
    return (
       <S.DialogRoot>
-         <TargetButton>Metas</TargetButton>
+         <TargetButton Icon={<Target />}>Metas</TargetButton>
          <S.DialogPortal>
             <S.DialogOverlay />
             <S.DialogContent>
