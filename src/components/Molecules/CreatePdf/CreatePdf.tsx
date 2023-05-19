@@ -3,6 +3,7 @@ import { FilePdf } from '@phosphor-icons/react';
 import * as PopOver from '@radix-ui/react-popover';
 
 import { Download, X } from 'lucide-react';
+
 import { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -44,16 +45,15 @@ export const CreatePdf = ({
       formState: { errors },
    } = createPdfForm;
 
-   const handleDownload = (pdfBuffer: Buffer) => {
-      const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
+   const handleDownload = async (pdfBuffer: any) => {
+      const pdfBytes = new Uint8Array(pdfBuffer.data);
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-
-      link.setAttribute('download', 'arquivo.pdf');
-      document.body.appendChild(link);
+      link.download = 'arquivo.pdf';
       link.click();
-      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
    };
 
    const onSubmit = async (data: PdfType) => {
